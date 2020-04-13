@@ -1,0 +1,14 @@
+matrix:
+  include:
+    - language: java
+      jdk:
+        - openjdk8
+      branches:
+        except:
+          - gh-pages
+      cache:
+        directories:
+          - "$HOME/.m2/repository"
+      before_script: sed -i "/^version:.*/ s/$/-b${TRAVIS_BUILD_NUMBER}/" src/main/resources/plugin.yml
+      install: true
+      script: mvn clean package -Drelease
