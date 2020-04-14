@@ -4,3 +4,6 @@ main: au.com.grieve.portalnetwork.PortalNetwork
 api-version: "1.13"
 authors: [Bundabrg]
 description: Allow one to create portals that can easily be linked to each other using colors.
+permissions:
+  portalnetwork.admin:
+    default: op

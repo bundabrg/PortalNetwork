@@ -18,18 +18,40 @@
 
 package au.com.grieve.portalnetwork;
 
+import au.com.grieve.bcf.BukkitCommandManager;
+import au.com.grieve.portalnetwork.commands.MainCommand;
+import au.com.grieve.portalnetwork.commands.PortalBlockCommand;
+import lombok.Getter;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class PortalNetwork extends JavaPlugin {
 
+    @Getter
+    private static PortalNetwork instance;
+
+    @Getter
+    private BukkitCommandManager bcf;
+
+    public PortalNetwork() {
+        instance = this;
+    }
+
     @Override
     public void onEnable() {
-        // Plugin startup logic
+        // Setup Command Manager
+        bcf = new BukkitCommandManager(this);
 
+        // Register Commands
+        bcf.registerCommand(new MainCommand());
+        bcf.registerCommand(new PortalBlockCommand());
+
+        // Initialize Config
+        saveDefaultConfig();
     }
 
     @Override
     public void onDisable() {
         // Plugin shutdown logic
     }
+
 }
