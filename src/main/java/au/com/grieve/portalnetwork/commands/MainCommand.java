@@ -26,7 +26,9 @@ import au.com.grieve.bcf.api.BaseCommand;
 import au.com.grieve.portalnetwork.Portal;
 import au.com.grieve.portalnetwork.PortalNetwork;
 import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
 import org.bukkit.command.CommandSender;
 
 
@@ -36,7 +38,7 @@ public class MainCommand extends BaseCommand {
     @Default
     public void onDefault(CommandSender sender) {
         sender.spigot().sendMessage(
-                new ComponentBuilder("=== [ PortalNetwork Help ] ===").color(ChatColor.AQUA).create()
+                new ComponentBuilder("========= [ PortalNetwork Help ] =========").color(ChatColor.AQUA).create()
         );
 
         sender.spigot().sendMessage(
@@ -54,10 +56,20 @@ public class MainCommand extends BaseCommand {
         );
     }
 
+    @Arg("reload")
+    public void onReload(CommandSender sender) {
+        // Read main config
+        PortalNetwork.getInstance().reload();
+
+        sender.spigot().sendMessage(
+                new ComponentBuilder("Reloaded PortalNetwork").color(ChatColor.YELLOW).create()
+        );
+    }
+
     @Arg("list")
     public void onList(CommandSender sender) {
         sender.spigot().sendMessage(
-                new ComponentBuilder("=== [ List of Portals ] ===").color(ChatColor.AQUA).create()
+                new ComponentBuilder("========= [ List of Portals ] =========").color(ChatColor.AQUA).create()
         );
 
         for (Portal portal : PortalNetwork.getInstance().getPortalManager().getPortals()) {
@@ -65,8 +77,17 @@ public class MainCommand extends BaseCommand {
                     "[" + portal.getLocation().getX() + ";" +
                             portal.getLocation().getY() + ";" +
                             portal.getLocation().getZ() + ";" +
-                            portal.getLocation().getWorld().getName() + "] "
-            ).color(ChatColor.BLUE);
+                            portal.getLocation().getWorld().getName() + "] ").color(ChatColor.GREEN)
+                    .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND,
+                            "/tp " + sender.getName() + " " +
+                                    portal.getLocation().getX() + " " +
+                                    (portal.getLocation().getY() + 1) + " " +
+                                    portal.getLocation().getZ()
+                    ))
+                    .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Teleport to Portal").create()))
+                    .append("").event((HoverEvent) null).event((ClickEvent) null);
+
+
             if (!portal.isValid()) {
                 msg.append("[invalid]").color(ChatColor.RED);
             } else {
@@ -74,7 +95,7 @@ public class MainCommand extends BaseCommand {
                 if (portal.getDialed() == null) {
                     msg.append("[disconnected]").color(ChatColor.RED);
                 } else {
-                    msg.append("connected:" + portal.getDialed());
+                    msg.append("connected:" + portal.getDialed().getAddress());
                 }
             }
 
@@ -82,7 +103,7 @@ public class MainCommand extends BaseCommand {
         }
 
         sender.spigot().sendMessage(
-                new ComponentBuilder("===========================").color(ChatColor.AQUA).create()
+                new ComponentBuilder("=====================================").color(ChatColor.AQUA).create()
         );
     }
 

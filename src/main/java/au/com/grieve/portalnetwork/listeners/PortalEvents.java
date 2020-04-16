@@ -21,10 +21,13 @@ package au.com.grieve.portalnetwork.listeners;
 import au.com.grieve.portalnetwork.Portal;
 import au.com.grieve.portalnetwork.PortalManager;
 import au.com.grieve.portalnetwork.PortalNetwork;
+import org.bukkit.GameMode;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
@@ -44,7 +47,32 @@ public class PortalEvents implements Listener {
         if (portal.getLocation().equals(event.getBlock().getLocation())) {
             portal.remove();
             event.setDropItems(false);
-            event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), portal.createPortalBlock());
+            if (event.getPlayer().getGameMode() != GameMode.CREATIVE) {
+                event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), portal.createPortalBlock());
+            }
+        }
+    }
+
+    @EventHandler
+    public void onPlayerInteractEvent(PlayerInteractEvent event) {
+        System.err.println(event);
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getClickedBlock() == null) {
+            System.err.println("Action: " + event.getAction() + " - " + event.getClickedBlock());
+            return;
+        }
+
+        PortalManager manager = PortalNetwork.getInstance().getPortalManager();
+        Portal portal = manager.find(event.getClickedBlock().getLocation());
+
+        if (portal == null) {
+            return;
+        }
+        event.setCancelled(true);
+
+        // Player has right clicked portal so lets dial next address if any, else deactivate
+        System.err.println("Reached dial");
+        if (portal.isValid()) {
+            portal.dialNext();
         }
     }
 
@@ -65,9 +93,7 @@ public class PortalEvents implements Listener {
         // It's a portal block so lookup type and try to create it
         Portal.PortalType portalType = Portal.PortalType.valueOf(meta.getPersistentDataContainer().get(Portal.PortalTypeKey, PersistentDataType.STRING));
 
-        Portal portal = PortalNetwork.getInstance().getPortalManager().createPortal(event.getBlockPlaced().getLocation(), portalType);
+        PortalNetwork.getInstance().getPortalManager().createPortal(event.getBlockPlaced().getLocation(), portalType);
     }
-
-    // Check if player it destroying a
 
 }

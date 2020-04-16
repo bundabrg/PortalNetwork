@@ -65,7 +65,7 @@ public class Portal {
 
     // Dialed
     @Getter
-    Integer dialed;
+    Portal dialed;
 
     @Getter
     boolean valid = false;
@@ -206,26 +206,110 @@ public class Portal {
 
     @SuppressWarnings("UnusedReturnValue")
     public boolean dial(Integer address) {
+        System.err.println("Dial(" + address + ")");
         if (!valid) {
+            System.err.println("Not valid");
             return false;
         }
 
-        // Find an active portal with this address
+        // Presently dialed?
+        if (dialed == null && address == null) {
+            System.err.println("dialed=address=null");
+            return true;
+        }
+        if (dialed != null && dialed.address.equals(address)) {
+            System.err.println("dialed == address");
+            return true;
+        }
+
+
+        // Deactivate portal
+        if (address == null) {
+            Portal oldDialed = dialed;
+            dialed = null;
+            System.err.println(this.toString() + " deactivates");
+            oldDialed.dial(null);
+            manager.save();
+            return true;
+        }
+
+        // Dial another portal
         Portal portal = manager.find(network, address);
-
         if (portal == null) {
+            System.err.println("Can't find portal!");
             return false;
         }
 
-        dialed = address;
+        // Deactivate old dialed portal
+        if (dialed != null) {
+            Portal oldDialed = dialed;
+            dialed = null;
+            oldDialed.dial(null);
+        }
+
+        System.err.println(this.toString() + " dials " + portal);
+        dialed = portal;
+        dialed.dial(this.address);
+        manager.save();
+//
+//
+//        } else {
+//            System.err.println("Portal deactivates.");
+//        }
+//
+//        dialed = address;
         return true;
     }
 
     /**
-     * Remove portal
+     * Dial next available address, otherwise we deactivate.
+     */
+    public boolean dialNext() {
+        System.err.println("Dialing next");
+        if (!valid) {
+            return false;
+        }
+
+        for (int i = 1; i < 17; i++) {
+            int checkAddress = (address + i) % 17;
+            System.err.println("Checking address: " + checkAddress);
+
+            if (checkAddress == address) {
+                continue;
+            }
+
+            // Address 16 will be considered deactivate
+            if (checkAddress == 16) {
+                System.err.println("Force deactivate");
+                break;
+            }
+
+            if (dial(checkAddress)) {
+                return true;
+            }
+        }
+
+        // Deactivate
+        System.err.println("Deactivating");
+        dial(null);
+        return true;
+    }
+
+    /**
+     * Remove portal cleanly
      */
     public void remove() {
         manager.removePortal(this);
+        destroy();
+    }
+
+    /**
+     * Destroy portal
+     *
+     * @return
+     */
+    public void destroy() {
+        // Clean up portal
     }
 
     @Override
@@ -237,7 +321,7 @@ public class Portal {
                 "network=" + network + ", " +
                 "address=" + address + ", " +
                 "type=" + portalType + ", " +
-                "dialled=" + dialed + ")";
+                "dialled=" + (dialed == null ? "[disconnected]" : dialed.getAddress()) + ")";
     }
 
     /**

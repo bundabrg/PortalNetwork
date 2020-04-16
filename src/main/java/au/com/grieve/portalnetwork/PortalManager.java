@@ -89,6 +89,16 @@ public class PortalManager {
         }
     }
 
+    public void reload() {
+        for (Portal portal : portals) {
+            portal.destroy();
+        }
+        portals.clear();
+
+        // Load Data
+        load();
+    }
+
     public void save() {
         Config portalConfig = new Config(plugin.getDataFolder() + "/" + "portal-data.yml");
         ConfigurationSection portalsData = portalConfig.createSection("portals");
@@ -96,7 +106,7 @@ public class PortalManager {
             Portal portal = portals.get(i);
             ConfigurationSection portalData = portalsData.createSection(Integer.toString(i));
 
-            portalData.set("dialed", portal.getDialed());
+            portalData.set("dialed", portal.getDialed().getAddress());
             portalData.set("portal_type", portal.getPortalType().toString());
             portalData.set("location", portal.getLocation());
             portalData.set("valid", portal.isValid());
