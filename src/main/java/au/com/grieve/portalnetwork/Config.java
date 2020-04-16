@@ -16,34 +16,36 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package au.com.grieve.bcf.api;
+package au.com.grieve.portalnetwork;
 
-import lombok.Data;
 import lombok.Getter;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.YamlConfiguration;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.File;
+import java.io.IOException;
 
-@Data
-public class ParserContext implements Cloneable {
+public class Config extends YamlConfiguration {
 
-    private final CommandManager manager;
     @Getter
-    private List<Parser> switches = new ArrayList<>();
-    @Getter
-    private List<Parser> parsers = new ArrayList<>();
+    private final String filename;
 
-    public ParserContext(CommandManager manager) {
-        this.manager = manager;
+    public Config(String filename) {
+        this.filename = filename;
     }
 
-    public Object clone() throws CloneNotSupportedException {
-        ParserContext clone = (ParserContext) super.clone();
+    public void load() throws IOException, InvalidConfigurationException {
+        File f = new File(filename);
+        load(f);
+    }
 
-        // Clone Data
-        clone.switches = new ArrayList<>(switches);
-
-        return clone;
+    public void save() {
+        File f = new File(filename);
+        try {
+            save(f);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

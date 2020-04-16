@@ -18,10 +18,13 @@
 
 package au.com.grieve.portalnetwork.commands;
 
+import au.com.grieve.bcf.annotations.Arg;
 import au.com.grieve.bcf.annotations.Command;
 import au.com.grieve.bcf.annotations.Default;
 import au.com.grieve.bcf.annotations.Error;
 import au.com.grieve.bcf.api.BaseCommand;
+import au.com.grieve.portalnetwork.Portal;
+import au.com.grieve.portalnetwork.PortalNetwork;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.command.CommandSender;
@@ -48,6 +51,38 @@ public class MainCommand extends BaseCommand {
     public void onError(CommandSender sender, String message) {
         sender.spigot().sendMessage(
                 new ComponentBuilder(message).color(ChatColor.RED).create()
+        );
+    }
+
+    @Arg("list")
+    public void onList(CommandSender sender) {
+        sender.spigot().sendMessage(
+                new ComponentBuilder("=== [ List of Portals ] ===").color(ChatColor.AQUA).create()
+        );
+
+        for (Portal portal : PortalNetwork.getInstance().getPortalManager().getPortals()) {
+            @SuppressWarnings("ConstantConditions") ComponentBuilder msg = new ComponentBuilder(
+                    "[" + portal.getLocation().getX() + ";" +
+                            portal.getLocation().getY() + ";" +
+                            portal.getLocation().getZ() + ";" +
+                            portal.getLocation().getWorld().getName() + "] "
+            ).color(ChatColor.BLUE);
+            if (!portal.isValid()) {
+                msg.append("[invalid]").color(ChatColor.RED);
+            } else {
+                msg.append(portal.getNetwork() + ":" + portal.getAddress() + " ").color(ChatColor.YELLOW);
+                if (portal.getDialed() == null) {
+                    msg.append("[disconnected]").color(ChatColor.RED);
+                } else {
+                    msg.append("connected:" + portal.getDialed());
+                }
+            }
+
+            sender.spigot().sendMessage(msg.create());
+        }
+
+        sender.spigot().sendMessage(
+                new ComponentBuilder("===========================").color(ChatColor.AQUA).create()
         );
     }
 

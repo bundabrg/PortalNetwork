@@ -30,7 +30,7 @@ public class ParserNode implements Iterable<ParserNode> {
     @Getter
     ParserNode parent;
     @Getter
-    List<ParserNode> children;
+    final List<ParserNode> children;
 
     @Getter
     ParserNodeData data;

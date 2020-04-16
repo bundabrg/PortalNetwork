@@ -30,8 +30,8 @@ import java.util.stream.Collectors;
 
 public abstract class CommandManager {
 
-    protected Map<String, RootCommand> commands = new HashMap<>();
-    protected Map<String, Class<? extends Parser>> parsers = new HashMap<>();
+    protected final Map<String, RootCommand> commands = new HashMap<>();
+    protected final Map<String, Class<? extends Parser>> parsers = new HashMap<>();
 
     public CommandManager() {
         // Register Default Parsers

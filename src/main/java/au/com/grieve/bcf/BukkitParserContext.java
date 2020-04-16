@@ -20,18 +20,15 @@ package au.com.grieve.bcf;
 
 import au.com.grieve.bcf.api.CommandManager;
 import au.com.grieve.bcf.api.ParserContext;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.bukkit.command.CommandSender;
 
-@EqualsAndHashCode(callSuper = true)
-@Data
 public class BukkitParserContext extends ParserContext {
 
     // Bukkit Command Sender
+    @SuppressWarnings("unused")
     @Getter
-    private CommandSender sender;
+    private final CommandSender sender;
 
     public BukkitParserContext(CommandManager manager, CommandSender sender) {
         super(manager);

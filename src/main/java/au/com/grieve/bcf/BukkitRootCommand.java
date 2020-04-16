@@ -29,11 +29,10 @@ import java.util.Collections;
 import java.util.List;
 
 public class BukkitRootCommand extends Command implements RootCommand {
-    @Getter
-    private ParserNode node = new ParserNode();
+    private final ParserNode node = new ParserNode();
 
     @Getter
-    private CommandManager manager;
+    private final CommandManager manager;
 
     protected BukkitRootCommand(CommandManager manager, String name) {
         super(name);
@@ -51,5 +50,10 @@ public class BukkitRootCommand extends Command implements RootCommand {
     public List<String> tabComplete(CommandSender sender, String alias, String[] args) throws IllegalArgumentException {
         BukkitParserContext context = new BukkitParserContext(manager, sender);
         return manager.getComplete(node, String.join(" ", args), context);
+    }
+
+    @Override
+    public ParserNode getNode() {
+        return node;
     }
 }

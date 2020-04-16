@@ -31,13 +31,13 @@ import java.util.Map;
 public abstract class Parser {
     // Data
     @Getter
-    protected CommandManager manager;
+    protected final CommandManager manager;
     @Getter
-    protected ParserNode node;
+    protected final ParserNode node;
     @Getter
-    protected ParserContext context;
+    protected final ParserContext context;
     @Getter
-    protected Map<String, String> defaultParameters = new HashMap<>();
+    protected final Map<String, String> defaultParameters = new HashMap<>();
 
     @Getter
     protected boolean parsed = false;

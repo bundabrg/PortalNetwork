@@ -21,10 +21,15 @@ package au.com.grieve.portalnetwork.commands;
 import au.com.grieve.bcf.annotations.Arg;
 import au.com.grieve.bcf.annotations.Default;
 import au.com.grieve.bcf.annotations.Description;
+import au.com.grieve.portalnetwork.Portal;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ComponentBuilder;
-import org.bukkit.OfflinePlayer;
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 
 @Arg("portalblock|pb")
 public class PortalBlockCommand extends MainCommand {
@@ -38,12 +43,28 @@ public class PortalBlockCommand extends MainCommand {
         // Show list of child commands
     }
 
-    @Arg("give|g @player(required=true, default=%self, mode=offline)")
+    @Arg("give|g @portaltype(switch=type|t, default=NETHER) @player(required=true, default=%self, mode=online)")
     @Description("Give player a portal block")
-    public void onGive(CommandSender sender, OfflinePlayer player) {
+    public void onGive(CommandSender sender, Portal.PortalType portalType, Player player) {
+        // Create a Portal Block
+        ItemStack item = new ItemStack(Material.BEACON, 1);
+        ItemMeta meta = item.getItemMeta();
+
+        assert meta != null;
+        meta.setDisplayName("Portal Block");
+        meta.getPersistentDataContainer().set(Portal.PortalTypeKey, PersistentDataType.STRING, portalType.toString());
+        item.setItemMeta(meta);
+        player.getInventory().addItem(Portal.CreatePortalBlock(portalType));
+
         sender.spigot().sendMessage(
-                new ComponentBuilder("Giving " + player.getName() + " block.").create()
+                new ComponentBuilder("Giving " + player.getName() + " a " + portalType + " portal block.").create()
         );
+
+        if (!sender.equals(player)) {
+            player.spigot().sendMessage(
+                    new ComponentBuilder("You have received a Portal Block.").create()
+            );
+        }
     }
 
 

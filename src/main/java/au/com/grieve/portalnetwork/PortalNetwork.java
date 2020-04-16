@@ -21,6 +21,8 @@ package au.com.grieve.portalnetwork;
 import au.com.grieve.bcf.BukkitCommandManager;
 import au.com.grieve.portalnetwork.commands.MainCommand;
 import au.com.grieve.portalnetwork.commands.PortalBlockCommand;
+import au.com.grieve.portalnetwork.listeners.PortalEvents;
+import au.com.grieve.portalnetwork.parsers.PortalTypeParser;
 import lombok.Getter;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -32,6 +34,9 @@ public final class PortalNetwork extends JavaPlugin {
     @Getter
     private BukkitCommandManager bcf;
 
+    @Getter
+    private PortalManager portalManager;
+
     public PortalNetwork() {
         instance = this;
     }
@@ -40,18 +45,40 @@ public final class PortalNetwork extends JavaPlugin {
     public void onEnable() {
         // Setup Command Manager
         bcf = new BukkitCommandManager(this);
+        bcf.registerParser("portaltype", PortalTypeParser.class);
 
         // Register Commands
         bcf.registerCommand(new MainCommand());
         bcf.registerCommand(new PortalBlockCommand());
 
-        // Initialize Config
-        saveDefaultConfig();
+        // Initialize Configs
+        initConfig();
+
+        // Load Portal Manager
+        portalManager = new PortalManager(this);
+        portalManager.load();
+
+        // Register Listeners
+        getServer().getPluginManager().registerEvents(new PortalEvents(), this);
+
+        // Test1
+//        Portal portal1 = Portal.Create(new Location(getServer().getWorld("world"), 356, 3, -313));
+//        System.err.println("Portal1: " + portal1);
+//
+//        Portal portal2 = Portal.Create(new Location(getServer().getWorld("world"), 353, 4, -308));
+//        System.err.println("Portal2: " + portal2);
+
+
     }
 
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+    }
+
+    private void initConfig() {
+        // Main Config
+        saveDefaultConfig();
     }
 
 }

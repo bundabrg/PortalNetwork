@@ -27,9 +27,9 @@ import java.util.List;
 
 public class ParserMethod {
     @Getter
-    BaseCommand command;
+    private final BaseCommand command;
     @Getter
-    Method method;
+    private final Method method;
 
     public ParserMethod(BaseCommand command, Method method) {
         this.command = command;

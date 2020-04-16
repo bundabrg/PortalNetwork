@@ -30,9 +30,9 @@ import java.util.stream.Collectors;
 
 public class ParserNodeData {
     @Getter
-    String name;
+    final String name;
     @Getter
-    Map<String, String> parameters = new HashMap<>();
+    final Map<String, String> parameters = new HashMap<>();
 
 
     public ParserNodeData(String name) {
@@ -41,7 +41,7 @@ public class ParserNodeData {
 
     public ParserNodeData(String name, Map<String, String> parameters) {
         this(name);
-        this.parameters = parameters;
+        this.parameters.putAll(parameters);
     }
 
     @Override
