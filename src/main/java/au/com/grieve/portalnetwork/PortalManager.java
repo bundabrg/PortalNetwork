@@ -26,10 +26,7 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class PortalManager {
     private final JavaPlugin plugin;
@@ -39,7 +36,7 @@ public class PortalManager {
     private final List<Portal> portals = new ArrayList<>();
 
     // Location Map
-    //private Hashtable<Location, Portal> locationMap;
+    private final Hashtable<Location, Portal> indexLocation = new Hashtable<>();
 
     public PortalManager(JavaPlugin plugin) {
         this.plugin = plugin;
@@ -80,6 +77,7 @@ public class PortalManager {
                 }
 
                 portals.add(portal);
+                reindexPortal(portal);
             }
         }
 
@@ -94,6 +92,7 @@ public class PortalManager {
             portal.destroy();
         }
         portals.clear();
+        indexLocation.clear();
 
         // Load Data
         load();
@@ -106,7 +105,9 @@ public class PortalManager {
             Portal portal = portals.get(i);
             ConfigurationSection portalData = portalsData.createSection(Integer.toString(i));
 
-            portalData.set("dialed", portal.getDialed().getAddress());
+            if (portal.getDialed() != null) {
+                portalData.set("dialed", portal.getDialed().getAddress());
+            }
             portalData.set("portal_type", portal.getPortalType().toString());
             portalData.set("location", portal.getLocation());
             portalData.set("valid", portal.isValid());
@@ -122,6 +123,7 @@ public class PortalManager {
         Portal portal = new Portal(this, location, portalType);
         portals.add(portal);
         portal.update();
+        reindexPortal(portal);
         save();
 
         return portal;
@@ -129,7 +131,17 @@ public class PortalManager {
 
     public void removePortal(Portal portal) {
         portals.remove(portal);
-        save();
+        indexLocation.values().removeIf(v -> v.equals(portal));
+    }
+
+    public void reindexPortal(Portal portal) {
+        indexLocation.values().removeIf(v -> v.equals(portal));
+        for (Iterator<Location> it = portal.getPortalIterator(); it.hasNext(); ) {
+            Location loc = it.next();
+            indexLocation.put(loc, portal);
+        }
+
+        indexLocation.put(portal.getLocation(), portal);
     }
 
     /**
@@ -162,15 +174,15 @@ public class PortalManager {
      * Get a portal at location
      */
     public Portal find(@NonNull Location location, Boolean valid) {
-        for (Portal portal : portals) {
-            if (valid != null && portal.isValid() != valid) {
-                continue;
-            }
-
-            if (portal.getLocation().equals(location)) {
-                return portal;
-            }
+        Portal portal = indexLocation.get(location);
+        if (valid == null) {
+            return portal;
         }
+
+        if (valid == portal.isValid()) {
+            return portal;
+        }
+
         return null;
     }
 

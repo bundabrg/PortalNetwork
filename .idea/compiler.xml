@@ -11,7 +11,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="PortalNetwork" target="1.8" />
+      <module name="PortalNetwork" target="9" />
     </bytecodeTargetLevel>
   </component>
 </project>

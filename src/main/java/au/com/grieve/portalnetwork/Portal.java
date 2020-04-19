@@ -19,19 +19,18 @@
 package au.com.grieve.portalnetwork;
 
 import lombok.Getter;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.Tag;
+import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.Orientable;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.util.BlockIterator;
 import org.bukkit.util.Vector;
 
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 
 public class Portal {
@@ -100,46 +99,43 @@ public class Portal {
         return item;
     }
 
-    /**
-     * Return integer for color of wool
-     */
-    public static int ColorToNumber(Material material) {
-        switch (material) {
-            case WHITE_WOOL:
-                return 0;
-            case ORANGE_WOOL:
-                return 1;
-            case MAGENTA_WOOL:
-                return 2;
-            case LIGHT_BLUE_WOOL:
-                return 3;
-            case YELLOW_WOOL:
-                return 4;
-            case LIME_WOOL:
-                return 5;
-            case PINK_WOOL:
-                return 6;
-            case GRAY_WOOL:
-                return 7;
-            case LIGHT_GRAY_WOOL:
-                return 8;
-            case CYAN_WOOL:
-                return 9;
-            case PURPLE_WOOL:
-                return 10;
-            case BLUE_WOOL:
-                return 11;
-            case BROWN_WOOL:
-                return 12;
-            case GREEN_WOOL:
-                return 13;
-            case RED_WOOL:
-                return 14;
-            case BLACK_WOOL:
-                return 15;
-        }
-        throw new IndexOutOfBoundsException("Invalid Material");
-    }
+    private static final List<Material> WOOL_MAPPINGS = List.of(
+            Material.WHITE_WOOL,
+            Material.ORANGE_WOOL,
+            Material.MAGENTA_WOOL,
+            Material.LIGHT_BLUE_WOOL,
+            Material.YELLOW_WOOL,
+            Material.LIME_WOOL,
+            Material.PINK_WOOL,
+            Material.GRAY_WOOL,
+            Material.LIGHT_GRAY_WOOL,
+            Material.CYAN_WOOL,
+            Material.PURPLE_WOOL,
+            Material.BLUE_WOOL,
+            Material.BROWN_WOOL,
+            Material.GREEN_WOOL,
+            Material.RED_WOOL,
+            Material.BLACK_WOOL
+    );
+
+    private static final List<Material> GLASS_MAPPINGS = List.of(
+            Material.WHITE_STAINED_GLASS,
+            Material.ORANGE_STAINED_GLASS,
+            Material.MAGENTA_STAINED_GLASS,
+            Material.LIGHT_BLUE_STAINED_GLASS,
+            Material.YELLOW_STAINED_GLASS,
+            Material.LIME_STAINED_GLASS,
+            Material.PINK_STAINED_GLASS,
+            Material.GRAY_STAINED_GLASS,
+            Material.LIGHT_GRAY_STAINED_GLASS,
+            Material.CYAN_STAINED_GLASS,
+            Material.PURPLE_STAINED_GLASS,
+            Material.BLUE_STAINED_GLASS,
+            Material.BROWN_STAINED_GLASS,
+            Material.GREEN_STAINED_GLASS,
+            Material.RED_STAINED_GLASS,
+            Material.BLACK_STAINED_GLASS
+    );
 
     /**
      * Update Portal
@@ -175,12 +171,12 @@ public class Portal {
 
         // Determine address block. It should be opposite non_idx
         Block address_block = blocks.get((non_idx + 2) % 4);
-        address = ColorToNumber(address_block.getType());
+        address = WOOL_MAPPINGS.indexOf(address_block.getType());
 
         // Net block is previous and next to non_idx
         Block left_block = blocks.get((non_idx - 1) % 4);
         Block right_block = blocks.get((non_idx + 1) % 4);
-        network = (ColorToNumber(left_block.getType()) << 4) + ColorToNumber(right_block.getType());
+        network = (WOOL_MAPPINGS.indexOf(left_block.getType()) << 4) + WOOL_MAPPINGS.indexOf(right_block.getType());
 
         // Get Width of portal by counting obsidian blocks to a max of 10 each direction
         Vector left_unit_vector = left_block.getLocation().toVector().subtract(location.toVector()).normalize();
@@ -204,60 +200,62 @@ public class Portal {
         }
     }
 
-    @SuppressWarnings("UnusedReturnValue")
     public boolean dial(Integer address) {
-        System.err.println("Dial(" + address + ")");
+        if (address == null) {
+            return dial(null, null);
+        }
+
         if (!valid) {
-            System.err.println("Not valid");
             return false;
         }
 
-        // Presently dialed?
-        if (dialed == null && address == null) {
-            System.err.println("dialed=address=null");
-            return true;
-        }
-        if (dialed != null && dialed.address.equals(address)) {
-            System.err.println("dialed == address");
-            return true;
-        }
-
-
-        // Deactivate portal
-        if (address == null) {
-            Portal oldDialed = dialed;
-            dialed = null;
-            System.err.println(this.toString() + " deactivates");
-            oldDialed.dial(null);
-            manager.save();
-            return true;
-        }
-
-        // Dial another portal
         Portal portal = manager.find(network, address);
         if (portal == null) {
-            System.err.println("Can't find portal!");
             return false;
         }
 
-        // Deactivate old dialed portal
-        if (dialed != null) {
-            Portal oldDialed = dialed;
+        return dial(portal, null);
+    }
+
+    public boolean dial(Portal portal, Portal from) {
+        // Undialing
+        if (portal == null) {
+            if (dialed == null) {
+                // Already undialed
+                return true;
+            }
+
+            // If we are not connected to from we will get our dialed to undial
+            if (from != dialed) {
+                dialed.dial(null, this);
+            }
+
             dialed = null;
-            oldDialed.dial(null);
+            deactivate();
+            return true;
         }
 
-        System.err.println(this.toString() + " dials " + portal);
+        // Dialing
+
+        // Already Dialed to portal?
+        if (dialed == portal) {
+            return true;
+        }
+
+        // If we are not connected to from we will get our dialed to undial
+        if (dialed != null && from != dialed) {
+            dialed.dial(null, this);
+        }
+
+        // If portal is not from we will get it to dial us
+        if (portal != from) {
+            portal.dial(this, this);
+        }
+
         dialed = portal;
-        dialed.dial(this.address);
         manager.save();
-//
-//
-//        } else {
-//            System.err.println("Portal deactivates.");
-//        }
-//
-//        dialed = address;
+        activate();
+
         return true;
     }
 
@@ -265,14 +263,14 @@ public class Portal {
      * Dial next available address, otherwise we deactivate.
      */
     public boolean dialNext() {
-        System.err.println("Dialing next");
         if (!valid) {
             return false;
         }
 
+        int startAddress = dialed == null ? 0 : dialed.getAddress();
+
         for (int i = 1; i < 17; i++) {
-            int checkAddress = (address + i) % 17;
-            System.err.println("Checking address: " + checkAddress);
+            int checkAddress = (startAddress + i) % 17;
 
             if (checkAddress == address) {
                 continue;
@@ -280,7 +278,6 @@ public class Portal {
 
             // Address 16 will be considered deactivate
             if (checkAddress == 16) {
-                System.err.println("Force deactivate");
                 break;
             }
 
@@ -290,8 +287,190 @@ public class Portal {
         }
 
         // Deactivate
-        System.err.println("Deactivating");
         dial(null);
+        return true;
+    }
+
+    /**
+     * Return an iterator over the portal part of the portal
+     */
+    public Iterator<Location> getPortalIterator() {
+
+        int maxWidth = (int) new Vector(0, 0, 0).distance(right.clone().subtract(left));
+        int maxHeight = 5;
+
+        return new Iterator<Location>() {
+            int width = 1;
+            int height = 1;
+            Location next;
+
+            private Location getNext() throws NoSuchElementException {
+                if (!isValid()) {
+                    throw new NoSuchElementException();
+                }
+
+                while (width < maxWidth) {
+                    while (height++ < maxHeight - 1) {
+                        Location check = location.clone().add(left).add(right.clone().normalize().multiply(width));
+
+                        // Something blocking us?
+                        if (check.clone().add(new Vector(0, 1, 0).multiply(height)).getBlock().getType() == Material.OBSIDIAN) {
+                            continue;
+                        }
+
+                        return check.add(new Vector(0, 1, 0).multiply(height - 1));
+                    }
+                    width++;
+                    height = 1;
+                }
+                throw new NoSuchElementException();
+            }
+
+
+            @Override
+            public boolean hasNext() {
+                if (next == null) {
+                    try {
+                        next = getNext();
+                    } catch (NoSuchElementException e) {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+
+            @Override
+            public Location next() {
+                if (hasNext()) {
+                    Location ret = next;
+                    next = null;
+                    return ret;
+                }
+
+                throw new NoSuchElementException();
+            }
+        };
+    }
+
+    /**
+     * Return an iterator over the portal frame
+     */
+    public Iterator<Location> getPortalFrameIterator() {
+
+        int maxWidth = (int) new Vector(0, 0, 0).distance(right.clone().subtract(left));
+        int maxHeight = 5;
+
+        return new Iterator<Location>() {
+            int width = 1;
+            int height = 1;
+            Location cache;
+
+            @Override
+            public boolean hasNext() {
+                if (!isValid()) {
+                    return false;
+                }
+
+                if (cache != null) {
+                    return true;
+                }
+
+                // Check if something blocking portal
+                Block block = location.clone().add(left).add(right.clone().normalize().multiply(width)).add(new Vector(0, 1, 0).multiply(height)).getBlock();
+                if (block.getType() == Material.OBSIDIAN) {
+                    width++;
+                    height = 1;
+                }
+
+                // Past width?
+                if (width > maxWidth - 1) {
+                    return false;
+                }
+
+                // Save block
+                cache = location.clone().add(left).add(right.clone().normalize().multiply(width)).add(new Vector(0, 1, 0).multiply(height));
+                return true;
+            }
+
+            @Override
+            public Location next() {
+                if (hasNext()) {
+                    height++;
+                    if (height > maxHeight - 1) {
+                        height = 1;
+                        width++;
+                    }
+                    Location loc = cache;
+                    cache = null;
+                    return loc;
+                }
+
+                throw new NoSuchElementException();
+            }
+        };
+    }
+
+
+    /**
+     * Activate Portal using type of portal as to what is seen/heard
+     */
+    public boolean activate() {
+        if (!valid || dialed == null || location.getWorld() == null) {
+            return false;
+        }
+
+        // Set Portal Block Colour
+        location.getWorld().getBlockAt(location).setType(GLASS_MAPPINGS.get(dialed.getAddress()));
+
+        for (Iterator<Location> it = getPortalIterator(); it.hasNext(); ) {
+            Location loc = it.next();
+            Block block = loc.getBlock();
+            if (block.getType() != Material.AIR) {
+                continue;
+            }
+
+            block.setType(Material.NETHER_PORTAL);
+            Orientable bd = (Orientable) block.getBlockData();
+            if (left.getX() == 0) {
+                bd.setAxis(Axis.Z);
+            } else {
+                bd.setAxis(Axis.X);
+            }
+            block.setBlockData(bd);
+        }
+
+        // Play portal sound
+        location.getWorld().playSound(location, Sound.BLOCK_BEACON_ACTIVATE, 100, 1);
+
+        return true;
+
+    }
+
+    /**
+     * Deactivate Portal
+     */
+    public boolean deactivate() {
+        if (location.getWorld() == null) {
+            return false;
+        }
+
+        for (Iterator<Location> it = getPortalIterator(); it.hasNext(); ) {
+            Location loc = it.next();
+            Block block = loc.getBlock();
+            if (block.getType() != Material.NETHER_PORTAL) {
+                continue;
+            }
+
+            block.setType(Material.AIR);
+        }
+
+        // Set back to beacon block
+        location.getWorld().getBlockAt(location).setType(Material.BEACON);
+
+        // Play portal sound
+        location.getWorld().playSound(location, Sound.BLOCK_BEACON_DEACTIVATE, 100, 1);
+
         return true;
     }
 
@@ -305,8 +484,6 @@ public class Portal {
 
     /**
      * Destroy portal
-     *
-     * @return
      */
     public void destroy() {
         // Clean up portal
@@ -322,26 +499,6 @@ public class Portal {
                 "address=" + address + ", " +
                 "type=" + portalType + ", " +
                 "dialled=" + (dialed == null ? "[disconnected]" : dialed.getAddress()) + ")";
-    }
-
-    /**
-     * Make Portal
-     */
-    public void make() {
-        if (location.getWorld() == null) {
-            return;
-        }
-
-        BlockIterator blockIterator = new BlockIterator(
-                location.getWorld(),
-                location.toVector().add(left),
-                location.toVector().add(right),
-                0, 10);
-
-        while (blockIterator.hasNext()) {
-            Block block = blockIterator.next();
-            System.err.println("Loc: " + block.getLocation() + " - " + block.getType().toString());
-        }
     }
 
     /**

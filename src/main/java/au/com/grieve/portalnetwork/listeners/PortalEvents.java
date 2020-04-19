@@ -22,10 +22,12 @@ import au.com.grieve.portalnetwork.Portal;
 import au.com.grieve.portalnetwork.PortalManager;
 import au.com.grieve.portalnetwork.PortalNetwork;
 import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -54,10 +56,26 @@ public class PortalEvents implements Listener {
     }
 
     @EventHandler
+    public void onBlockPhysicsEvent(BlockPhysicsEvent event) {
+        System.err.println("Physics: " + event + " - " + event.getBlock().getType() + " - " + event.getBlock().getLocation());
+        // We cancel any physics events in a portal
+        if (event.getBlock().getType() != Material.NETHER_PORTAL) {
+            return;
+        }
+
+        event.setCancelled(true);
+
+//        Portal portal = PortalNetwork.getInstance().getPortalManager().find(event.getBlock().getLocation());
+//        if (portal != null) {
+//            event.setCancelled(true);
+//        }
+    }
+
+
+    @EventHandler
     public void onPlayerInteractEvent(PlayerInteractEvent event) {
         System.err.println(event);
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getClickedBlock() == null) {
-            System.err.println("Action: " + event.getAction() + " - " + event.getClickedBlock());
             return;
         }
 
@@ -70,7 +88,6 @@ public class PortalEvents implements Listener {
         event.setCancelled(true);
 
         // Player has right clicked portal so lets dial next address if any, else deactivate
-        System.err.println("Reached dial");
         if (portal.isValid()) {
             portal.dialNext();
         }
