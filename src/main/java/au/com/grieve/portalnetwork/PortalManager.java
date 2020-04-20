@@ -52,6 +52,7 @@ public class PortalManager {
 
         // Initialize all portals
         Map<Portal, Integer> dialed = new HashMap<>();
+        List<Portal> invalid = new ArrayList<>();
 
         ConfigurationSection portalsData = portalConfig.getConfigurationSection("portals");
         if (portalsData != null) {
@@ -70,6 +71,8 @@ public class PortalManager {
                 // Update valid portals, ignore invalid so we don't accidentally link them later
                 if (portalData.getBoolean("valid")) {
                     portal.update();
+                } else {
+                    invalid.add(portal);
                 }
 
                 if (portalData.contains("dialed")) {
@@ -84,6 +87,11 @@ public class PortalManager {
         // Dial Portals
         for (Map.Entry<Portal, Integer> dialedPortal : dialed.entrySet()) {
             dialedPortal.getKey().dial(dialedPortal.getValue());
+        }
+
+        // Update invalids
+        for (Portal portal : invalid) {
+            portal.update();
         }
     }
 
@@ -141,6 +149,11 @@ public class PortalManager {
             indexLocation.put(loc, portal);
         }
 
+        for (Iterator<Location> it = portal.getPortalFrameIterator(); it.hasNext(); ) {
+            Location loc = it.next();
+            indexLocation.put(loc, portal);
+        }
+
         indexLocation.put(portal.getLocation(), portal);
     }
 
@@ -153,11 +166,11 @@ public class PortalManager {
                 continue;
             }
 
-            if (network != null && !portal.getNetwork().equals(network)) {
+            if (!Objects.equals(portal.getNetwork(), network)) {
                 continue;
             }
 
-            if (address != null && !portal.getAddress().equals(address)) {
+            if (Objects.equals(portal.getAddress(), address)) {
                 continue;
             }
 
@@ -175,11 +188,7 @@ public class PortalManager {
      */
     public Portal find(@NonNull Location location, Boolean valid) {
         Portal portal = indexLocation.get(location);
-        if (valid == null) {
-            return portal;
-        }
-
-        if (valid == portal.isValid()) {
+        if (valid == null || valid == portal.isValid()) {
             return portal;
         }
 

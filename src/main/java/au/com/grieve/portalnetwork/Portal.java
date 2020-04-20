@@ -164,6 +164,10 @@ public class Portal {
 
         if (count != 3 || non_idx == -1) {
             valid = false;
+
+            // Set portal block just in case
+            location.getBlock().setType(Material.BEACON);
+
             return;
         }
 
@@ -272,6 +276,8 @@ public class Portal {
         for (int i = 1; i < 17; i++) {
             int checkAddress = (startAddress + i) % 17;
 
+            System.err.println("Check addr: " + checkAddress);
+
             if (checkAddress == address) {
                 continue;
             }
@@ -281,12 +287,15 @@ public class Portal {
                 break;
             }
 
+            System.err.println("Dialing " + checkAddress);
             if (dial(checkAddress)) {
+                System.err.println("Success");
                 return true;
             }
         }
 
         // Deactivate
+        System.err.println("Deactivate");
         dial(null);
         return true;
     }
@@ -296,10 +305,10 @@ public class Portal {
      */
     public Iterator<Location> getPortalIterator() {
 
-        int maxWidth = (int) new Vector(0, 0, 0).distance(right.clone().subtract(left));
-        int maxHeight = 5;
+        final int maxWidth = isValid() ? (int) new Vector(0, 0, 0).distance(right.clone().subtract(left)) : 0;
+        final int maxHeight = 5;
 
-        return new Iterator<Location>() {
+        return new Iterator<>() {
             int width = 1;
             int height = 1;
             Location next;
@@ -309,16 +318,26 @@ public class Portal {
                     throw new NoSuchElementException();
                 }
 
-                while (width < maxWidth) {
-                    while (height++ < maxHeight - 1) {
+                while (width <= maxWidth - 1) {
+                    while (height <= maxHeight - 1) {
                         Location check = location.clone().add(left).add(right.clone().normalize().multiply(width));
 
-                        // Something blocking us?
+                        // If this location is blocked we continue
                         if (check.clone().add(new Vector(0, 1, 0).multiply(height)).getBlock().getType() == Material.OBSIDIAN) {
                             continue;
                         }
 
-                        return check.add(new Vector(0, 1, 0).multiply(height - 1));
+                        Location ret = check.clone().add(new Vector(0, 1, 0).multiply(height));
+
+                        // Something blocking above us? We will reset next round
+                        if (check.clone().add(new Vector(0, 1, 0).multiply(height + 1)).getBlock().getType() == Material.OBSIDIAN) {
+                            height = 1;
+                            width++;
+                        } else {
+                            height++;
+                        }
+
+                        return ret;
                     }
                     width++;
                     height = 1;
@@ -358,52 +377,82 @@ public class Portal {
      */
     public Iterator<Location> getPortalFrameIterator() {
 
-        int maxWidth = (int) new Vector(0, 0, 0).distance(right.clone().subtract(left));
-        int maxHeight = 5;
+        final int maxWidth = isValid() ? (int) new Vector(0, 0, 0).distance(right.clone().subtract(left)) : 0;
+        final int maxHeight = 5;
 
         return new Iterator<Location>() {
-            int width = 1;
+            int width = 0;
             int height = 1;
-            Location cache;
+            Location next;
 
-            @Override
-            public boolean hasNext() {
+            private Location getNext() throws NoSuchElementException {
                 if (!isValid()) {
-                    return false;
+                    throw new NoSuchElementException();
                 }
 
-                if (cache != null) {
-                    return true;
-                }
+                while (width <= maxWidth) {
+                    while (height <= maxHeight) {
+                        Location check = location.clone().add(left).add(right.clone().normalize().multiply(width));
 
-                // Check if something blocking portal
-                Block block = location.clone().add(left).add(right.clone().normalize().multiply(width)).add(new Vector(0, 1, 0).multiply(height)).getBlock();
-                if (block.getType() == Material.OBSIDIAN) {
+                        // If this location is blocked we continue
+                        if (check.clone().add(new Vector(0, 1, 0).multiply(height)).getBlock().getType() == Material.OBSIDIAN) {
+                            continue;
+                        }
+
+                        // If we are on either end of the portal, then every height is part of the frame unless blocked
+                        if (width == 0 || width == maxWidth) {
+                            Location ret = check.clone().add(new Vector(0, 1, 0).multiply(height));
+                            if (check.clone().add(new Vector(0, 1, 0).multiply(height + 1)).getBlock().getType() == Material.OBSIDIAN) {
+                                height = 1;
+                                width++;
+                            } else {
+                                height++;
+                            }
+                            return ret;
+                        }
+
+                        // Max height is frame
+                        if (height == maxHeight) {
+                            Location ret = check.clone().add(new Vector(0, 1, 0).multiply(height));
+                            height = 1;
+                            width++;
+                            return ret;
+                        }
+
+                        // Something blocking above us? We don't draw frame
+                        if (check.clone().add(new Vector(0, 1, 0).multiply(height + 1)).getBlock().getType() == Material.OBSIDIAN) {
+                            break;
+                        }
+
+                        // Else
+                        height++;
+                    }
                     width++;
                     height = 1;
                 }
+                throw new NoSuchElementException();
+            }
 
-                // Past width?
-                if (width > maxWidth - 1) {
-                    return false;
+
+            @Override
+            public boolean hasNext() {
+                if (next == null) {
+                    try {
+                        next = getNext();
+                    } catch (NoSuchElementException e) {
+                        return false;
+                    }
                 }
 
-                // Save block
-                cache = location.clone().add(left).add(right.clone().normalize().multiply(width)).add(new Vector(0, 1, 0).multiply(height));
                 return true;
             }
 
             @Override
             public Location next() {
                 if (hasNext()) {
-                    height++;
-                    if (height > maxHeight - 1) {
-                        height = 1;
-                        width++;
-                    }
-                    Location loc = cache;
-                    cache = null;
-                    return loc;
+                    Location ret = next;
+                    next = null;
+                    return ret;
                 }
 
                 throw new NoSuchElementException();
@@ -423,6 +472,17 @@ public class Portal {
         // Set Portal Block Colour
         location.getWorld().getBlockAt(location).setType(GLASS_MAPPINGS.get(dialed.getAddress()));
 
+        // Draw frame
+        for (Iterator<Location> it = getPortalFrameIterator(); it.hasNext(); ) {
+            Location loc = it.next();
+            Block block = loc.getBlock();
+            if (block.getType() != Material.AIR && !GLASS_MAPPINGS.contains(block.getType())) {
+                continue;
+            }
+
+            block.setType(GLASS_MAPPINGS.get(dialed.getAddress()));
+        }
+
         for (Iterator<Location> it = getPortalIterator(); it.hasNext(); ) {
             Location loc = it.next();
             Block block = loc.getBlock();
@@ -439,6 +499,7 @@ public class Portal {
             }
             block.setBlockData(bd);
         }
+
 
         // Play portal sound
         location.getWorld().playSound(location, Sound.BLOCK_BEACON_ACTIVATE, 100, 1);
@@ -459,6 +520,17 @@ public class Portal {
             Location loc = it.next();
             Block block = loc.getBlock();
             if (block.getType() != Material.NETHER_PORTAL) {
+                continue;
+            }
+
+            block.setType(Material.AIR);
+        }
+
+        // Remove frame
+        for (Iterator<Location> it = getPortalFrameIterator(); it.hasNext(); ) {
+            Location loc = it.next();
+            Block block = loc.getBlock();
+            if (!GLASS_MAPPINGS.contains(block.getType())) {
                 continue;
             }
 

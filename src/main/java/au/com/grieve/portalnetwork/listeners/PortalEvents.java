@@ -21,13 +21,11 @@ package au.com.grieve.portalnetwork.listeners;
 import au.com.grieve.portalnetwork.Portal;
 import au.com.grieve.portalnetwork.PortalManager;
 import au.com.grieve.portalnetwork.PortalNetwork;
-import org.bukkit.GameMode;
-import org.bukkit.Material;
+import com.google.common.collect.Streams;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -45,31 +43,32 @@ public class PortalEvents implements Listener {
             return;
         }
 
-        // If the block broken is the portal block itself, we remove the portal and drop the block
-        if (portal.getLocation().equals(event.getBlock().getLocation())) {
+        // If the block broken is the portal block itself or its frame, we remove the portal
+        if (portal.getLocation().equals(event.getBlock().getLocation()) ||
+                Streams.stream(portal.getPortalFrameIterator()).anyMatch(l -> event.getBlock().getLocation().equals(l))) {
             portal.remove();
             event.setDropItems(false);
-            if (event.getPlayer().getGameMode() != GameMode.CREATIVE) {
-                event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), portal.createPortalBlock());
-            }
+//            if (event.getPlayer().getGameMode() != GameMode.CREATIVE) {
+//                event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), portal.createPortalBlock());
+//            }
         }
     }
 
-    @EventHandler
-    public void onBlockPhysicsEvent(BlockPhysicsEvent event) {
-        System.err.println("Physics: " + event + " - " + event.getBlock().getType() + " - " + event.getBlock().getLocation());
-        // We cancel any physics events in a portal
-        if (event.getBlock().getType() != Material.NETHER_PORTAL) {
-            return;
-        }
-
-        event.setCancelled(true);
-
-//        Portal portal = PortalNetwork.getInstance().getPortalManager().find(event.getBlock().getLocation());
-//        if (portal != null) {
-//            event.setCancelled(true);
+//    @EventHandler
+//    public void onBlockPhysicsEvent(BlockPhysicsEvent event) {
+//        System.err.println("Physics: " + event + " - " + event.getBlock().getType() + " - " + event.getBlock().getLocation());
+//        // We cancel any physics events in a portal
+//        if (event.getBlock().getType() != Material.NETHER_PORTAL) {
+//            return;
 //        }
-    }
+//
+//        event.setCancelled(true);
+//
+////        Portal portal = PortalNetwork.getInstance().getPortalManager().find(event.getBlock().getLocation());
+////        if (portal != null) {
+////            event.setCancelled(true);
+////        }
+//    }
 
 
     @EventHandler
@@ -82,10 +81,14 @@ public class PortalEvents implements Listener {
         PortalManager manager = PortalNetwork.getInstance().getPortalManager();
         Portal portal = manager.find(event.getClickedBlock().getLocation());
 
-        if (portal == null) {
+        System.err.println("Portal: " + portal);
+
+        if (portal == null || !event.getClickedBlock().getLocation().equals(portal.getLocation())) {
             return;
         }
         event.setCancelled(true);
+
+        System.err.println("here");
 
         // Player has right clicked portal so lets dial next address if any, else deactivate
         if (portal.isValid()) {
