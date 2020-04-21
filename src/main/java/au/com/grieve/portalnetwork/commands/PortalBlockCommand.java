@@ -21,15 +21,13 @@ package au.com.grieve.portalnetwork.commands;
 import au.com.grieve.bcf.annotations.Arg;
 import au.com.grieve.bcf.annotations.Default;
 import au.com.grieve.bcf.annotations.Description;
-import au.com.grieve.portalnetwork.Portal;
+import au.com.grieve.portalnetwork.PortalNetwork;
+import au.com.grieve.portalnetwork.exceptions.InvalidPortalException;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ComponentBuilder;
-import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataType;
 
 @Arg("portalblock|pb")
 public class PortalBlockCommand extends MainCommand {
@@ -45,24 +43,24 @@ public class PortalBlockCommand extends MainCommand {
 
     @Arg("give|g @portaltype(switch=type|t, default=NETHER) @player(required=true, default=%self, mode=online)")
     @Description("Give player a portal block")
-    public void onGive(CommandSender sender, Portal.PortalType portalType, Player player) {
-        // Create a Portal Block
-        ItemStack item = new ItemStack(Material.BEACON, 1);
-        ItemMeta meta = item.getItemMeta();
+    public void onGive(CommandSender sender, String portalType, Player player) {
+        ItemStack item = null;
+        try {
+            item = PortalNetwork.getInstance().getPortalManager().createPortalBlock(portalType);
+            player.getInventory().addItem(item);
 
-        assert meta != null;
-        meta.setDisplayName("Portal Block");
-        meta.getPersistentDataContainer().set(Portal.PortalTypeKey, PersistentDataType.STRING, portalType.toString());
-        item.setItemMeta(meta);
-        player.getInventory().addItem(Portal.CreatePortalBlock(portalType));
+            sender.spigot().sendMessage(
+                    new ComponentBuilder("Giving " + player.getName() + " a portal block.").create()
+            );
 
-        sender.spigot().sendMessage(
-                new ComponentBuilder("Giving " + player.getName() + " a " + portalType + " portal block.").create()
-        );
-
-        if (!sender.equals(player)) {
-            player.spigot().sendMessage(
-                    new ComponentBuilder("You have received a Portal Block.").create()
+            if (!sender.equals(player)) {
+                player.spigot().sendMessage(
+                        new ComponentBuilder("You have received a Portal Block.").create()
+                );
+            }
+        } catch (InvalidPortalException e) {
+            sender.spigot().sendMessage(
+                    new ComponentBuilder("Unable to create block.").color(ChatColor.RED).create()
             );
         }
     }

@@ -16,15 +16,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package au.com.grieve.portalnetwork;
+package au.com.grieve.portalnetwork.portals;
 
+import au.com.grieve.portalnetwork.PortalManager;
+import au.com.grieve.portalnetwork.PortalNetwork;
 import lombok.Getter;
-import org.bukkit.*;
-import org.bukkit.block.Block;
-import org.bukkit.block.data.Orientable;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.Tag;
+import org.bukkit.util.BlockVector;
 import org.bukkit.util.Vector;
 
 import java.util.Arrays;
@@ -33,7 +34,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 
-public class Portal {
+public class BasePortal {
 
     static public final NamespacedKey PortalTypeKey = new NamespacedKey(PortalNetwork.getInstance(), "portal_type");
 
@@ -41,56 +42,11 @@ public class Portal {
     @Getter
     final PortalManager manager;
 
-    // Type of Portal
-    @Getter
-    final PortalType portalType;
-
-
     // Location of Portal Block
     @Getter
     final Location location;
 
-    // Size Vectors
-    @Getter
-    Vector left, right;
-
-    // Network (16^2)
-    @Getter
-    Integer network;
-
-    // Address (16)
-    @Getter
-    Integer address;
-
-    // Dialed
-    @Getter
-    Portal dialed;
-
-    @Getter
-    boolean valid = false;
-
-    public Portal(PortalManager manager, Location location, PortalType portalType) {
-        this.manager = manager;
-        this.location = location;
-        this.portalType = portalType;
-    }
-
-    /**
-     * Create portal block item
-     */
-    public static ItemStack CreatePortalBlock(PortalType portalType) {
-        // Create a Portal Block
-        ItemStack item = new ItemStack(Material.BEACON, 1);
-        ItemMeta meta = item.getItemMeta();
-
-        assert meta != null;
-        meta.setDisplayName("Portal Block");
-        meta.getPersistentDataContainer().set(Portal.PortalTypeKey, PersistentDataType.STRING, portalType.toString());
-        item.setItemMeta(meta);
-        return item;
-    }
-
-    private static final List<Material> WOOL_MAPPINGS = List.of(
+    static final List<Material> WOOL_MAPPINGS = List.of(
             Material.WHITE_WOOL,
             Material.ORANGE_WOOL,
             Material.MAGENTA_WOOL,
@@ -109,7 +65,14 @@ public class Portal {
             Material.BLACK_WOOL
     );
 
-    private static final List<Material> GLASS_MAPPINGS = List.of(
+    // Network (16^2)
+    @Getter
+    Integer network;
+
+    // Address (16)
+    @Getter
+    Integer address;
+    static final List<Material> GLASS_MAPPINGS = List.of(
             Material.WHITE_STAINED_GLASS,
             Material.ORANGE_STAINED_GLASS,
             Material.MAGENTA_STAINED_GLASS,
@@ -128,25 +91,38 @@ public class Portal {
             Material.BLACK_STAINED_GLASS
     );
 
+    @Getter
+    boolean valid = false;
+    // Size Vectors
+    @Getter
+    BlockVector left, right;
+    // Dialed
+    @Getter
+    BasePortal dialledPortal;
+
+    public BasePortal(PortalManager manager, Location location) {
+        this.manager = manager;
+        this.location = location;
+        update();
+    }
+
     /**
      * Update Portal
-     * <p>
-     * Update portal settings. Returns true if any changes
      */
     public void update() {
         // Check that wool only appears on 3 sides
-        List<Block> blocks = Arrays.asList(
-                location.clone().add(1, 0, 0).getBlock(),
-                location.clone().add(0, 0, 1).getBlock(),
-                location.clone().add(-1, 0, 0).getBlock(),
-                location.clone().add(0, 0, -1).getBlock()
+        List<Location> blocks = Arrays.asList(
+                location.clone().add(1, 0, 0),
+                location.clone().add(0, 0, 1),
+                location.clone().add(-1, 0, 0),
+                location.clone().add(0, 0, -1)
         );
 
         int count = 0;
         int non_idx = -1;
 
         for (int idx = 0; idx < blocks.size(); idx++) {
-            if (Tag.WOOL.isTagged(blocks.get(idx).getType())) {
+            if (Tag.WOOL.isTagged(blocks.get(idx).getBlock().getType())) {
                 count += 1;
             } else {
                 non_idx = idx;
@@ -159,7 +135,7 @@ public class Portal {
                 valid = false;
             }
 
-            // Set portal block just in case
+            // Set portal block just in case @todo
             location.getBlock().setType(Material.BEACON);
 
             return;
@@ -168,34 +144,51 @@ public class Portal {
         valid = true;
 
         // Determine address block. It should be opposite non_idx
-        Block address_block = blocks.get((non_idx + 2) % 4);
-        address = WOOL_MAPPINGS.indexOf(address_block.getType());
+        Location address_block = blocks.get((non_idx + 2) % 4);
+        address = WOOL_MAPPINGS.indexOf(address_block.getBlock().getType());
+        location.setDirection(location.toVector().subtract(address_block.toVector()));
 
         // Net block is previous and next to non_idx
-        Block left_block = blocks.get((non_idx - 1) % 4);
-        Block right_block = blocks.get((non_idx + 1) % 4);
-        network = (WOOL_MAPPINGS.indexOf(left_block.getType()) << 4) + WOOL_MAPPINGS.indexOf(right_block.getType());
+        Location left_block = blocks.get((non_idx - 1) % 4);
+        Location right_block = blocks.get((non_idx + 1) % 4);
+        network = (WOOL_MAPPINGS.indexOf(left_block.getBlock().getType()) << 4) + WOOL_MAPPINGS.indexOf(right_block.getBlock().getType());
 
         // Get Width of portal by counting obsidian blocks to a max of 10 each direction
-        Vector left_unit_vector = left_block.getLocation().toVector().subtract(location.toVector()).normalize();
-        left = left_unit_vector.clone();
+        Vector left_unit_vector = left_block.toVector().subtract(location.toVector()).normalize();
+        left = left_unit_vector.toBlockVector();
         for (int i = 0; i < 10; i++) {
             Vector test_left = left.clone().add(left_unit_vector);
             if (location.clone().add(test_left).getBlock().getType() != Material.OBSIDIAN) {
                 break;
             }
-            left = test_left;
+            left = test_left.toBlockVector();
         }
 
-        Vector right_unit_vector = right_block.getLocation().toVector().subtract(location.toVector()).normalize();
-        right = right_unit_vector.clone();
+        Vector right_unit_vector = right_block.toVector().subtract(location.toVector()).normalize();
+        right = right_unit_vector.toBlockVector();
         for (int i = 0; i < 10; i++) {
             Vector test_right = right.clone().add(right_unit_vector);
             if (location.clone().add(test_right).getBlock().getType() != Material.OBSIDIAN) {
                 break;
             }
-            right = test_right;
+            right = test_right.toBlockVector();
         }
+    }
+
+    // Return portal width
+    public int getWidth() {
+        if (!valid) {
+            return 1;
+        }
+        return (int) left.distance(right);
+    }
+
+    // Return Portal height
+    public int getHeight() {
+        if (!valid) {
+            return 0;
+        }
+        return getWidth() + 1;
     }
 
     public boolean dial(Integer address) {
@@ -207,8 +200,7 @@ public class Portal {
             return false;
         }
 
-        Portal portal = manager.find(network, address);
-        System.err.println("Dial portal: " + portal);
+        BasePortal portal = manager.find(network, address);
         if (portal == null) {
             return false;
         }
@@ -216,20 +208,18 @@ public class Portal {
         return dial(portal, null);
     }
 
-    public boolean dial(Portal portal, Portal from) {
-        // Undialing
+    public boolean dial(BasePortal portal, BasePortal from) {
         if (portal == null) {
-            if (dialed == null) {
-                // Already undialed
+            if (dialledPortal == null) {
                 return true;
             }
 
             // If we are not connected to from we will get our dialed to undial
-            if (from != dialed) {
-                dialed.dial(null, this);
+            if (from != dialledPortal) {
+                dialledPortal.dial(null, this);
             }
 
-            dialed = null;
+            dialledPortal = null;
             deactivate();
             return true;
         }
@@ -237,13 +227,13 @@ public class Portal {
         // Dialing
 
         // Already Dialed to portal?
-        if (dialed == portal) {
+        if (dialledPortal == portal) {
             return true;
         }
 
         // If we are not connected to from we will get our dialed to undial
-        if (dialed != null && from != dialed) {
-            dialed.dial(null, this);
+        if (dialledPortal != null && from != dialledPortal) {
+            dialledPortal.dial(null, this);
         }
 
         // If portal is not from we will get it to dial us
@@ -251,8 +241,8 @@ public class Portal {
             portal.dial(this, this);
         }
 
-        dialed = portal;
-        manager.save();
+        dialledPortal = portal;
+//        manager.save();
         activate();
 
         return true;
@@ -261,17 +251,16 @@ public class Portal {
     /**
      * Dial next available address, otherwise we deactivate.
      */
+    @SuppressWarnings("UnusedReturnValue")
     public boolean dialNext() {
         if (!valid) {
             return false;
         }
 
-        int startAddress = dialed == null ? 0 : dialed.getAddress();
+        int startAddress = dialledPortal == null ? 0 : dialledPortal.getAddress();
 
         for (int i = 1; i < 17; i++) {
             int checkAddress = (startAddress + i) % 17;
-
-            System.err.println("Check addr: " + checkAddress);
 
             if (checkAddress == address) {
                 continue;
@@ -314,7 +303,7 @@ public class Portal {
                 }
 
                 while (width <= maxWidth - 1) {
-                    while (height <= maxHeight - 1) {
+                    if (height <= maxHeight - 1) {
                         Location check = location.clone().add(left).add(right.clone().normalize().multiply(width));
 
                         // If this location is blocked we continue
@@ -384,7 +373,7 @@ public class Portal {
                     throw new NoSuchElementException();
                 }
 
-                while (width <= maxWidth) {
+                if (width <= maxWidth) {
                     Location ret = location.clone().add(left).add(right.clone().normalize().multiply(width));
                     width++;
                     return ret;
@@ -392,7 +381,7 @@ public class Portal {
 
                 // Address block.
                 if (width == maxWidth + 1) {
-                    Location ret = location.clone().add(getDirection());
+                    Location ret = location.clone().add(location.getDirection());
                     width++;
                     return ret;
                 }
@@ -425,26 +414,6 @@ public class Portal {
                 throw new NoSuchElementException();
             }
         };
-    }
-
-    /**
-     * Return our direction
-     */
-    public Vector getDirection() {
-        if (!isValid()) {
-            return null;
-        }
-
-        Vector direction = right.clone().normalize();
-        // rotate it 90 degress clockwise
-        double currentX = direction.getX();
-        double currentZ = direction.getZ();
-        double cosine = Math.cos(Math.toRadians(90));
-        double sine = Math.sin(Math.toRadians(90));
-        direction = new Vector((cosine * currentX - sine * currentZ), direction.getY(), (sine * currentX + cosine * currentZ));
-
-        System.err.println("Direction: " + direction);
-        return direction;
     }
 
     /**
@@ -539,101 +508,24 @@ public class Portal {
     /**
      * Activate Portal using type of portal as to what is seen/heard
      */
-    public boolean activate() {
-        if (!valid || dialed == null || location.getWorld() == null) {
-            return false;
-        }
-
-        // Set Portal Block Colour
-        location.getWorld().getBlockAt(location).setType(GLASS_MAPPINGS.get(dialed.getAddress()));
-
-        // Draw frame
-        for (Iterator<Location> it = getPortalFrameIterator(); it.hasNext(); ) {
-            Location loc = it.next();
-            Block block = loc.getBlock();
-            if (block.getType() != Material.AIR && !GLASS_MAPPINGS.contains(block.getType())) {
-                continue;
-            }
-
-            block.setType(GLASS_MAPPINGS.get(dialed.getAddress()));
-        }
-
-        for (Iterator<Location> it = getPortalIterator(); it.hasNext(); ) {
-            Location loc = it.next();
-            Block block = loc.getBlock();
-            if (block.getType() != Material.AIR) {
-                continue;
-            }
-
-            block.setType(Material.NETHER_PORTAL);
-            Orientable bd = (Orientable) block.getBlockData();
-            if (left.getX() == 0) {
-                bd.setAxis(Axis.Z);
-            } else {
-                bd.setAxis(Axis.X);
-            }
-            block.setBlockData(bd);
-        }
-
-
-        // Play portal sound
-        location.getWorld().playSound(location, Sound.BLOCK_BEACON_ACTIVATE, 100, 1);
-
-        return true;
-
+    public void activate() {
+        throw new UnsupportedOperationException();
     }
 
     /**
      * Deactivate Portal
      */
-    public boolean deactivate() {
-        if (location.getWorld() == null) {
-            return false;
-        }
-
-        for (Iterator<Location> it = getPortalIterator(); it.hasNext(); ) {
-            Location loc = it.next();
-            Block block = loc.getBlock();
-            if (block.getType() != Material.NETHER_PORTAL) {
-                continue;
-            }
-
-            block.setType(Material.AIR);
-        }
-
-        // Remove frame
-        for (Iterator<Location> it = getPortalFrameIterator(); it.hasNext(); ) {
-            Location loc = it.next();
-            Block block = loc.getBlock();
-            if (!GLASS_MAPPINGS.contains(block.getType())) {
-                continue;
-            }
-
-            block.setType(Material.AIR);
-        }
-
-        // Set back to beacon block
-        location.getWorld().getBlockAt(location).setType(Material.BEACON);
-
-        // Play portal sound
-        location.getWorld().playSound(location, Sound.BLOCK_BEACON_DEACTIVATE, 100, 1);
-
-        return true;
+    public void deactivate() {
+        throw new UnsupportedOperationException();
     }
 
     /**
      * Remove portal cleanly
      */
     public void remove() {
+        deactivate();
+        location.getBlock().setType(Material.AIR);
         manager.removePortal(this);
-        destroy();
-    }
-
-    /**
-     * Destroy portal
-     */
-    public void destroy() {
-        // Clean up portal
     }
 
     @Override
@@ -644,23 +536,6 @@ public class Portal {
                 "right=" + right + ", " +
                 "network=" + network + ", " +
                 "address=" + address + ", " +
-                "type=" + portalType + ", " +
-                "dialled=" + (dialed == null ? "[disconnected]" : dialed.getAddress()) + ")";
+                "dialled=" + (dialledPortal == null ? "[disconnected]" : dialledPortal.getAddress()) + ")";
     }
-
-    /**
-     * Create PortalBlock
-     */
-    public ItemStack createPortalBlock() {
-        return CreatePortalBlock(portalType);
-    }
-
-    // Portal Types
-    public enum PortalType {
-        NETHER,
-        END,
-        HIDDEN,
-    }
-
-
 }

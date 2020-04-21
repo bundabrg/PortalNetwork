@@ -18,9 +18,9 @@
 
 package au.com.grieve.portalnetwork.listeners;
 
-import au.com.grieve.portalnetwork.Portal;
 import au.com.grieve.portalnetwork.PortalManager;
 import au.com.grieve.portalnetwork.PortalNetwork;
+import au.com.grieve.portalnetwork.portals.BasePortal;
 import com.google.common.collect.Streams;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -48,7 +48,7 @@ public class PortalEvents implements Listener {
     @EventHandler
     public void onBlockBreakEvent(BlockBreakEvent event) {
         PortalManager manager = PortalNetwork.getInstance().getPortalManager();
-        Portal portal = manager.find(event.getBlock().getLocation());
+        BasePortal portal = manager.find(event.getBlock().getLocation());
 
         if (portal == null) {
             return;
@@ -104,7 +104,7 @@ public class PortalEvents implements Listener {
         }
 
         PortalManager manager = PortalNetwork.getInstance().getPortalManager();
-        Portal portal = manager.find(event.getClickedBlock().getLocation());
+        BasePortal portal = manager.find(event.getClickedBlock().getLocation());
 
         // If its not the portal base we are not interested
         if (portal == null || event.getClickedBlock().getLocation().equals(portal.getLocation()) || !Streams.stream(portal.getPortalBaseIterator()).anyMatch(l -> event.getClickedBlock().getLocation().equals(l))) {
@@ -144,10 +144,10 @@ public class PortalEvents implements Listener {
         }
 
         PortalManager manager = PortalNetwork.getInstance().getPortalManager();
-        Portal portal = manager.find(event.getTo());
+        BasePortal portal = manager.find(event.getTo());
         Player player = event.getPlayer();
 
-        if (portal == null || portal.getDialed() == null) {
+        if (portal == null || portal.getDialledPortal() == null) {
             ignore.remove(player);
             return;
         }
@@ -156,7 +156,7 @@ public class PortalEvents implements Listener {
 
         Location fromPortalLocation = portal.getLocation().clone().setDirection(portal.getDirection()).add(new Vector(0.5, 0, 0.5));
         ;
-        Location toPortalLocation = portal.getDialed().getLocation().clone().setDirection(portal.getDialed().getDirection()).add(new Vector(0.5, 0, 0.5));
+        Location toPortalLocation = portal.getDialledPortal().getLocation().clone().setDirection(portal.getDialledPortal().getDirection()).add(new Vector(0.5, 0, 0.5));
         float yawDiff = fromPortalLocation.getYaw() - toPortalLocation.getYaw();
 
         System.err.println("fromPortal: " + fromPortalLocation);
@@ -198,7 +198,7 @@ public class PortalEvents implements Listener {
         }
 
         PortalManager manager = PortalNetwork.getInstance().getPortalManager();
-        Portal portal = manager.find(event.getFrom(), 1);
+        BasePortal portal = manager.find(event.getFrom(), 1);
 
         if (portal == null) {
             System.err.println("No portal found");
@@ -206,7 +206,7 @@ public class PortalEvents implements Listener {
         }
 
         // Make sure portal is dialled
-        if (portal.getDialed() == null) {
+        if (portal.getDialledPortal() == null) {
             return;
         }
 
@@ -220,7 +220,7 @@ public class PortalEvents implements Listener {
 
         // Check if block placed is anywhere in a portal
         PortalManager manager = PortalNetwork.getInstance().getPortalManager();
-        Portal portal = manager.find(event.getBlock().getLocation());
+        BasePortal portal = manager.find(event.getBlock().getLocation());
         if (portal != null) {
             portal.dial(null);
             portal.update();
@@ -230,8 +230,8 @@ public class PortalEvents implements Listener {
         ItemMeta meta = event.getItemInHand().getItemMeta();
         if (meta != null) {
             meta.getPersistentDataContainer();
-            if (meta.getPersistentDataContainer().has(Portal.PortalTypeKey, PersistentDataType.STRING)) {
-                Portal.PortalType portalType = Portal.PortalType.valueOf(meta.getPersistentDataContainer().get(Portal.PortalTypeKey, PersistentDataType.STRING));
+            if (meta.getPersistentDataContainer().has(BasePortal.PortalTypeKey, PersistentDataType.STRING)) {
+                BasePortal.PortalType portalType = BasePortal.PortalType.valueOf(meta.getPersistentDataContainer().get(BasePortal.PortalTypeKey, PersistentDataType.STRING));
                 PortalNetwork.getInstance().getPortalManager().createPortal(event.getBlockPlaced().getLocation(), portalType);
             }
         }

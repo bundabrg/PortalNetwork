@@ -23,9 +23,8 @@ import au.com.grieve.bcf.api.ParserContext;
 import au.com.grieve.bcf.api.ParserNode;
 import au.com.grieve.bcf.api.exceptions.ParserInvalidResultException;
 import au.com.grieve.bcf.api.parsers.SingleParser;
-import au.com.grieve.portalnetwork.Portal;
+import au.com.grieve.portalnetwork.PortalNetwork;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,19 +38,17 @@ public class PortalTypeParser extends SingleParser {
     }
 
     @Override
-    protected Object result() throws ParserInvalidResultException {
-        try {
-            return Portal.PortalType.valueOf(getInput().toUpperCase());
-        } catch (IllegalArgumentException e) {
-            throw new ParserInvalidResultException("Invalid Portal Type: " + getInput());
+    protected String result() throws ParserInvalidResultException {
+        if (PortalNetwork.getInstance().getPortalManager().getPortalClasses().containsKey(getInput().toLowerCase())) {
+            return getInput().toLowerCase();
         }
+        throw new ParserInvalidResultException("Invalid Portal Type: " + getInput());
     }
 
     @Override
     protected List<String> complete() {
-        return Arrays.stream(Portal.PortalType.values())
-                .map(Portal.PortalType::toString)
-                .filter(p -> p.startsWith(getInput().toUpperCase()))
+        return PortalNetwork.getInstance().getPortalManager().getPortalClasses().keySet().stream()
+                .filter(p -> p.startsWith(getInput().toLowerCase()))
                 .limit(20)
                 .collect(Collectors.toList());
     }

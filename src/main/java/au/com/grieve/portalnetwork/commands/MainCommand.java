@@ -23,8 +23,8 @@ import au.com.grieve.bcf.annotations.Command;
 import au.com.grieve.bcf.annotations.Default;
 import au.com.grieve.bcf.annotations.Error;
 import au.com.grieve.bcf.api.BaseCommand;
-import au.com.grieve.portalnetwork.Portal;
 import au.com.grieve.portalnetwork.PortalNetwork;
+import au.com.grieve.portalnetwork.portals.BasePortal;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -72,7 +72,7 @@ public class MainCommand extends BaseCommand {
                 new ComponentBuilder("========= [ List of Portals ] =========").color(ChatColor.AQUA).create()
         );
 
-        for (Portal portal : PortalNetwork.getInstance().getPortalManager().getPortals()) {
+        for (BasePortal portal : PortalNetwork.getInstance().getPortalManager().getPortals()) {
             @SuppressWarnings("ConstantConditions") ComponentBuilder msg = new ComponentBuilder(
                     "[" + portal.getLocation().getX() + ";" +
                             portal.getLocation().getY() + ";" +
@@ -92,10 +92,10 @@ public class MainCommand extends BaseCommand {
                 msg.append("[invalid]").color(ChatColor.RED);
             } else {
                 msg.append(portal.getNetwork() + ":" + portal.getAddress() + " ").color(ChatColor.YELLOW);
-                if (portal.getDialed() == null) {
+                if (portal.getDialledPortal() == null) {
                     msg.append("[disconnected]").color(ChatColor.RED);
                 } else {
-                    msg.append("connected:" + portal.getDialed().getAddress());
+                    msg.append("connected:" + portal.getDialledPortal().getAddress());
                 }
             }
 
