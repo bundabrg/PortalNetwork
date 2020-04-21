@@ -20,11 +20,18 @@ package au.com.grieve.portalnetwork.portals;
 
 import au.com.grieve.portalnetwork.PortalManager;
 import au.com.grieve.portalnetwork.PortalNetwork;
+import com.google.common.collect.Streams;
 import lombok.Getter;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Tag;
+import org.bukkit.entity.Player;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.util.BlockVector;
 import org.bukkit.util.Vector;
 
@@ -43,7 +50,6 @@ public class BasePortal {
     final PortalManager manager;
 
     // Location of Portal Block
-    @Getter
     final Location location;
 
     static final List<Material> WOOL_MAPPINGS = List.of(
@@ -106,6 +112,10 @@ public class BasePortal {
         update();
     }
 
+    public Location getLocation() {
+        return location.clone();
+    }
+
     /**
      * Update Portal
      */
@@ -134,9 +144,6 @@ public class BasePortal {
                 dial(null);
                 valid = false;
             }
-
-            // Set portal block just in case @todo
-            location.getBlock().setType(Material.BEACON);
 
             return;
         }
@@ -370,6 +377,11 @@ public class BasePortal {
 
             private Location getNext() throws NoSuchElementException {
                 if (!isValid()) {
+                    // A non-valid portal just returns its own location
+                    if (width == 0) {
+                        width++;
+                        return location;
+                    }
                     throw new NoSuchElementException();
                 }
 
@@ -517,6 +529,90 @@ public class BasePortal {
      */
     public void deactivate() {
         throw new UnsupportedOperationException();
+    }
+
+    public void handlePlayerInteract(PlayerInteractEvent event) {
+        // If its not our base we are not interested
+        //noinspection UnstableApiUsage
+        if (!Streams.stream(getPortalFrameIterator()).anyMatch(l -> event.getClickedBlock().getLocation().equals(l))) {
+            return;
+        }
+
+        event.setCancelled(true);
+
+        if (event.getHand() != EquipmentSlot.HAND) {
+            return;
+        }
+
+        // Player has right clicked portal so lets dial next address if any, else deactivate
+        if (valid) {
+            dialNext();
+        }
+    }
+
+    public void handlePlayerMove(PlayerMoveEvent event) {
+        Player player = event.getPlayer();
+
+        if (getDialledPortal() == null || event.getTo() == null) {
+            return;
+        }
+
+        // teleport to relative portal position
+
+        Location fromPortalLocation = getLocation().add(new Vector(0.5, 0, 0.5));
+        Location toPortalLocation = dialledPortal.getLocation().add(new Vector(0.5, 0, 0.5));
+        float yawDiff = fromPortalLocation.getYaw() - toPortalLocation.getYaw();
+
+        System.err.println("fromPortal: " + fromPortalLocation);
+        System.err.println("toPortal: " + toPortalLocation);
+
+
+        Vector playerRelativePosition = event.getTo().toVector().subtract(fromPortalLocation.toVector());
+        System.err.println("playerRelativePositionToFrom: " + playerRelativePosition);
+        playerRelativePosition.rotateAroundY(Math.toRadians(yawDiff));
+
+        Location destination = toPortalLocation.clone().add(playerRelativePosition);
+        System.err.println("playerRelativePositionToTo: " + playerRelativePosition);
+        System.err.println("playerCurr: " + player.getLocation());
+        System.err.println("playerDest: " + destination);
+
+        destination.setYaw(player.getLocation().getYaw() - yawDiff);
+        destination.setPitch(player.getLocation().getPitch());
+
+        Vector oldVelocity = player.getVelocity();
+        Vector newVelocity = oldVelocity.clone().rotateAroundY(Math.toRadians(yawDiff));
+
+        System.err.println("oldVelocity: " + oldVelocity);
+        System.err.println("newVelocity: " + newVelocity);
+
+        player.setVelocity(newVelocity);
+        event.setTo(destination);
+    }
+
+    public void handleBlockBreak(BlockBreakEvent event) {
+        // If it's the frame we cancel drops
+        //noinspection UnstableApiUsage
+        if (Streams.stream(getPortalFrameIterator()).anyMatch(l -> event.getBlock().getLocation().equals(l))) {
+            event.setDropItems(false);
+        }
+
+
+        dial(null);
+
+        System.err.println("HereE - " + location.toVector().toBlockVector() + " - " + event.getBlock().getLocation().toVector().toBlockVector());
+        if (event.getBlock().getLocation().toVector().toBlockVector().equals(location.toVector().toBlockVector())) {
+            System.err.println("Remove");
+            event.setDropItems(false);
+            remove();
+        }
+
+
+        update();
+    }
+
+    public void handleBlockPlace(BlockPlaceEvent event) {
+        dial(null);
+        update();
     }
 
     /**

@@ -89,7 +89,7 @@ public final class PortalNetwork extends JavaPlugin {
         reloadConfig();
 
         // Reload Portals
-        portalManager.reload();
+        //portalManager.reload();
     }
 
 }
