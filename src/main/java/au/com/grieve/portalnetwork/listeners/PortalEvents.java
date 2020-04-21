@@ -22,17 +22,28 @@ import au.com.grieve.portalnetwork.Portal;
 import au.com.grieve.portalnetwork.PortalManager;
 import au.com.grieve.portalnetwork.PortalNetwork;
 import com.google.common.collect.Streams;
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.*;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.BlockVector;
+import org.bukkit.util.Vector;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class PortalEvents implements Listener {
+
+    Map<Player, BlockVector> ignore = new HashMap<>();
 
     @EventHandler
     public void onBlockBreakEvent(BlockBreakEvent event) {
@@ -43,11 +54,25 @@ public class PortalEvents implements Listener {
             return;
         }
 
-        // If the block broken is the portal block itself or its frame, we remove the portal
-        if (portal.getLocation().equals(event.getBlock().getLocation()) ||
-                Streams.stream(portal.getPortalFrameIterator()).anyMatch(l -> event.getBlock().getLocation().equals(l))) {
-            portal.remove();
+        // If it's the frame we cancel drops
+        //noinspection UnstableApiUsage
+        if (Streams.stream(portal.getPortalFrameIterator()).anyMatch(l -> event.getBlock().getLocation().equals(l))) {
             event.setDropItems(false);
+        }
+
+        portal.dial(null);
+        new BukkitRunnable() {
+
+            @Override
+            public void run() {
+                portal.update();
+            }
+        }.runTaskLater(PortalNetwork.getInstance(), 1);
+
+        // If it was the portal block we remove the portal as well
+        if (portal.getLocation().equals(event.getBlock().getLocation())) {
+            event.setDropItems(false);
+            portal.remove();
 //            if (event.getPlayer().getGameMode() != GameMode.CREATIVE) {
 //                event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), portal.createPortalBlock());
 //            }
@@ -81,14 +106,16 @@ public class PortalEvents implements Listener {
         PortalManager manager = PortalNetwork.getInstance().getPortalManager();
         Portal portal = manager.find(event.getClickedBlock().getLocation());
 
-        System.err.println("Portal: " + portal);
-
-        if (portal == null || !event.getClickedBlock().getLocation().equals(portal.getLocation())) {
+        // If its not the portal base we are not interested
+        if (portal == null || event.getClickedBlock().getLocation().equals(portal.getLocation()) || !Streams.stream(portal.getPortalBaseIterator()).anyMatch(l -> event.getClickedBlock().getLocation().equals(l))) {
             return;
         }
+
         event.setCancelled(true);
 
-        System.err.println("here");
+        if (event.getHand() != EquipmentSlot.HAND) {
+            return;
+        }
 
         // Player has right clicked portal so lets dial next address if any, else deactivate
         if (portal.isValid()) {
@@ -96,24 +123,118 @@ public class PortalEvents implements Listener {
         }
     }
 
-    /**
-     * Check if player is trying to place a portal block
-     */
+    @EventHandler
+    public void onPlayerQuitEvent(PlayerQuitEvent event) {
+        ignore.remove(event.getPlayer());
+    }
+
+    @EventHandler
+    public void onPlayerMoveEvent(PlayerMoveEvent event) {
+        // If ignored player has moved enough we stop ignoring
+        if (ignore.containsKey(event.getPlayer())) {
+            if (ignore.get(event.getPlayer()).distance(event.getPlayer().getLocation().toVector()) > 2) {
+                ignore.remove(event.getPlayer());
+            }
+            return;
+        }
+
+        // If player has not moved, ignore
+        if (event.getFrom().toVector().toBlockVector() == event.getTo().toVector().toBlockVector()) {
+            return;
+        }
+
+        PortalManager manager = PortalNetwork.getInstance().getPortalManager();
+        Portal portal = manager.find(event.getTo());
+        Player player = event.getPlayer();
+
+        if (portal == null || portal.getDialed() == null) {
+            ignore.remove(player);
+            return;
+        }
+
+        // teleport to relative portal position
+
+        Location fromPortalLocation = portal.getLocation().clone().setDirection(portal.getDirection()).add(new Vector(0.5, 0, 0.5));
+        ;
+        Location toPortalLocation = portal.getDialed().getLocation().clone().setDirection(portal.getDialed().getDirection()).add(new Vector(0.5, 0, 0.5));
+        float yawDiff = fromPortalLocation.getYaw() - toPortalLocation.getYaw();
+
+        System.err.println("fromPortal: " + fromPortalLocation);
+        System.err.println("toPortal: " + toPortalLocation);
+
+
+        Vector playerRelativePosition = event.getTo().toVector().subtract(fromPortalLocation.toVector());
+        System.err.println("playerRelativePositionToFrom: " + playerRelativePosition);
+        playerRelativePosition.rotateAroundY(Math.toRadians(yawDiff));
+
+        Location destination = toPortalLocation.clone().add(playerRelativePosition);
+        System.err.println("playerRelativePositionToTo: " + playerRelativePosition);
+        System.err.println("playerCurr: " + player.getLocation());
+        System.err.println("playerDest: " + destination);
+
+        destination.setYaw(player.getLocation().getYaw() - yawDiff);
+        destination.setPitch(player.getLocation().getPitch());
+
+        Vector oldVelocity = player.getVelocity();
+        Vector newVelocity = oldVelocity.clone().rotateAroundY(Math.toRadians(yawDiff));
+
+        System.err.println("oldVelocity: " + oldVelocity);
+        System.err.println("newVelocity: " + newVelocity);
+
+        ignore.put(player, destination.toVector().toBlockVector());
+        player.setVelocity(newVelocity);
+        event.setTo(destination);
+        //event.getPlayer().teleport(destination);
+    }
+
+    @EventHandler
+    public void onPlayerPortalEvent(PlayerPortalEvent event) {
+
+        // Only interested if its one of the 3 portal types
+        if (event.getCause() != PlayerTeleportEvent.TeleportCause.NETHER_PORTAL &&
+                event.getCause() != PlayerTeleportEvent.TeleportCause.END_GATEWAY &&
+                event.getCause() != PlayerTeleportEvent.TeleportCause.END_PORTAL) {
+            return;
+        }
+
+        PortalManager manager = PortalNetwork.getInstance().getPortalManager();
+        Portal portal = manager.find(event.getFrom(), 1);
+
+        if (portal == null) {
+            System.err.println("No portal found");
+            return;
+        }
+
+        // Make sure portal is dialled
+        if (portal.getDialed() == null) {
+            return;
+        }
+
+        // Cancel event
+        event.setCancelled(true);
+    }
+
+
     @EventHandler
     public void onBlockPlaceEvent(BlockPlaceEvent event) {
+
+        // Check if block placed is anywhere in a portal
+        PortalManager manager = PortalNetwork.getInstance().getPortalManager();
+        Portal portal = manager.find(event.getBlock().getLocation());
+        if (portal != null) {
+            portal.dial(null);
+            portal.update();
+        }
+
+        // Check if player is trying to place a portal block
         ItemMeta meta = event.getItemInHand().getItemMeta();
-        if (meta == null) {
-            return;
+        if (meta != null) {
+            meta.getPersistentDataContainer();
+            if (meta.getPersistentDataContainer().has(Portal.PortalTypeKey, PersistentDataType.STRING)) {
+                Portal.PortalType portalType = Portal.PortalType.valueOf(meta.getPersistentDataContainer().get(Portal.PortalTypeKey, PersistentDataType.STRING));
+                PortalNetwork.getInstance().getPortalManager().createPortal(event.getBlockPlaced().getLocation(), portalType);
+            }
         }
-
-        if (!meta.getPersistentDataContainer().has(Portal.PortalTypeKey, PersistentDataType.STRING)) {
-            return;
-        }
-
-        // It's a portal block so lookup type and try to create it
-        Portal.PortalType portalType = Portal.PortalType.valueOf(meta.getPersistentDataContainer().get(Portal.PortalTypeKey, PersistentDataType.STRING));
-
-        PortalNetwork.getInstance().getPortalManager().createPortal(event.getBlockPlaced().getLocation(), portalType);
     }
 
 }

@@ -75,15 +75,6 @@ public class Portal {
         this.portalType = portalType;
     }
 
-//    public Portal(Location location, Vector left, Vector right, Integer network, Integer address, PortalType type) {
-//        this.location = location;
-//        this.left = left;
-//        this.right = right;
-//        this.network = network;
-//        this.address = address;
-//        this.portalType = type;
-//    }
-
     /**
      * Create portal block item
      */
@@ -163,7 +154,10 @@ public class Portal {
         }
 
         if (count != 3 || non_idx == -1) {
-            valid = false;
+            if (valid) {
+                dial(null);
+                valid = false;
+            }
 
             // Set portal block just in case
             location.getBlock().setType(Material.BEACON);
@@ -214,6 +208,7 @@ public class Portal {
         }
 
         Portal portal = manager.find(network, address);
+        System.err.println("Dial portal: " + portal);
         if (portal == null) {
             return false;
         }
@@ -324,7 +319,7 @@ public class Portal {
 
                         // If this location is blocked we continue
                         if (check.clone().add(new Vector(0, 1, 0).multiply(height)).getBlock().getType() == Material.OBSIDIAN) {
-                            continue;
+                            break;
                         }
 
                         Location ret = check.clone().add(new Vector(0, 1, 0).multiply(height));
@@ -373,6 +368,86 @@ public class Portal {
     }
 
     /**
+     * Return an iterator over the portal base
+     */
+    public Iterator<Location> getPortalBaseIterator() {
+
+        final int maxWidth = isValid() ? (int) new Vector(0, 0, 0).distance(right.clone().subtract(left)) : 0;
+        final int maxHeight = 5;
+
+        return new Iterator<>() {
+            int width = 0;
+            Location next;
+
+            private Location getNext() throws NoSuchElementException {
+                if (!isValid()) {
+                    throw new NoSuchElementException();
+                }
+
+                while (width <= maxWidth) {
+                    Location ret = location.clone().add(left).add(right.clone().normalize().multiply(width));
+                    width++;
+                    return ret;
+                }
+
+                // Address block.
+                if (width == maxWidth + 1) {
+                    Location ret = location.clone().add(getDirection());
+                    width++;
+                    return ret;
+                }
+
+                throw new NoSuchElementException();
+            }
+
+
+            @Override
+            public boolean hasNext() {
+                if (next == null) {
+                    try {
+                        next = getNext();
+                    } catch (NoSuchElementException e) {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+
+            @Override
+            public Location next() {
+                if (hasNext()) {
+                    Location ret = next;
+                    next = null;
+                    return ret;
+                }
+
+                throw new NoSuchElementException();
+            }
+        };
+    }
+
+    /**
+     * Return our direction
+     */
+    public Vector getDirection() {
+        if (!isValid()) {
+            return null;
+        }
+
+        Vector direction = right.clone().normalize();
+        // rotate it 90 degress clockwise
+        double currentX = direction.getX();
+        double currentZ = direction.getZ();
+        double cosine = Math.cos(Math.toRadians(90));
+        double sine = Math.sin(Math.toRadians(90));
+        direction = new Vector((cosine * currentX - sine * currentZ), direction.getY(), (sine * currentX + cosine * currentZ));
+
+        System.err.println("Direction: " + direction);
+        return direction;
+    }
+
+    /**
      * Return an iterator over the portal frame
      */
     public Iterator<Location> getPortalFrameIterator() {
@@ -396,7 +471,7 @@ public class Portal {
 
                         // If this location is blocked we continue
                         if (check.clone().add(new Vector(0, 1, 0).multiply(height)).getBlock().getType() == Material.OBSIDIAN) {
-                            continue;
+                            break;
                         }
 
                         // If we are on either end of the portal, then every height is part of the frame unless blocked

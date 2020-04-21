@@ -24,6 +24,8 @@ import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.util.BlockVector;
+import org.bukkit.util.Vector;
 
 import java.io.IOException;
 import java.util.*;
@@ -36,7 +38,7 @@ public class PortalManager {
     private final List<Portal> portals = new ArrayList<>();
 
     // Location Map
-    private final Hashtable<Location, Portal> indexLocation = new Hashtable<>();
+    private final Hashtable<BlockVector, Portal> indexLocation = new Hashtable<>();
 
     public PortalManager(JavaPlugin plugin) {
         this.plugin = plugin;
@@ -68,7 +70,7 @@ public class PortalManager {
                         Portal.PortalType.valueOf(portalData.getString("portal_type"))
                 );
 
-                // Update valid portals, ignore invalid so we don't accidentally link them later
+                // Update valid portals, ignore invalid so we don't accidentally dial them later
                 if (portalData.getBoolean("valid")) {
                     portal.update();
                 } else {
@@ -146,15 +148,20 @@ public class PortalManager {
         indexLocation.values().removeIf(v -> v.equals(portal));
         for (Iterator<Location> it = portal.getPortalIterator(); it.hasNext(); ) {
             Location loc = it.next();
-            indexLocation.put(loc, portal);
+            indexLocation.put(loc.toVector().toBlockVector(), portal);
         }
 
         for (Iterator<Location> it = portal.getPortalFrameIterator(); it.hasNext(); ) {
             Location loc = it.next();
-            indexLocation.put(loc, portal);
+            indexLocation.put(loc.toVector().toBlockVector(), portal);
         }
 
-        indexLocation.put(portal.getLocation(), portal);
+        for (Iterator<Location> it = portal.getPortalBaseIterator(); it.hasNext(); ) {
+            Location loc = it.next();
+            indexLocation.put(loc.toVector().toBlockVector(), portal);
+        }
+
+        indexLocation.put(portal.getLocation().toVector().toBlockVector(), portal);
     }
 
     /**
@@ -170,7 +177,7 @@ public class PortalManager {
                 continue;
             }
 
-            if (Objects.equals(portal.getAddress(), address)) {
+            if (!Objects.equals(portal.getAddress(), address)) {
                 continue;
             }
 
@@ -186,17 +193,31 @@ public class PortalManager {
     /**
      * Get a portal at location
      */
-    public Portal find(@NonNull Location location, Boolean valid) {
-        Portal portal = indexLocation.get(location);
-        if (valid == null || valid == portal.isValid()) {
-            return portal;
+    public Portal find(@NonNull Location location, Boolean valid, int distance) {
+        Vector search = location.toVector();
+
+        for (int x = -distance; x <= distance; x++) {
+            for (int y = -distance; y <= distance; y++) {
+                for (int z = -distance; z <= distance; z++) {
+                    Portal portal = indexLocation.get(search.clone().add(new Vector(x, y, z)).toBlockVector());
+                    if (portal != null) {
+                        if (valid == null || valid == portal.isValid()) {
+                            return portal;
+                        }
+                    }
+                }
+            }
         }
 
         return null;
     }
 
     public Portal find(@NonNull Location location) {
-        return find(location, null);
+        return find(location, null, 0);
+    }
+
+    public Portal find(@NonNull Location location, int distance) {
+        return find(location, null, distance);
     }
 
 }
