@@ -97,7 +97,7 @@ public class PortalManager {
                     continue;
                 }
 
-                BasePortal portal = null;
+                BasePortal portal;
                 try {
                     portal = createPortal(portalData.getString("portal_type"), portalData.getLocation("location"));
                 } catch (InvalidPortalException e) {

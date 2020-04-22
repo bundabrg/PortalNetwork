@@ -22,9 +22,9 @@ import au.com.grieve.portalnetwork.PortalManager;
 import au.com.grieve.portalnetwork.PortalNetwork;
 import au.com.grieve.portalnetwork.exceptions.InvalidPortalException;
 import au.com.grieve.portalnetwork.portals.BasePortal;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -42,7 +42,7 @@ import java.util.Map;
 
 public class PortalEvents implements Listener {
 
-    Map<Player, BlockVector> ignore = new HashMap<>();
+    final Map<Player, BlockVector> ignore = new HashMap<>();
 
     @SuppressWarnings("unused")
     @EventHandler
@@ -67,7 +67,7 @@ public class PortalEvents implements Listener {
         // If its the portal block we remove portal and drop the block
         if (event.getBlock().getLocation().toVector().toBlockVector().equals(portal.getLocation().toVector().toBlockVector())) {
             event.setDropItems(false);
-            if (event.getBlock().getLocation().getWorld() != null) {
+            if (event.getPlayer().getGameMode() != GameMode.CREATIVE && event.getBlock().getLocation().getWorld() != null) {
                 try {
                     event.getBlock().getLocation().getWorld().dropItemNaturally(event.getBlock().getLocation(), PortalNetwork.getInstance().getPortalManager().createPortalBlock(portal));
                 } catch (InvalidPortalException ignored) {
@@ -86,9 +86,9 @@ public class PortalEvents implements Listener {
             return;
         }
 
-        if (event.useInteractedBlock().equals(Event.Result.DENY)) {
-            return;
-        }
+//        if (event.useInteractedBlock().equals(Event.Result.DENY)) {
+//            return;
+//        }
 
         PortalManager manager = PortalNetwork.getInstance().getPortalManager();
         BasePortal portal = manager.find(event.getClickedBlock().getLocation());

@@ -44,7 +44,8 @@ public class PortalBlockCommand extends MainCommand {
     @Arg("give|g @portaltype(switch=type|t, default=NETHER) @player(required=true, default=%self, mode=online)")
     @Description("Give player a portal block")
     public void onGive(CommandSender sender, String portalType, Player player) {
-        ItemStack item = null;
+        ItemStack item;
+
         try {
             item = PortalNetwork.getInstance().getPortalManager().createPortalBlock(portalType);
             player.getInventory().addItem(item);

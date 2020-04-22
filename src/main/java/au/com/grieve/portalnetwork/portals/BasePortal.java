@@ -110,6 +110,10 @@ public class BasePortal {
     public BasePortal(PortalManager manager, Location location) {
         this.manager = manager;
         this.location = location;
+
+        // Set Portal Block
+        location.getBlock().setType(Material.GOLD_BLOCK);
+
         update();
     }
 
@@ -121,9 +125,6 @@ public class BasePortal {
      * Update Portal
      */
     public void update() {
-        // Update portal block
-        location.getBlock().setType(Material.GOLD_BLOCK);
-
         // Check that wool only appears on 3 sides
         List<Location> blocks = Arrays.asList(
                 location.clone().add(1, 0, 0),
@@ -192,17 +193,16 @@ public class BasePortal {
             return 1;
         }
         int width = (int) left.distance(right);
-        System.err.println("Width is: " + width);
-        return width;
+        return width + 1;
     }
 
     // Return Portal height
     @SuppressWarnings("unused")
     public int getHeight() {
         if (!valid) {
-            return 0;
+            return 1;
         }
-        return (int) Math.ceil(getWidth() + 2 / 2f);
+        return (int) Math.ceil(getWidth() / 2f) + 2;
     }
 
     public boolean dial(Integer address) {
@@ -312,8 +312,8 @@ public class BasePortal {
                     throw new NoSuchElementException();
                 }
 
-                while (width <= maxWidth - 1) {
-                    if (height <= maxHeight - 1) {
+                while (width < maxWidth - 1) {
+                    if (height < maxHeight - 1) {
                         Location check = location.clone().add(left).add(right.clone().normalize().multiply(width));
 
                         // If this location is blocked we continue
@@ -387,14 +387,14 @@ public class BasePortal {
                     throw new NoSuchElementException();
                 }
 
-                if (width <= maxWidth) {
+                if (width < maxWidth) {
                     Location ret = location.clone().add(left).add(right.clone().normalize().multiply(width));
                     width++;
                     return ret.toVector().toBlockVector();
                 }
 
                 // Address block.
-                if (width == maxWidth + 1) {
+                if (width == maxWidth) {
                     Location ret = location.clone().subtract(location.getDirection());
                     width++;
                     return ret.toVector().toBlockVector();
@@ -448,8 +448,8 @@ public class BasePortal {
                     throw new NoSuchElementException();
                 }
 
-                while (width <= maxWidth) {
-                    while (height <= maxHeight) {
+                while (width < maxWidth) {
+                    while (height < maxHeight) {
                         Location check = location.clone().add(left).add(right.clone().normalize().multiply(width));
 
                         // If this location is blocked we continue
@@ -458,7 +458,7 @@ public class BasePortal {
                         }
 
                         // If we are on either end of the portal, then every height is part of the frame unless blocked
-                        if (width == 0 || width == maxWidth) {
+                        if (width == 0 || width == maxWidth - 1) {
                             Location ret = check.clone().add(new Vector(0, 1, 0).multiply(height));
                             if (check.clone().add(new Vector(0, 1, 0).multiply(height + 1)).getBlock().getType() == Material.OBSIDIAN) {
                                 height = 1;
@@ -470,7 +470,7 @@ public class BasePortal {
                         }
 
                         // Max height is frame
-                        if (height == maxHeight) {
+                        if (height == maxHeight - 1) {
                             Location ret = check.clone().add(new Vector(0, 1, 0).multiply(height));
                             height = 1;
                             width++;
@@ -581,10 +581,10 @@ public class BasePortal {
         }
 
         Location destinationCheck = destination.clone();
-        destination.setY(dialledPortal.getLocation().getY());
+        destinationCheck.setY(dialledPortal.getLocation().getY());
         if (dialledPortal.getLocation().distance(destinationCheck) > ((dialledPortal.getWidth() - 2) / 2f)) {
             destination.setX(toPortalLocation.getX());
-            destination.setY(toPortalLocation.getY());
+            destination.setZ(toPortalLocation.getZ());
         }
 
 
