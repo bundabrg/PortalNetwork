@@ -575,6 +575,11 @@ public class BasePortal {
 
         Location destination = toPortalLocation.clone().add(playerRelativePosition);
 
+        // Make sure Y is 1 block higher than dest portal
+        if (destination.getY() <= dialledPortal.getLocation().getY()) {
+            destination.setY(dialledPortal.getLocation().getY() + 1);
+        }
+
         // If destination portal is not wide or tall enough we clip it
         if (destination.getY() > dialledPortal.getLocation().getY() + dialledPortal.getHeight() - 2) {
             destination.setY(dialledPortal.getLocation().getY() + dialledPortal.getHeight() - 2);
