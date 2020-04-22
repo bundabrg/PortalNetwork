@@ -20,10 +20,14 @@ package au.com.grieve.portalnetwork;
 
 import au.com.grieve.portalnetwork.exceptions.InvalidPortalException;
 import au.com.grieve.portalnetwork.portals.BasePortal;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 import lombok.Getter;
 import lombok.NonNull;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
@@ -31,6 +35,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.BlockVector;
 import org.bukkit.util.Vector;
 
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
@@ -38,7 +43,7 @@ import java.util.stream.Stream;
 
 public class PortalManager {
     @Getter
-    private final Map<String, Class<? extends BasePortal>> portalClasses = new HashMap<>();
+    private final BiMap<String, Class<? extends BasePortal>> portalClasses = HashBiMap.create();
 
     private final JavaPlugin plugin;
 
@@ -66,58 +71,50 @@ public class PortalManager {
         portalClasses.put(name, portalClass);
     }
 
-//    public void load() {
-//        // Portal Data
-//        Config portalConfig = new Config(plugin.getDataFolder() + "/" + "portal-data.yml");
-//        try {
-//            portalConfig.load();
-//        } catch (IOException | InvalidConfigurationException ignored) {
-//        }
-//
-//        // Initialize all portals
-//        Map<BasePortal, Integer> dialed = new HashMap<>();
-//        List<BasePortal> invalid = new ArrayList<>();
-//
-//        ConfigurationSection portalsData = portalConfig.getConfigurationSection("portals");
-//        if (portalsData != null) {
-//            for (String key : portalsData.getKeys(false)) {
-//                ConfigurationSection portalData = portalsData.getConfigurationSection(key);
-//                if (portalData == null) {
-//                    continue;
-//                }
-//
-//                BasePortal portal = new BasePortal(
-//                        this,
-//                        portalData.getLocation("location"),
-//                        BasePortal.PortalType.valueOf(portalData.getString("portal_type"))
-//                );
-//
-//                // Update valid portals, ignore invalid so we don't accidentally dial them later
-//                if (portalData.getBoolean("valid")) {
-//                    portal.update();
-//                } else {
-//                    invalid.add(portal);
-//                }
-//
-//                if (portalData.contains("dialed")) {
-//                    dialed.put(portal, portalData.getInt("dialed"));
-//                }
-//
-//                portals.add(portal);
-//                reindexPortal(portal);
-//            }
-//        }
-//
-//        // Dial Portals
-//        for (Map.Entry<BasePortal, Integer> dialedPortal : dialed.entrySet()) {
-//            dialedPortal.getKey().dial(dialedPortal.getValue());
-//        }
-//
-//        // Update invalids
-//        for (BasePortal portal : invalid) {
-//            portal.update();
-//        }
-//    }
+    public void clear() {
+        while (portals.size() > 0) {
+            BasePortal portal = portals.remove(0);
+            portal.remove();
+        }
+    }
+
+    public void load() {
+        // Portal Data
+        Config portalConfig = new Config(plugin.getDataFolder() + "/" + "portal-data.yml");
+        try {
+            portalConfig.load();
+        } catch (IOException | InvalidConfigurationException ignored) {
+        }
+
+        // Initialize all portals
+        Map<BasePortal, Integer> dialed = new HashMap<>();
+
+        ConfigurationSection portalsData = portalConfig.getConfigurationSection("portals");
+        if (portalsData != null) {
+            for (String key : portalsData.getKeys(false)) {
+                ConfigurationSection portalData = portalsData.getConfigurationSection(key);
+                if (portalData == null) {
+                    continue;
+                }
+
+                BasePortal portal = null;
+                try {
+                    portal = createPortal(portalData.getString("portal_type"), portalData.getLocation("location"));
+                } catch (InvalidPortalException e) {
+                    continue;
+                }
+
+                if (portalData.contains("dialled")) {
+                    dialed.put(portal, portalData.getInt("dialled"));
+                }
+            }
+        }
+
+        // Dial Portals
+        for (Map.Entry<BasePortal, Integer> dialedPortal : dialed.entrySet()) {
+            dialedPortal.getKey().dial(dialedPortal.getValue());
+        }
+    }
 
 //    public void reload() {
 //        for (BasePortal portal : portals) {
@@ -130,23 +127,23 @@ public class PortalManager {
 //        load();
 //    }
 
-//    public void save() {
-//        Config portalConfig = new Config(plugin.getDataFolder() + "/" + "portal-data.yml");
-//        ConfigurationSection portalsData = portalConfig.createSection("portals");
-//        for (int i = 0; i < portals.size(); i++) {
-//            BasePortal portal = portals.get(i);
-//            ConfigurationSection portalData = portalsData.createSection(Integer.toString(i));
-//
-//            if (portal.getDialledPortal() != null) {
-//                portalData.set("dialed", portal.getDialledPortal().getAddress());
-//            }
-//            portalData.set("portal_type", portal.getPortalType().toString());
-//            portalData.set("location", portal.getLocation());
-//            portalData.set("valid", portal.isValid());
-//        }
-//
-//        portalConfig.save();
-//    }
+    public void save() {
+        Config portalConfig = new Config(plugin.getDataFolder() + "/" + "portal-data.yml");
+        ConfigurationSection portalsData = portalConfig.createSection("portals");
+        for (int i = 0; i < portals.size(); i++) {
+            BasePortal portal = portals.get(i);
+            ConfigurationSection portalData = portalsData.createSection(Integer.toString(i));
+
+            if (portal.getDialledPortal() != null) {
+                portalData.set("dialled", portal.getDialledPortal().getAddress());
+            }
+            portalData.set("portal_type", portalClasses.inverse().get(portal.getClass()));
+            portalData.set("location", portal.getLocation());
+            portalData.set("valid", portal.isValid());
+        }
+
+        portalConfig.save();
+    }
 
     /**
      * Create a new portal
@@ -180,6 +177,11 @@ public class PortalManager {
         indexPortalBlocks.values().removeIf(v -> v.equals(portal));
     }
 
+    // Create block based upon portal
+    public ItemStack createPortalBlock(BasePortal portal) throws InvalidPortalException {
+        return createPortalBlock(getPortalClasses().inverse().get(portal.getClass()));
+    }
+
     public ItemStack createPortalBlock(String portalType) throws InvalidPortalException {
         if (!portalClasses.containsKey(portalType)) {
             throw new InvalidPortalException("No such portal type");
@@ -201,21 +203,21 @@ public class PortalManager {
         indexPortalBlocks.put(portal.getLocation().toVector().toBlockVector(), portal);
 
         indexFrames.values().removeIf(v -> v.equals(portal));
-        for (Iterator<Location> it = portal.getPortalFrameIterator(); it.hasNext(); ) {
-            Location loc = it.next();
-            indexFrames.put(loc.toVector().toBlockVector(), portal);
+        for (Iterator<BlockVector> it = portal.getPortalFrameIterator(); it.hasNext(); ) {
+            BlockVector loc = it.next();
+            indexFrames.put(loc, portal);
         }
 
         indexPortals.values().removeIf(v -> v.equals(portal));
-        for (Iterator<Location> it = portal.getPortalIterator(); it.hasNext(); ) {
-            Location loc = it.next();
-            indexPortals.put(loc.toVector().toBlockVector(), portal);
+        for (Iterator<BlockVector> it = portal.getPortalIterator(); it.hasNext(); ) {
+            BlockVector loc = it.next();
+            indexPortals.put(loc, portal);
         }
 
         indexBases.values().removeIf(v -> v.equals(portal));
-        for (Iterator<Location> it = portal.getPortalBaseIterator(); it.hasNext(); ) {
-            Location loc = it.next();
-            indexBases.put(loc.toVector().toBlockVector(), portal);
+        for (Iterator<BlockVector> it = portal.getPortalBaseIterator(); it.hasNext(); ) {
+            BlockVector loc = it.next();
+            indexBases.put(loc, portal);
         }
     }
 

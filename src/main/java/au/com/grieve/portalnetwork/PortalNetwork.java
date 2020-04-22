@@ -23,6 +23,8 @@ import au.com.grieve.portalnetwork.commands.MainCommand;
 import au.com.grieve.portalnetwork.commands.PortalBlockCommand;
 import au.com.grieve.portalnetwork.listeners.PortalEvents;
 import au.com.grieve.portalnetwork.parsers.PortalTypeParser;
+import au.com.grieve.portalnetwork.portals.End;
+import au.com.grieve.portalnetwork.portals.Hidden;
 import au.com.grieve.portalnetwork.portals.Nether;
 import lombok.Getter;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -58,8 +60,11 @@ public final class PortalNetwork extends JavaPlugin {
         // Load Portal Manager
         portalManager = new PortalManager(this);
         portalManager.registerPortalClass("nether", Nether.class);
+        portalManager.registerPortalClass("end", End.class);
+        portalManager.registerPortalClass("hidden", Hidden.class);
 
-        //portalManager.load();
+
+        portalManager.load();
 
         // Register Listeners
         getServer().getPluginManager().registerEvents(new PortalEvents(), this);
@@ -77,6 +82,7 @@ public final class PortalNetwork extends JavaPlugin {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+        portalManager.clear();
     }
 
     private void initConfig() {

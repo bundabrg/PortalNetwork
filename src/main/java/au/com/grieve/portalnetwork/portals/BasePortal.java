@@ -32,6 +32,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.BlockVector;
 import org.bukkit.util.Vector;
 
@@ -120,6 +121,9 @@ public class BasePortal {
      * Update Portal
      */
     public void update() {
+        // Update portal block
+        location.getBlock().setType(Material.GOLD_BLOCK);
+
         // Check that wool only appears on 3 sides
         List<Location> blocks = Arrays.asList(
                 location.clone().add(1, 0, 0),
@@ -187,15 +191,18 @@ public class BasePortal {
         if (!valid) {
             return 1;
         }
-        return (int) left.distance(right);
+        int width = (int) left.distance(right);
+        System.err.println("Width is: " + width);
+        return width;
     }
 
     // Return Portal height
+    @SuppressWarnings("unused")
     public int getHeight() {
         if (!valid) {
             return 0;
         }
-        return getWidth() + 1;
+        return (int) Math.ceil(getWidth() + 2 / 2f);
     }
 
     public boolean dial(Integer address) {
@@ -249,7 +256,6 @@ public class BasePortal {
         }
 
         dialledPortal = portal;
-//        manager.save();
         activate();
 
         return true;
@@ -278,15 +284,12 @@ public class BasePortal {
                 break;
             }
 
-            System.err.println("Dialing " + checkAddress);
             if (dial(checkAddress)) {
-                System.err.println("Success");
                 return true;
             }
         }
 
         // Deactivate
-        System.err.println("Deactivate");
         dial(null);
         return true;
     }
@@ -294,17 +297,17 @@ public class BasePortal {
     /**
      * Return an iterator over the portal part of the portal
      */
-    public Iterator<Location> getPortalIterator() {
+    public Iterator<BlockVector> getPortalIterator() {
 
-        final int maxWidth = isValid() ? (int) new Vector(0, 0, 0).distance(right.clone().subtract(left)) : 0;
-        final int maxHeight = 5;
+        final int maxWidth = getWidth();
+        final int maxHeight = getHeight();
 
         return new Iterator<>() {
             int width = 1;
             int height = 1;
-            Location next;
+            BlockVector next;
 
-            private Location getNext() throws NoSuchElementException {
+            private BlockVector getNext() throws NoSuchElementException {
                 if (!isValid()) {
                     throw new NoSuchElementException();
                 }
@@ -328,7 +331,7 @@ public class BasePortal {
                             height++;
                         }
 
-                        return ret;
+                        return ret.toVector().toBlockVector();
                     }
                     width++;
                     height = 1;
@@ -351,9 +354,9 @@ public class BasePortal {
             }
 
             @Override
-            public Location next() {
+            public BlockVector next() {
                 if (hasNext()) {
-                    Location ret = next;
+                    BlockVector ret = next;
                     next = null;
                     return ret;
                 }
@@ -366,21 +369,20 @@ public class BasePortal {
     /**
      * Return an iterator over the portal base
      */
-    public Iterator<Location> getPortalBaseIterator() {
+    public Iterator<BlockVector> getPortalBaseIterator() {
 
-        final int maxWidth = isValid() ? (int) new Vector(0, 0, 0).distance(right.clone().subtract(left)) : 0;
-        final int maxHeight = 5;
+        final int maxWidth = getWidth();
 
         return new Iterator<>() {
             int width = 0;
-            Location next;
+            BlockVector next;
 
-            private Location getNext() throws NoSuchElementException {
+            private BlockVector getNext() throws NoSuchElementException {
                 if (!isValid()) {
                     // A non-valid portal just returns its own location
                     if (width == 0) {
                         width++;
-                        return location;
+                        return location.toVector().toBlockVector();
                     }
                     throw new NoSuchElementException();
                 }
@@ -388,14 +390,14 @@ public class BasePortal {
                 if (width <= maxWidth) {
                     Location ret = location.clone().add(left).add(right.clone().normalize().multiply(width));
                     width++;
-                    return ret;
+                    return ret.toVector().toBlockVector();
                 }
 
                 // Address block.
                 if (width == maxWidth + 1) {
-                    Location ret = location.clone().add(location.getDirection());
+                    Location ret = location.clone().subtract(location.getDirection());
                     width++;
-                    return ret;
+                    return ret.toVector().toBlockVector();
                 }
 
                 throw new NoSuchElementException();
@@ -416,9 +418,9 @@ public class BasePortal {
             }
 
             @Override
-            public Location next() {
+            public BlockVector next() {
                 if (hasNext()) {
-                    Location ret = next;
+                    BlockVector ret = next;
                     next = null;
                     return ret;
                 }
@@ -431,17 +433,17 @@ public class BasePortal {
     /**
      * Return an iterator over the portal frame
      */
-    public Iterator<Location> getPortalFrameIterator() {
+    public Iterator<BlockVector> getPortalFrameIterator() {
 
-        final int maxWidth = isValid() ? (int) new Vector(0, 0, 0).distance(right.clone().subtract(left)) : 0;
-        final int maxHeight = 5;
+        final int maxWidth = getWidth();
+        final int maxHeight = getHeight();
 
-        return new Iterator<Location>() {
+        return new Iterator<>() {
             int width = 0;
             int height = 1;
-            Location next;
+            BlockVector next;
 
-            private Location getNext() throws NoSuchElementException {
+            private BlockVector getNext() throws NoSuchElementException {
                 if (!isValid()) {
                     throw new NoSuchElementException();
                 }
@@ -464,7 +466,7 @@ public class BasePortal {
                             } else {
                                 height++;
                             }
-                            return ret;
+                            return ret.toVector().toBlockVector();
                         }
 
                         // Max height is frame
@@ -472,7 +474,7 @@ public class BasePortal {
                             Location ret = check.clone().add(new Vector(0, 1, 0).multiply(height));
                             height = 1;
                             width++;
-                            return ret;
+                            return ret.toVector().toBlockVector();
                         }
 
                         // Something blocking above us? We don't draw frame
@@ -504,9 +506,9 @@ public class BasePortal {
             }
 
             @Override
-            public Location next() {
+            public BlockVector next() {
                 if (hasNext()) {
-                    Location ret = next;
+                    BlockVector ret = next;
                     next = null;
                     return ret;
                 }
@@ -532,9 +534,12 @@ public class BasePortal {
     }
 
     public void handlePlayerInteract(PlayerInteractEvent event) {
+        if (event.getClickedBlock() == null) {
+            return;
+        }
         // If its not our base we are not interested
         //noinspection UnstableApiUsage
-        if (!Streams.stream(getPortalFrameIterator()).anyMatch(l -> event.getClickedBlock().getLocation().equals(l))) {
+        if (Streams.stream(getPortalBaseIterator()).noneMatch(l -> event.getClickedBlock().getLocation().toVector().toBlockVector().equals(l))) {
             return;
         }
 
@@ -547,6 +552,7 @@ public class BasePortal {
         // Player has right clicked portal so lets dial next address if any, else deactivate
         if (valid) {
             dialNext();
+            manager.save();
         }
     }
 
@@ -563,27 +569,31 @@ public class BasePortal {
         Location toPortalLocation = dialledPortal.getLocation().add(new Vector(0.5, 0, 0.5));
         float yawDiff = fromPortalLocation.getYaw() - toPortalLocation.getYaw();
 
-        System.err.println("fromPortal: " + fromPortalLocation);
-        System.err.println("toPortal: " + toPortalLocation);
-
 
         Vector playerRelativePosition = event.getTo().toVector().subtract(fromPortalLocation.toVector());
-        System.err.println("playerRelativePositionToFrom: " + playerRelativePosition);
         playerRelativePosition.rotateAroundY(Math.toRadians(yawDiff));
 
         Location destination = toPortalLocation.clone().add(playerRelativePosition);
-        System.err.println("playerRelativePositionToTo: " + playerRelativePosition);
-        System.err.println("playerCurr: " + player.getLocation());
-        System.err.println("playerDest: " + destination);
+
+        // If destination portal is not wide or tall enough we clip it
+        if (destination.getY() > dialledPortal.getLocation().getY() + dialledPortal.getHeight() - 2) {
+            destination.setY(dialledPortal.getLocation().getY() + dialledPortal.getHeight() - 2);
+        }
+
+        Location destinationCheck = destination.clone();
+        destination.setY(dialledPortal.getLocation().getY());
+        if (dialledPortal.getLocation().distance(destinationCheck) > ((dialledPortal.getWidth() - 2) / 2f)) {
+            destination.setX(toPortalLocation.getX());
+            destination.setY(toPortalLocation.getY());
+        }
+
 
         destination.setYaw(player.getLocation().getYaw() - yawDiff);
         destination.setPitch(player.getLocation().getPitch());
 
-        Vector oldVelocity = player.getVelocity();
+        Vector oldVelocity = event.getTo().toVector().subtract(event.getFrom().toVector());
         Vector newVelocity = oldVelocity.clone().rotateAroundY(Math.toRadians(yawDiff));
 
-        System.err.println("oldVelocity: " + oldVelocity);
-        System.err.println("newVelocity: " + newVelocity);
 
         player.setVelocity(newVelocity);
         event.setTo(destination);
@@ -592,27 +602,27 @@ public class BasePortal {
     public void handleBlockBreak(BlockBreakEvent event) {
         // If it's the frame we cancel drops
         //noinspection UnstableApiUsage
-        if (Streams.stream(getPortalFrameIterator()).anyMatch(l -> event.getBlock().getLocation().equals(l))) {
+        if (Streams.stream(getPortalFrameIterator()).anyMatch(l -> event.getBlock().getLocation().toVector().toBlockVector().equals(l))) {
             event.setDropItems(false);
         }
 
 
         dial(null);
 
-        System.err.println("HereE - " + location.toVector().toBlockVector() + " - " + event.getBlock().getLocation().toVector().toBlockVector());
-        if (event.getBlock().getLocation().toVector().toBlockVector().equals(location.toVector().toBlockVector())) {
-            System.err.println("Remove");
-            event.setDropItems(false);
-            remove();
-        }
-
-
-        update();
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                update();
+                manager.save();
+            }
+        }.runTaskLater(PortalNetwork.getInstance(), 3);
     }
 
+    @SuppressWarnings("unused")
     public void handleBlockPlace(BlockPlaceEvent event) {
         dial(null);
         update();
+        manager.save();
     }
 
     /**
@@ -620,7 +630,7 @@ public class BasePortal {
      */
     public void remove() {
         deactivate();
-        location.getBlock().setType(Material.AIR);
+        location.getBlock().setType(Material.STONE);
         manager.removePortal(this);
     }
 

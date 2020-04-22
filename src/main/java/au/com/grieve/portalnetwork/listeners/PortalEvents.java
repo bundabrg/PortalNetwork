@@ -22,7 +22,9 @@ import au.com.grieve.portalnetwork.PortalManager;
 import au.com.grieve.portalnetwork.PortalNetwork;
 import au.com.grieve.portalnetwork.exceptions.InvalidPortalException;
 import au.com.grieve.portalnetwork.portals.BasePortal;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -32,6 +34,7 @@ import org.bukkit.event.player.*;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.util.BlockVector;
+import org.bukkit.util.Vector;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -41,8 +44,13 @@ public class PortalEvents implements Listener {
 
     Map<Player, BlockVector> ignore = new HashMap<>();
 
+    @SuppressWarnings("unused")
     @EventHandler
     public void onBlockBreakEvent(BlockBreakEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
+
         PortalManager manager = PortalNetwork.getInstance().getPortalManager();
 
         // Check if player is breaking a portal block
@@ -56,29 +64,29 @@ public class PortalEvents implements Listener {
             return;
         }
 
+        // If its the portal block we remove portal and drop the block
+        if (event.getBlock().getLocation().toVector().toBlockVector().equals(portal.getLocation().toVector().toBlockVector())) {
+            event.setDropItems(false);
+            if (event.getBlock().getLocation().getWorld() != null) {
+                try {
+                    event.getBlock().getLocation().getWorld().dropItemNaturally(event.getBlock().getLocation(), PortalNetwork.getInstance().getPortalManager().createPortalBlock(portal));
+                } catch (InvalidPortalException ignored) {
+                }
+            }
+            portal.remove();
+        }
+
         portal.handleBlockBreak(event);
     }
 
-//    @EventHandler
-//    public void onBlockPhysicsEvent(BlockPhysicsEvent event) {
-//        System.err.println("Physics: " + event + " - " + event.getBlock().getType() + " - " + event.getBlock().getLocation());
-//        // We cancel any physics events in a portal
-//        if (event.getBlock().getType() != Material.NETHER_PORTAL) {
-//            return;
-//        }
-//
-//        event.setCancelled(true);
-//
-////        Portal portal = PortalNetwork.getInstance().getPortalManager().find(event.getBlock().getLocation());
-////        if (portal != null) {
-////            event.setCancelled(true);
-////        }
-//    }
-
-
+    @SuppressWarnings("unused")
     @EventHandler
     public void onPlayerInteractEvent(PlayerInteractEvent event) {
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getClickedBlock() == null) {
+            return;
+        }
+
+        if (event.useInteractedBlock().equals(Event.Result.DENY)) {
             return;
         }
 
@@ -92,11 +100,13 @@ public class PortalEvents implements Listener {
         portal.handlePlayerInteract(event);
     }
 
+    @SuppressWarnings("unused")
     @EventHandler
     public void onPlayerQuitEvent(PlayerQuitEvent event) {
         ignore.remove(event.getPlayer());
     }
 
+    @SuppressWarnings("unused")
     @EventHandler
     public void onPlayerMoveEvent(PlayerMoveEvent event) {
         // If ignored player has moved enough we stop ignoring
@@ -112,21 +122,39 @@ public class PortalEvents implements Listener {
             return;
         }
 
+        Vector velocity = event.getTo().toVector().subtract(event.getFrom().toVector());
+
         PortalManager manager = PortalNetwork.getInstance().getPortalManager();
-        BasePortal portal = manager.find(event.getTo());
+        Location loc = event.getFrom().clone();
+        if (velocity.getZ() < 0) {
+            loc = loc.add(new Vector(0, 0, -0.5));
+        } else {
+            loc = loc.add(new Vector(0, 0, -1.5));
+        }
+
+        if (velocity.getX() < 0) {
+            loc = loc.add(new Vector(0.5, 0, 0));
+        } else {
+            loc = loc.add(new Vector(-0.5, 0, 0));
+        }
+
+        BasePortal portal = manager.find(loc);
 
         if (portal == null) {
             return;
         }
 
         portal.handlePlayerMove(event);
-
         ignore.put(event.getPlayer(), event.getTo().toVector().toBlockVector());
     }
 
     // Probably should move this inside nether portal class
+    @SuppressWarnings("unused")
     @EventHandler
     public void onPlayerPortalEvent(PlayerPortalEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
 
         // Only interested if its one of the 3 portal types
         if (event.getCause() != PlayerTeleportEvent.TeleportCause.NETHER_PORTAL &&
@@ -136,24 +164,29 @@ public class PortalEvents implements Listener {
         }
 
         PortalManager manager = PortalNetwork.getInstance().getPortalManager();
-        BasePortal portal = manager.find(event.getFrom(), 1);
+        BasePortal portal = manager.find(event.getFrom(), 2);
 
         if (portal == null) {
             return;
         }
 
-        // Make sure portal is dialled
-        if (portal.getDialledPortal() == null) {
-            return;
-        }
+//        // Make sure portal is dialled
+//        if (portal.getDialledPortal() == null) {
+//            return;
+//        }
 
         // Cancel event
         event.setCancelled(true);
     }
 
 
+    @SuppressWarnings("unused")
     @EventHandler
     public void onBlockPlaceEvent(BlockPlaceEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
+
         // Check if player is trying to place a portal block
         ItemMeta meta = event.getItemInHand().getItemMeta();
         if (meta != null) {

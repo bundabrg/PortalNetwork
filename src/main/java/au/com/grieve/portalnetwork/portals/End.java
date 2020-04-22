@@ -19,19 +19,18 @@
 package au.com.grieve.portalnetwork.portals;
 
 import au.com.grieve.portalnetwork.PortalManager;
-import org.bukkit.Axis;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
-import org.bukkit.block.data.Orientable;
+import org.bukkit.block.EndGateway;
 import org.bukkit.util.BlockVector;
 
 import java.util.Iterator;
 
-public class Nether extends BasePortal {
+public class End extends BasePortal {
 
-    public Nether(PortalManager manager, Location location) {
+    public End(PortalManager manager, Location location) {
         super(manager, location);
     }
 
@@ -61,18 +60,17 @@ public class Nether extends BasePortal {
         for (Iterator<BlockVector> it = getPortalIterator(); it.hasNext(); ) {
             BlockVector loc = it.next();
             Block block = loc.toLocation(location.getWorld()).getBlock();
+
+
             if (block.getType() != Material.AIR) {
                 continue;
             }
 
-            block.setType(Material.NETHER_PORTAL);
-            Orientable bd = (Orientable) block.getBlockData();
-            if (left.getX() == 0) {
-                bd.setAxis(Axis.Z);
-            } else {
-                bd.setAxis(Axis.X);
-            }
-            block.setBlockData(bd);
+            block.setType(Material.END_GATEWAY);
+            EndGateway eg = (EndGateway) block.getState();
+            eg.setAge(-100000000);
+            eg.update();
+
         }
 
 
@@ -92,7 +90,7 @@ public class Nether extends BasePortal {
         for (Iterator<BlockVector> it = getPortalIterator(); it.hasNext(); ) {
             BlockVector loc = it.next();
             Block block = loc.toLocation(location.getWorld()).getBlock();
-            if (block.getType() != Material.NETHER_PORTAL) {
+            if (block.getType() != Material.END_GATEWAY) {
                 continue;
             }
 
