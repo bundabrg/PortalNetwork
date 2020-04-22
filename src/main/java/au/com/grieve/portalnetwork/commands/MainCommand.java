@@ -18,18 +18,19 @@
 
 package au.com.grieve.portalnetwork.commands;
 
-import au.com.grieve.bcf.annotations.Arg;
-import au.com.grieve.bcf.annotations.Command;
-import au.com.grieve.bcf.annotations.Default;
 import au.com.grieve.bcf.annotations.Error;
+import au.com.grieve.bcf.annotations.*;
 import au.com.grieve.bcf.api.BaseCommand;
 import au.com.grieve.portalnetwork.PortalNetwork;
+import au.com.grieve.portalnetwork.exceptions.InvalidPortalException;
 import au.com.grieve.portalnetwork.portals.BasePortal;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 
 @Command("portalnetwork|pn")
@@ -105,6 +106,31 @@ public class MainCommand extends BaseCommand {
         sender.spigot().sendMessage(
                 new ComponentBuilder("=====================================").color(ChatColor.AQUA).create()
         );
+    }
+
+    @Arg("give|g @portaltype(switch=type|t, default=NETHER) @player(required=true, default=%self, mode=online)")
+    @Description("Give player a portal block")
+    public void onGive(CommandSender sender, String portalType, Player player) {
+        ItemStack item;
+
+        try {
+            item = PortalNetwork.getInstance().getPortalManager().createPortalBlock(portalType);
+            player.getInventory().addItem(item);
+
+            sender.spigot().sendMessage(
+                    new ComponentBuilder("Giving " + player.getName() + " a portal block.").create()
+            );
+
+            if (!sender.equals(player)) {
+                player.spigot().sendMessage(
+                        new ComponentBuilder("You have received a Portal Block.").create()
+                );
+            }
+        } catch (InvalidPortalException e) {
+            sender.spigot().sendMessage(
+                    new ComponentBuilder("Unable to create block.").color(ChatColor.RED).create()
+            );
+        }
     }
 
 

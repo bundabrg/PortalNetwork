@@ -127,18 +127,22 @@ public class PortalEvents implements Listener {
         PortalManager manager = PortalNetwork.getInstance().getPortalManager();
         Location loc = event.getFrom().clone();
         if (velocity.getZ() < 0) {
-            loc = loc.add(new Vector(0, 0, -0.5));
+            loc = loc.add(new Vector(0, 0, 0.0));
         } else {
-            loc = loc.add(new Vector(0, 0, -1.5));
+            loc = loc.add(new Vector(0, 0, -1.0));
         }
 
         if (velocity.getX() < 0) {
-            loc = loc.add(new Vector(0.5, 0, 0));
+            loc = loc.add(new Vector(0.0, 0, 0));
         } else {
-            loc = loc.add(new Vector(-0.5, 0, 0));
+            loc = loc.add(new Vector(-1.0, 0, 0));
         }
 
-        BasePortal portal = manager.find(loc);
+        // X and Z to nearest whole number
+        loc.setX(Math.round(loc.getX()));
+        loc.setZ(Math.round(loc.getZ()));
+
+        BasePortal portal = manager.findByPortal(loc);
 
         if (portal == null) {
             return;

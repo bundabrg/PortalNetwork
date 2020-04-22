@@ -20,7 +20,6 @@ package au.com.grieve.portalnetwork;
 
 import au.com.grieve.bcf.BukkitCommandManager;
 import au.com.grieve.portalnetwork.commands.MainCommand;
-import au.com.grieve.portalnetwork.commands.PortalBlockCommand;
 import au.com.grieve.portalnetwork.listeners.PortalEvents;
 import au.com.grieve.portalnetwork.parsers.PortalTypeParser;
 import au.com.grieve.portalnetwork.portals.End;
@@ -52,7 +51,6 @@ public final class PortalNetwork extends JavaPlugin {
 
         // Register Commands
         bcf.registerCommand(new MainCommand());
-        bcf.registerCommand(new PortalBlockCommand());
 
         // Initialize Configs
         initConfig();

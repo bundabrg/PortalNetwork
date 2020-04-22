@@ -161,8 +161,8 @@ public class BasePortal {
         location.setDirection(location.toVector().subtract(address_block.toVector()));
 
         // Net block is previous and next to non_idx
-        Location left_block = blocks.get((non_idx - 1) % 4);
-        Location right_block = blocks.get((non_idx + 1) % 4);
+        Location left_block = blocks.get(((non_idx - 1) % 4 + 4) % 4);
+        Location right_block = blocks.get(((non_idx + 1) % 4 + 4) % 4);
         network = (WOOL_MAPPINGS.indexOf(left_block.getBlock().getType()) << 4) + WOOL_MAPPINGS.indexOf(right_block.getBlock().getType());
 
         // Get Width of portal by counting obsidian blocks to a max of 10 each direction
@@ -270,7 +270,7 @@ public class BasePortal {
             return false;
         }
 
-        int startAddress = dialledPortal == null ? 0 : dialledPortal.getAddress();
+        int startAddress = dialledPortal == null ? 16 : dialledPortal.getAddress();
 
         for (int i = 1; i < 17; i++) {
             int checkAddress = (startAddress + i) % 17;
@@ -279,7 +279,7 @@ public class BasePortal {
                 continue;
             }
 
-            // Address 16 will be considered deactivate
+            // Address 16 to terminal call
             if (checkAddress == 16) {
                 break;
             }

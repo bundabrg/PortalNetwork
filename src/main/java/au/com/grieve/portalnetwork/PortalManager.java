@@ -248,6 +248,28 @@ public class PortalManager {
     }
 
     /**
+     * Get a portal based upon its inside
+     */
+    public BasePortal findByPortal(@NonNull BlockVector search, Boolean valid) {
+        BasePortal portal = indexPortals.entrySet().stream()
+                .filter(e -> e.getKey().equals(search))
+                .map(Map.Entry::getValue)
+                .findFirst()
+                .orElse(null);
+
+        if (portal != null) {
+            if (valid == null || valid == portal.isValid()) {
+                return portal;
+            }
+        }
+        return null;
+    }
+
+    public BasePortal findByPortal(@NonNull Location location) {
+        return findByPortal(location.toVector().toBlockVector(), null);
+    }
+
+    /**
      * Get a portal at location
      */
     public BasePortal find(@NonNull BlockVector search, Boolean valid) {
