@@ -27,8 +27,7 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Tag;
 import org.bukkit.entity.Player;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.block.*;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.EquipmentSlot;
@@ -614,6 +613,39 @@ public class BasePortal {
 
         dial(null);
 
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                update();
+                manager.save();
+            }
+        }.runTaskLater(PortalNetwork.getInstance(), 3);
+    }
+
+    public void handleBlockBurn(BlockBurnEvent event) {
+        dial(null);
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                update();
+                manager.save();
+            }
+        }.runTaskLater(PortalNetwork.getInstance(), 3);
+    }
+
+    public void handleBlockExplode(BlockExplodeEvent event) {
+        dial(null);
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                update();
+                manager.save();
+            }
+        }.runTaskLater(PortalNetwork.getInstance(), 3);
+    }
+
+    public void handleBlockIgnite(BlockIgniteEvent event) {
+        dial(null);
         new BukkitRunnable() {
             @Override
             public void run() {

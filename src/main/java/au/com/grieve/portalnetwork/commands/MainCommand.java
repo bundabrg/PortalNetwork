@@ -18,9 +18,9 @@
 
 package au.com.grieve.portalnetwork.commands;
 
+import au.com.grieve.bcf.BaseCommand;
 import au.com.grieve.bcf.annotations.Error;
 import au.com.grieve.bcf.annotations.*;
-import au.com.grieve.bcf.api.BaseCommand;
 import au.com.grieve.portalnetwork.PortalNetwork;
 import au.com.grieve.portalnetwork.exceptions.InvalidPortalException;
 import au.com.grieve.portalnetwork.portals.BasePortal;

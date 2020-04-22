@@ -18,11 +18,11 @@
 
 package au.com.grieve.portalnetwork.parsers;
 
-import au.com.grieve.bcf.api.CommandManager;
-import au.com.grieve.bcf.api.ParserContext;
-import au.com.grieve.bcf.api.ParserNode;
-import au.com.grieve.bcf.api.exceptions.ParserInvalidResultException;
-import au.com.grieve.bcf.api.parsers.SingleParser;
+import au.com.grieve.bcf.CommandManager;
+import au.com.grieve.bcf.ParserContext;
+import au.com.grieve.bcf.ParserNode;
+import au.com.grieve.bcf.exceptions.ParserInvalidResultException;
+import au.com.grieve.bcf.parsers.SingleParser;
 import au.com.grieve.portalnetwork.PortalNetwork;
 
 import java.util.List;

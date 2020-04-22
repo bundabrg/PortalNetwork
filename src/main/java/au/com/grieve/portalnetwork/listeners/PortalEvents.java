@@ -27,9 +27,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.block.*;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
@@ -43,6 +41,48 @@ import java.util.Map;
 public class PortalEvents implements Listener {
 
     final Map<Player, BlockVector> ignore = new HashMap<>();
+
+    // Stop burning portal
+    @EventHandler
+    public void onBlockBurnEvent(BlockBurnEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
+
+        PortalManager manager = PortalNetwork.getInstance().getPortalManager();
+        BasePortal portal = manager.find(event.getBlock().getLocation());
+        if (portal != null) {
+            portal.handleBlockBurn(event);
+        }
+    }
+
+    // Stop Exploding
+    @EventHandler
+    public void onBlockExplodeEvent(BlockExplodeEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
+
+        PortalManager manager = PortalNetwork.getInstance().getPortalManager();
+        BasePortal portal = manager.find(event.getBlock().getLocation());
+        if (portal != null) {
+            portal.handleBlockExplode(event);
+        }
+    }
+
+    // Stop ignition
+    @EventHandler
+    public void onBlockIgniteEvent(BlockIgniteEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
+
+        PortalManager manager = PortalNetwork.getInstance().getPortalManager();
+        BasePortal portal = manager.find(event.getBlock().getLocation());
+        if (portal != null) {
+            portal.handleBlockIgnite(event);
+        }
+    }
 
     @SuppressWarnings("unused")
     @EventHandler
