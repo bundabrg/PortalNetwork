@@ -18,9 +18,9 @@
 
 package au.com.grieve.portalnetwork.parsers;
 
+import au.com.grieve.bcf.ArgNode;
+import au.com.grieve.bcf.CommandContext;
 import au.com.grieve.bcf.CommandManager;
-import au.com.grieve.bcf.ParserContext;
-import au.com.grieve.bcf.ParserNode;
 import au.com.grieve.bcf.exceptions.ParserInvalidResultException;
 import au.com.grieve.bcf.parsers.SingleParser;
 import au.com.grieve.portalnetwork.PortalNetwork;
@@ -33,8 +33,8 @@ import java.util.stream.Collectors;
  */
 public class PortalTypeParser extends SingleParser {
 
-    public PortalTypeParser(CommandManager manager, ParserNode node, ParserContext context) {
-        super(manager, node, context);
+    public PortalTypeParser(CommandManager manager, ArgNode argNode, CommandContext context) {
+        super(manager, argNode, context);
     }
 
     @Override
@@ -42,7 +42,7 @@ public class PortalTypeParser extends SingleParser {
         if (PortalNetwork.getInstance().getPortalManager().getPortalClasses().containsKey(getInput().toLowerCase())) {
             return getInput().toLowerCase();
         }
-        throw new ParserInvalidResultException("Invalid Portal Type: " + getInput());
+        throw new ParserInvalidResultException(this, "Invalid Portal Type: " + getInput());
     }
 
     @Override

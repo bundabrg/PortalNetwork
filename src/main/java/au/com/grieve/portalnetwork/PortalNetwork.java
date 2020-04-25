@@ -50,7 +50,7 @@ public final class PortalNetwork extends JavaPlugin {
         bcf.registerParser("portaltype", PortalTypeParser.class);
 
         // Register Commands
-        bcf.registerCommand(new MainCommand());
+        bcf.registerCommand(MainCommand.class);
 
         // Initialize Configs
         initConfig();

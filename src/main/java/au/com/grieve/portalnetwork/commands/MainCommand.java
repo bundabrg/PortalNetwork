@@ -18,9 +18,12 @@
 
 package au.com.grieve.portalnetwork.commands;
 
-import au.com.grieve.bcf.BaseCommand;
-import au.com.grieve.bcf.annotations.Error;
-import au.com.grieve.bcf.annotations.*;
+import au.com.grieve.bcf.BukkitCommand;
+import au.com.grieve.bcf.annotations.Arg;
+import au.com.grieve.bcf.annotations.Command;
+import au.com.grieve.bcf.annotations.Default;
+import au.com.grieve.bcf.annotations.Description;
+import au.com.grieve.bcf.annotations.Permission;
 import au.com.grieve.portalnetwork.PortalNetwork;
 import au.com.grieve.portalnetwork.exceptions.InvalidPortalException;
 import au.com.grieve.portalnetwork.portals.BasePortal;
@@ -34,7 +37,8 @@ import org.bukkit.inventory.ItemStack;
 
 
 @Command("portalnetwork|pn")
-public class MainCommand extends BaseCommand {
+@Permission("portalnetwork.*")
+public class MainCommand extends BukkitCommand {
 
     @Default
     public void onDefault(CommandSender sender) {
@@ -50,14 +54,9 @@ public class MainCommand extends BaseCommand {
         // Show list of child commands
     }
 
-    @Error
-    public void onError(CommandSender sender, String message) {
-        sender.spigot().sendMessage(
-                new ComponentBuilder(message).color(ChatColor.RED).create()
-        );
-    }
-
     @Arg("reload")
+    @Permission("portalnetwork.admin")
+    @Permission("portalnetwork.command.reload")
     public void onReload(CommandSender sender) {
         // Read main config
         PortalNetwork.getInstance().reload();
@@ -68,6 +67,8 @@ public class MainCommand extends BaseCommand {
     }
 
     @Arg("list")
+    @Permission("portalnetwork.admin")
+    @Permission("portalnetwork.command.list")
     public void onList(CommandSender sender) {
         sender.spigot().sendMessage(
                 new ComponentBuilder("========= [ List of Portals ] =========").color(ChatColor.AQUA).create()
@@ -110,6 +111,8 @@ public class MainCommand extends BaseCommand {
 
     @Arg("give|g @portaltype(switch=type|t, default=NETHER) @player(required=true, default=%self, mode=online)")
     @Description("Give player a portal block")
+    @Permission("portalnetwork.admin")
+    @Permission("portalnetwork.command.give")
     public void onGive(CommandSender sender, String portalType, Player player) {
         ItemStack item;
 
