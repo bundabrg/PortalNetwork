@@ -75,7 +75,7 @@ public class End extends BasePortal {
 
 
         // Play portal sound
-        location.getWorld().playSound(location, Sound.BLOCK_BEACON_ACTIVATE, 100, 1);
+        location.getWorld().playSound(location, Sound.BLOCK_BEACON_ACTIVATE, 1f, 1);
     }
 
     /**
@@ -112,7 +112,7 @@ public class End extends BasePortal {
         location.getWorld().getBlockAt(location).setType(Material.GOLD_BLOCK);
 
         // Play portal sound
-        location.getWorld().playSound(location, Sound.BLOCK_BEACON_DEACTIVATE, 100, 1);
+        location.getWorld().playSound(location, Sound.BLOCK_BEACON_DEACTIVATE, 1f, 1);
     }
 
 }
