@@ -27,8 +27,17 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.*;
-import org.bukkit.event.player.*;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockBurnEvent;
+import org.bukkit.event.block.BlockExplodeEvent;
+import org.bukkit.event.block.BlockIgniteEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerPortalEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.util.BlockVector;
@@ -114,9 +123,12 @@ public class PortalEvents implements Listener {
                 }
             }
             portal.remove();
+            return;
         }
 
         portal.handleBlockBreak(event);
+
+
     }
 
     @SuppressWarnings("unused")
@@ -246,7 +258,7 @@ public class PortalEvents implements Listener {
         }
 
         PortalManager manager = PortalNetwork.getInstance().getPortalManager();
-        BasePortal portal = manager.find(event.getBlock().getLocation());
+        BasePortal portal = manager.find(event.getBlock().getLocation(), 2);
 
         if (portal == null) {
             return;

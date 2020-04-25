@@ -27,7 +27,11 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Tag;
 import org.bukkit.entity.Player;
-import org.bukkit.event.block.*;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockBurnEvent;
+import org.bukkit.event.block.BlockExplodeEvent;
+import org.bukkit.event.block.BlockIgniteEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.EquipmentSlot;
@@ -148,6 +152,7 @@ public class BasePortal {
                 dial(null);
                 valid = false;
             }
+            manager.reindexPortal(this);
 
             return;
         }
@@ -184,6 +189,8 @@ public class BasePortal {
             }
             right = test_right.toBlockVector();
         }
+
+        manager.reindexPortal(this);
     }
 
     // Return portal width
@@ -533,7 +540,7 @@ public class BasePortal {
     }
 
     public void handlePlayerInteract(PlayerInteractEvent event) {
-        if (event.getClickedBlock() == null) {
+        if (event.getClickedBlock() == null || !valid) {
             return;
         }
         // If its not our base we are not interested
@@ -609,7 +616,6 @@ public class BasePortal {
         if (Streams.stream(getPortalFrameIterator()).anyMatch(l -> event.getBlock().getLocation().toVector().toBlockVector().equals(l))) {
             event.setDropItems(false);
         }
-
 
         dial(null);
 
