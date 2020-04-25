@@ -598,15 +598,24 @@ public class BasePortal {
             destination.setZ(toPortalLocation.getZ());
         }
 
-
         destination.setYaw(player.getLocation().getYaw() - yawDiff);
         destination.setPitch(player.getLocation().getPitch());
 
         Vector oldVelocity = event.getTo().toVector().subtract(event.getFrom().toVector());
-        Vector newVelocity = oldVelocity.clone().rotateAroundY(Math.toRadians(yawDiff));
+
+        // Check if destination is unblocked else we will flip the player around
+        if (!destination.clone().add(destination.getDirection()).add(new Vector(0, 1, 0)).getBlock().isPassable()) {
+            destination.setYaw(destination.getYaw() + 180);
+
+            Vector newVelocity = oldVelocity.clone().rotateAroundY(Math.toRadians(yawDiff + 180));
+            player.setVelocity(newVelocity);
+
+        } else {
+            Vector newVelocity = oldVelocity.clone().rotateAroundY(Math.toRadians(yawDiff));
+            player.setVelocity(newVelocity);
+        }
 
 
-        player.setVelocity(newVelocity);
         event.setTo(destination);
     }
 
