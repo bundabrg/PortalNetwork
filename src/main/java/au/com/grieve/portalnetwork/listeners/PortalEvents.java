@@ -24,7 +24,7 @@ import au.com.grieve.portalnetwork.exceptions.InvalidPortalException;
 import au.com.grieve.portalnetwork.portals.BasePortal;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -33,11 +33,13 @@ import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityPortalEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.util.BlockVector;
@@ -49,7 +51,7 @@ import java.util.Map;
 
 public class PortalEvents implements Listener {
 
-    final Map<Player, BlockVector> ignore = new HashMap<>();
+    final Map<Entity, BlockVector> ignore = new HashMap<>();
 
     // Stop burning portal
     @EventHandler
@@ -134,6 +136,11 @@ public class PortalEvents implements Listener {
     @SuppressWarnings("unused")
     @EventHandler
     public void onPlayerInteractEvent(PlayerInteractEvent event) {
+        // Ignore if player is sneaking
+        if (event.getPlayer().isSneaking()) {
+            return;
+        }
+
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getClickedBlock() == null) {
             return;
         }
@@ -163,7 +170,7 @@ public class PortalEvents implements Listener {
     public void onPlayerMoveEvent(PlayerMoveEvent event) {
         // If ignored player has moved enough we stop ignoring
         if (ignore.containsKey(event.getPlayer())) {
-            if (ignore.get(event.getPlayer()).distance(event.getPlayer().getLocation().toVector()) > 2) {
+            if (ignore.get(event.getPlayer()).distanceSquared(event.getPlayer().getLocation().toVector()) > 9) {
                 ignore.remove(event.getPlayer());
             }
             return;
@@ -179,15 +186,15 @@ public class PortalEvents implements Listener {
         PortalManager manager = PortalNetwork.getInstance().getPortalManager();
         Location loc = event.getFrom().clone();
         if (velocity.getZ() < 0) {
-            loc = loc.add(new Vector(0, 0, 0.0));
+            loc = loc.add(new Vector(0, 0, 0.2));
         } else {
-            loc = loc.add(new Vector(0, 0, -1.0));
+            loc = loc.add(new Vector(0, 0, -0.2));
         }
 
         if (velocity.getX() < 0) {
-            loc = loc.add(new Vector(0.0, 0, 0));
+            loc = loc.add(new Vector(0.2, 0, 0));
         } else {
-            loc = loc.add(new Vector(-1.0, 0, 0));
+            loc = loc.add(new Vector(-0.2, 0, 0));
         }
 
         // X and Z to nearest whole number
@@ -201,7 +208,74 @@ public class PortalEvents implements Listener {
         }
 
         portal.handlePlayerMove(event);
-        ignore.put(event.getPlayer(), event.getTo().toVector().toBlockVector());
+        ignore.put(event.getPlayer(), event.getPlayer().getLocation().toVector().toBlockVector());
+    }
+
+    // Handle Vehicle moves
+    @EventHandler
+    public void onVehicleMoveEvent(VehicleMoveEvent event) {
+        // If ignored player has moved enough we stop ignoring
+        if (ignore.containsKey(event.getVehicle())) {
+            if (ignore.get(event.getVehicle()).distanceSquared(event.getVehicle().getLocation().toVector()) > 9) {
+                ignore.remove(event.getVehicle());
+            }
+            return;
+        }
+
+        // If vehicle has not actually moved, ignore
+        if (event.getFrom().toVector().toBlockVector() == event.getTo().toVector().toBlockVector()) {
+            return;
+        }
+
+        Vector velocity = event.getTo().toVector().subtract(event.getFrom().toVector());
+
+        PortalManager manager = PortalNetwork.getInstance().getPortalManager();
+        Location loc = event.getFrom().clone();
+        if (velocity.getZ() < 0) {
+            loc = loc.add(new Vector(0, 0, 0.5));
+        } else {
+            loc = loc.add(new Vector(0, 0, -0.5));
+        }
+
+        if (velocity.getX() < 0) {
+            loc = loc.add(new Vector(0.5, 0, 0));
+        } else {
+            loc = loc.add(new Vector(-0.5, 0, 0));
+        }
+
+        // X and Z to nearest whole number
+        loc.setX(Math.round(loc.getX()));
+        loc.setZ(Math.round(loc.getZ()));
+
+        BasePortal portal = manager.findByPortal(loc);
+
+        if (portal == null) {
+            return;
+        }
+
+        portal.handleVehicleMove(event);
+        ignore.put(event.getVehicle(), event.getVehicle().getLocation().toVector().toBlockVector());
+//        for(Entity passenger : event.getVehicle().getPassengers()) {
+//            ignore.put(passenger, event.getVehicle().getLocation().toVector().toBlockVector());
+//        }
+    }
+
+    // Probably should move this inside nether/end portal class
+    @EventHandler
+    public void onEntityPortalEvent(EntityPortalEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
+
+        PortalManager manager = PortalNetwork.getInstance().getPortalManager();
+        BasePortal portal = manager.find(event.getFrom(), 2);
+
+        if (portal == null) {
+            return;
+        }
+
+        // Cancel event
+        event.setCancelled(true);
     }
 
     // Probably should move this inside nether portal class

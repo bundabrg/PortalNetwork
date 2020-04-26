@@ -26,6 +26,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Tag;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockBurnEvent;
@@ -34,11 +35,13 @@ import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.BlockVector;
 import org.bukkit.util.Vector;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -562,12 +565,15 @@ public class BasePortal {
         }
     }
 
-    public void handlePlayerMove(PlayerMoveEvent event) {
-        Player player = event.getPlayer();
-
-        if (getDialledPortal() == null || event.getTo() == null) {
-            return;
+    /**
+     * Return new position and velocity of an entity to dialled portal
+     */
+    PositionVelocity calculatePosition(Entity entity) {
+        if (getDialledPortal() == null) {
+            return null;
         }
+
+        Location to = entity.getLocation().clone().add(entity.getVelocity());
 
         // teleport to relative portal position
 
@@ -576,7 +582,7 @@ public class BasePortal {
         float yawDiff = fromPortalLocation.getYaw() - toPortalLocation.getYaw();
 
 
-        Vector playerRelativePosition = event.getTo().toVector().subtract(fromPortalLocation.toVector());
+        Vector playerRelativePosition = to.toVector().subtract(fromPortalLocation.toVector());
         playerRelativePosition.rotateAroundY(Math.toRadians(yawDiff));
 
         Location destination = toPortalLocation.clone().add(playerRelativePosition);
@@ -598,25 +604,120 @@ public class BasePortal {
             destination.setZ(toPortalLocation.getZ());
         }
 
-        destination.setYaw(player.getLocation().getYaw() - yawDiff);
-        destination.setPitch(player.getLocation().getPitch());
+        destination.setYaw(entity.getLocation().getYaw() - yawDiff);
+        destination.setPitch(entity.getLocation().getPitch());
 
-        Vector oldVelocity = event.getTo().toVector().subtract(event.getFrom().toVector());
+        Vector oldVelocity = entity.getVelocity();
+        Vector newVelocity;
 
         // Check if destination is unblocked else we will flip the player around
-        if (!destination.clone().add(destination.getDirection()).add(new Vector(0, 1, 0)).getBlock().isPassable()) {
-            destination.setYaw(destination.getYaw() + 180);
-
-            Vector newVelocity = oldVelocity.clone().rotateAroundY(Math.toRadians(yawDiff + 180));
-            player.setVelocity(newVelocity);
-
-        } else {
-            Vector newVelocity = oldVelocity.clone().rotateAroundY(Math.toRadians(yawDiff));
-            player.setVelocity(newVelocity);
+        boolean passable = true;
+        for (int i = 0; i < 3; i++) {
+            if (!destination.clone().add(destination.getDirection().multiply(i + 1)).add(new Vector(0, 1, 0)).getBlock().isPassable()) {
+                passable = false;
+                break;
+            }
         }
 
+        if (!passable) {
+            destination.setYaw(destination.getYaw() + 180);
+            newVelocity = oldVelocity.clone().rotateAroundY(Math.toRadians(yawDiff + 180));
+        } else {
+            newVelocity = oldVelocity.clone().rotateAroundY(Math.toRadians(yawDiff));
+        }
 
-        event.setTo(destination);
+        return new PositionVelocity(destination, newVelocity, yawDiff);
+    }
+
+    public void handleVehicleMove(VehicleMoveEvent event) {
+        if (getDialledPortal() == null) {
+            return;
+        }
+
+        Entity entity = event.getVehicle();
+
+        // Dismount all passengers first.
+        List<Entity> passengers = new ArrayList<>(entity.getPassengers());
+        for (Entity passenger : passengers) {
+            entity.removePassenger(passenger);
+        }
+
+        entity.setVelocity(event.getTo().toVector().subtract(event.getFrom().toVector()));
+        PositionVelocity pv = calculatePosition(entity);
+
+        entity.setVelocity(pv.getVelocity());
+        entity.teleport(pv.getLocation());
+
+        // Rotate and Mount all passengers
+        for (Entity passenger : passengers) {
+            passenger.teleport(pv.getLocation().clone().setDirection(pv.getVelocity().normalize()));
+            entity.addPassenger(passenger);
+        }
+    }
+
+    public void handlePlayerMove(PlayerMoveEvent event) {
+        if (event.getTo() == null) {
+            return;
+        }
+
+        if (getDialledPortal() == null) {
+            return;
+        }
+
+        Player player = event.getPlayer();
+
+        // If player is a passenger take care of the vehicle and other passengers
+        boolean insideVehicle = player.isInsideVehicle() && player.getVehicle() != null;
+        List<Entity> passengers = new ArrayList<>();
+        Entity vehicle = player.getVehicle();
+
+        if (insideVehicle) {
+            passengers.addAll(vehicle.getPassengers());
+            for (Entity passenger : passengers) {
+                vehicle.removePassenger(passenger);
+            }
+        }
+
+        player.setVelocity(event.getTo().toVector().subtract(event.getFrom().toVector()));
+        PositionVelocity pv = calculatePosition(player);
+
+        player.setVelocity(pv.getVelocity());
+        player.teleport(pv.getLocation());
+        //event.setTo(pv.getLocation());
+
+        if (insideVehicle) {
+            vehicle.teleport(pv.getLocation());
+            vehicle.setVelocity(pv.getVelocity());
+            new BukkitRunnable() {
+
+                @Override
+                public void run() {
+                    for (Entity passenger : passengers) {
+                        passenger.teleport(pv.getLocation());
+                        vehicle.addPassenger(passenger);
+                    }
+                }
+            }.runTaskLater(PortalNetwork.getInstance(), 1);
+
+        }
+    }
+
+    static class PositionVelocity {
+        @Getter
+        final Location location;
+
+        @Getter
+        final Vector velocity;
+
+        @Getter
+        final double yawDiff;
+
+        PositionVelocity(Location location, Vector velocity, double yawDiff) {
+            this.location = location;
+            this.velocity = velocity;
+            this.yawDiff = yawDiff;
+
+        }
     }
 
     public void handleBlockBreak(BlockBreakEvent event) {
