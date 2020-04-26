@@ -243,6 +243,12 @@ public class PortalEvents implements Listener {
             return;
         }
 
+        // Ignore if player is sneaking
+        if (event.getPlayer().isSneaking()) {
+            return;
+        }
+
+
         // Check if player is trying to place a portal block
         ItemMeta meta = event.getItemInHand().getItemMeta();
         if (meta != null) {
