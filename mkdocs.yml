@@ -56,6 +56,9 @@ markdown_extensions:
 # Bundie's Tip: Disable mkpdfs whilst using `mkdocs serve` on a local machine
 plugins:
   - search
+  - exclude:
+      glob:
+        - 'theme/*'
   - git-revision-date-localized:
       type: timeago
   - mkpdfs:
@@ -72,4 +75,5 @@ plugins:
 
 nav:
   - Introduction: index.md
+  - Permissions and Commands: permissions_and_commands.md
   - Contributing: contributing.md

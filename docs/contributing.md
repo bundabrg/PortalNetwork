@@ -30,7 +30,7 @@ pip3 install -r requirements.txt
 
 ### Dev Environment
 
-To start an http document server on `http://127.0.0.1:8000` execute:
+To start a http document server on `http://127.0.0.1:8000` execute:
 
 ```
 mkdocs serve
