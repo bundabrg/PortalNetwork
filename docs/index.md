@@ -6,14 +6,9 @@
 
 ![Workflow](https://github.com/bundabrg/PortalNetwork/workflows/build/badge.svg)
 
+## What is PortalNetwork?
 
----
+PortalNetwork is a portal system that gives control back to the players to be able to create portals that can dial each other. It supports different types of portals and allows players to change the portal shape.  Vehicles are also supported.
 
-**Documentation**: <a href="https:/bundabrg.github.io/PortalNetwork/" target="_blank">https://bundabrg.github.io/PortalNetwork</a>
-
-**Source Code**: <a href="https://github.com/bundabrg/PortalNetwork/" target="_blank">https://github.com/bundabrg/PortalNetwork</a>
-
----
-
-PortalNetwork is a Spigot plugin that allows players to create a network of portals able to dial each other.
+## Features
 

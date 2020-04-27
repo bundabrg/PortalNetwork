@@ -113,5 +113,4 @@ buildNumber.properties
 #**/target/
 
 # Ignore mkdocs
-#site/
-#gh-pages/
+build/
