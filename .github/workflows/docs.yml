@@ -1,10 +1,12 @@
-# This workflow will build a package using Maven and then publish it to GitHub packages when a release is created
-# For more information see: https://github.com/actions/setup-java#apache-maven-with-a-settings-path
+# Build docs and publish to gh-pages if docs have been updated
 
 name: docs
-on: [push]
-#  release:
-#    types: [created]
+on:
+  push:
+    paths:
+      - 'docs/**'
+#    branches:
+#      - master
 
 jobs:
   build:

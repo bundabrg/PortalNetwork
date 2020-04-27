@@ -9,10 +9,10 @@ copyright: 'Copyright (C) 2020 PortalNetwork Developers'
 
 extra_css:
   - 'css/mkpdf.css'
-  - 'css/version_select.css'
+#  - 'css/version_select.css'
 
-extra_javascript:
-  - 'js/version_select.js'
+#extra_javascript:
+#  - 'js/version_select.js'
 
 # More info on this theme: https://squidfunk.github.io/mkdocs-material
 theme:
