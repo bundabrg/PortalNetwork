@@ -1,11 +1,11 @@
-<p align="center">
-    <a href="https://travis-ci.org/Bundabrg/PortalNetwork" target="_blank">
-        <img src="https://travis-ci.org/Co0sh/BetonQuest.svg?branch=master" alt="Build Status">
-    </a>
-    <a href="https://github.com/Bundabrg/PortalNetwork/blob/master/LICENSE">
-        <img src="https://img.shields.io/badge/license-GPLv3-blue" alt="License" />
-      </a>
-</p>
+[![forthebadge made-with-java](http://ForTheBadge.com/images/badges/made-with-java.svg)](https://java.com/)
+
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+![Build Status](https://travis-ci.org/Co0sh/BetonQuest.svg?branch=master)
+[![HitCount](http://hits.dwyl.com/bundabrg/portalnetwork.svg)](http://hits.dwyl.com/bundabrg/portalnetwork)
+
+![Workflow](https://github.com/bundabrg/PortalNetwork/workflows/build/badge.svg)
+
 
 ---
 
