@@ -6,8 +6,6 @@ on:
   push:
     paths-ignore:
       - 'docs/**'
-#  release:
-#    types: [created]
 
 jobs:
   build:
