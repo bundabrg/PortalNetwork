@@ -7,11 +7,13 @@
 | portalnetwork.command.list   | Access to `list`
 | portalnetwork.command.reload | Access to `reload`
 
+No permission is necessary to build a portal.
+
 ## Commands
 
 Execute commands with `/portalnetwork <command>` or `/pn <command>`.
 
-### give
+### `give`
 
 Give a player a `PortalBlock`
 
@@ -33,13 +35,27 @@ Where:
     
     /pn give -type hidden
 
-### reload
+### `list`
+
+List all portals
+
+`/pn list`
+
+!!! info "Permissions (any of)"
+    * portalnetwork.admin
+    * portalnetwork.command.list
+   
+!!! examples
+    /pn list
+    
+
+### `reload`
 
 Reload all configuration.
 
 `/pn reload`
 
-!!! info "Permissions (Any of)"
+!!! info "Permissions (any of)"
     * portalnetwork.admin
     * portalnetwork.command.reload
    

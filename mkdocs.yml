@@ -22,8 +22,8 @@ theme:
   palette:
     primary: 'indigo'
     accent: 'indigo'
-#  feature:
-#    tabs: false
+  features:
+    - instant
 
 
 
@@ -49,7 +49,7 @@ markdown_extensions:
       custom_checkbox: true
   - pymdownx.tilde
   - toc:
-      permalink: false
+      permalink: true
 #  - footnotes
 #  - metadata
 
@@ -61,11 +61,11 @@ plugins:
         - 'theme/*'
   - git-revision-date-localized:
       type: timeago
-  - mkpdfs:
-      author: PortalNetwork Developers
-      toc_title: Table of contents
-      output_path: pdf/documentation.pdf
-      design: docs/css/pdf.css
+#  - mkpdfs:
+#      author: PortalNetwork Developers
+#      toc_title: Table of contents
+#      output_path: pdf/documentation.pdf
+#      design: docs/css/pdf.css
 
 # Discord not yet supported but it will be soon
 #extra:
@@ -75,5 +75,7 @@ plugins:
 
 nav:
   - Introduction: index.md
+  - Portals: portals.md
+  - Configuration: configuration.md
   - Permissions and Commands: permissions_and_commands.md
   - Contributing: contributing.md

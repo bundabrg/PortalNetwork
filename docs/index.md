@@ -1,10 +1,9 @@
-[![forthebadge made-with-java](http://ForTheBadge.com/images/badges/made-with-java.svg)](https://java.com/)
-
-[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-![Build Status](https://travis-ci.org/Co0sh/BetonQuest.svg?branch=master)
-[![HitCount](http://hits.dwyl.com/bundabrg/portalnetwork.svg)](http://hits.dwyl.com/bundabrg/portalnetwork)
-
+![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Workflow](https://github.com/bundabrg/PortalNetwork/workflows/build/badge.svg)
+![Workflow](https://github.com/bundabrg/PortalNetwork/workflows/docs/badge.svg)
+![HitCount](http://hits.dwyl.com/bundabrg/portalnetwork.svg)
+
+
 
 ## What is PortalNetwork?
 
@@ -33,3 +32,30 @@ PortalNetwork is a portal system that gives control back to the players to be ab
 * An API to allow plugins to add additional portal types.
 
 
+## Quickstart
+
+1. Get a `portalblock` using the command [`/pn give`](./permissions_and_commands/#give)
+
+2. Place the `portalblock` down and put white wool on either side of it. This defines the *network* the portal belongs to; in this case white/white.
+
+3. Place a third piece of wool on the side you wish to be the front. This defines the *address* of the portal within its network.  Altogether it should look like the shape of the T tetris block.
+
+    !!! note "Portal Base"
+        ![Portal Base](img/portal-qs-base.png)
+
+4. Optionally place obsidian on either side of the *network* wool blocks to make the portal wider
+
+    !!! note "Portal Base made wider"
+        ![Portal Base made wider](img/portal-qs-wide.png)
+
+5. Create another portal using steps 1-4 somewhere else. Make sure the `address` colour is different to your first portal.
+
+    !!! note "Second Portal"
+        ![Second Portal](img/portal-qs-second.png)
+
+6. Right click anywhere on the base to dial the other portal and step through.  Note that the frame will turn the colour of the portal being dialled and the other portal will be dialled back.
+
+    !!! note "Dialled Portal"
+        ![Dialled Portal](img/portal-qs-dial.png)
+
+7. Right click again to dial the next colour. In this case as there is no next colour the portals will deactivate.
