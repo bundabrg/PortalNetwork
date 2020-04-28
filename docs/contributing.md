@@ -10,6 +10,14 @@ Need something? Found a bug? Or just have a brilliant idea? Head to the [Issues]
 
 If you know Java then take a look at open issues and create a pull request.
 
+Do the following to build the code:
+
+```shell
+git clone https://github.com/Bundabrg/PortalNetwork
+cd PortalNetwork
+mvn clean package
+```
+
 ## Contributing Documentation
 
 If you can help improve the documentation it would be highly appreciated. Have a look under the `docs` folder for the existing documentation.
@@ -30,7 +38,7 @@ pip3 install -r requirements.txt
 
 ### Dev Environment
 
-To start an http document server on `http://127.0.0.1:8000` execute:
+To start a http document server on `http://127.0.0.1:8000` execute:
 
 ```
 mkdocs serve
