@@ -1,4 +1,4 @@
-![Logo](https://bundbrg.github.io/PortalNetwork/img/title.png)
+![Logo](https://bundabrg.github.io/PortalNetwork/img/title.png)
 ![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Workflow](https://github.com/bundabrg/PortalNetwork/workflows/build/badge.svg)
 ![Workflow](https://github.com/bundabrg/PortalNetwork/workflows/docs/badge.svg)
