@@ -21,7 +21,7 @@ Add the following dependency to your `pom.xml`
 <dependency>
     <groupId>au.com.grieve</groupId>
     <artifactId>PortalNetwork</artifactId>
-    <version>1.2-SNAPSHOT</version>
+    <version>1.2.0</version>
     <scope>provided</scope>
 </dependency>
 ```
