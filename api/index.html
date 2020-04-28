@@ -216,12 +216,17 @@
 <h1>API</h1>
 <h2 id="maven">Maven<a class="headerlink" href="#maven" title="Permanent link">¶</a></h2>
 <p>Add the following repository to your <code>pom.xml</code></p>
-<div class="highlight"><pre><span></span><code><span class="c">&lt;!-- Github Package Repo --&gt;</span>
+<div class="highlight"><pre><span></span><code><span class="c">&lt;!-- Bundabrg's Repo --&gt;</span>
 <span class="nt">&lt;repository&gt;</span>
-  <span class="nt">&lt;id&gt;</span>github<span class="nt">&lt;/id&gt;</span>
-  <span class="nt">&lt;name&gt;</span>GitHub Packages<span class="nt">&lt;/name&gt;</span>
-  <span class="nt">&lt;url&gt;</span>https://maven.pkg.github.com/octocat/hello-world<span class="nt">&lt;/url&gt;</span>
-<span class="nt">&lt;/repository&gt;</span>
+    <span class="nt">&lt;id&gt;</span>bundabrg-repo<span class="nt">&lt;/id&gt;</span>
+    <span class="nt">&lt;url&gt;</span>https://repo.worldguard.com.au/repository/maven-public<span class="nt">&lt;/url&gt;</span>
+    <span class="nt">&lt;releases&gt;</span>
+        <span class="nt">&lt;enabled&gt;</span>true<span class="nt">&lt;/enabled&gt;</span>
+    <span class="nt">&lt;/releases&gt;</span>
+    <span class="nt">&lt;snapshots&gt;</span>
+        <span class="nt">&lt;enabled&gt;</span>true<span class="nt">&lt;/enabled&gt;</span>
+    <span class="nt">&lt;/snapshots&gt;</span>
+<span class="nt">&lt;/repository&gt;</span>   
 </code></pre></div>
 <p>Add the following dependency to your <code>pom.xml</code>
 <div class="highlight"><pre><span></span><code><span class="nt">&lt;dependency&gt;</span>
@@ -257,7 +262,7 @@ do the following:</p>
 <div class="md-source-date">
 <small>
     
-      Last update: <span class="timeago" datetime="1588053227000" locale="en"></span>
+      Last update: <span class="timeago" datetime="1588059732000" locale="en"></span>
 </small>
 </div>
 </article>
