@@ -66,9 +66,7 @@ allows you to control the actual height of the portal.
 
 ![Portal Shape](img/portal-shape.png)
 
-
 Pressing sneak when placing a block on the base will not trigger a dial.
-
 
 ## Direction and Velocity
 
