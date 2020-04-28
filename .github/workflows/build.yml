@@ -131,7 +131,7 @@ jobs:
           [Online Documentation](https://bundabrg.github.io/PortalNetwork)
 
           Since Last Release:
-          $(git log $(git describe --tags --abbrev=0 HEAD^^^ 2> /dev/null || git rev-list --max-parents=0 HEAD)..HEAD --graph --pretty=format:'%h %d %s <%an>' --abbrev-commit)
+          $(git log $(git describe --tags --abbrev=0 HEAD^^^ 2> /dev/null || git rev-list --max-parents=0 HEAD)..HEAD --graph --pretty=format:'%h %d %s [%an]' --abbrev-commit)
           EOF
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
