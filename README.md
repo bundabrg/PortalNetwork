@@ -7,7 +7,6 @@
 ![HitCount](http://hits.dwyl.com/bundabrg/portalnetwork.svg)
 
 ![Workflow](https://github.com/bundabrg/PortalNetwork/workflows/build/badge.svg)
-![Workflow](https://github.com/bundabrg/PortalNetwork/workflows/docs/badge.svg)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/Bundabrg/PortalNetwork/graphs/commit-activity)
 [![GitHub contributors](https://img.shields.io/github/contributors/Bundabrg/PortalNetwork)](https://GitHub.com/Bundabrg/PortalNetwork/graphs/contributors/)
 [![GitHub issues](https://img.shields.io/github/issues/Bundabrg/PortalNetwork)](https://GitHub.com/Bundabrg/PortalNetwork/issues/)
