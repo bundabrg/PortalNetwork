@@ -1,12 +1,23 @@
 ![Logo](https://bundabrg.github.io/PortalNetwork/img/title.png)
-![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)
+
+[![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://lbesson.mit-license.org/)
+[![GitHub release](https://img.shields.io/github/release/Bundabrg/PortalNetwork)](https://GitHub.com/Bundabrg/PortalNetwork/releases/)
+[![GitHub commits](https://img.shields.io/github/commits-since/Bundabrg/PortalNetwork/v1.2.0.svg)](https://GitHub.com/Bundabrg/PortalNetwork/commit/)
+[![Github all releases](https://img.shields.io/github/downloads/Bundabrg/PortalNetwork/total.svg)](https://GitHub.com/Bundabrg/PortalNetwork/releases/)
+![HitCount](http://hits.dwyl.com/bundabrg/portalnetwork.svg)
+
 ![Workflow](https://github.com/bundabrg/PortalNetwork/workflows/build/badge.svg)
 ![Workflow](https://github.com/bundabrg/PortalNetwork/workflows/docs/badge.svg)
-![HitCount](http://hits.dwyl.com/bundabrg/portalnetwork.svg)
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/Bundabrg/PortalNetwork/graphs/commit-activity)
+[![GitHub contributors](https://img.shields.io/github/contributors/Bundabrg/PortalNetwork)](https://GitHub.com/Bundabrg/PortalNetwork/graphs/contributors/)
+[![GitHub issues](https://img.shields.io/github/issues/Bundabrg/PortalNetwork)](https://GitHub.com/Bundabrg/PortalNetwork/issues/)
+[![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/Bundabrg/PortalNetwork.svg)](http://isitmaintained.com/project/Bundabrg/PortalNetwork "Average time to resolve an issue")
+[![GitHub pull-requests](https://img.shields.io/github/issues-pr/Bundabrg/PortalNetwork)](https://GitHub.com/Bundabrg/PortalNetwork/pull/)
+ 
 
 ---
 
-[**Documentation**](https:/bundabrg.github.io/PortalNetwork/)
+[**Documentation**](https://bundabrg.github.io/PortalNetwork/)
 
 [**Source Code**](https://github.com/bundabrg/PortalNetwork/)
 
