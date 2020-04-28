@@ -79,3 +79,4 @@ nav:
   - Configuration: configuration.md
   - Permissions and Commands: permissions_and_commands.md
   - Contributing: contributing.md
+  - API: api.md

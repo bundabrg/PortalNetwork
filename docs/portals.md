@@ -18,6 +18,8 @@ The third coloured wool defines the portal *address*.  The address must be uniqu
 to the same *network*.  As there are 16 colours this means that you can have a total of 16 portals able to dial
 each other per network.
 
+!!! bug
+    At the moment it is undefined what happens if 2 portals have the same address. This will be rectified shortly.
 
 ## Portal Types
 
@@ -62,6 +64,11 @@ The only block that has special meaning is an obsidian block. Any obsidian block
 the portal generating any higher than just under that block and above that block will not trigger a teleport.  This
 allows you to control the actual height of the portal.
 
+![Portal Shape](img/portal-shape.png)
+
+
+Pressing sneak when placing a block on the base will not trigger a dial.
+
 
 ## Direction and Velocity
 
@@ -71,5 +78,29 @@ destination portal (relative to its direction).  Velocity it maintained so flyin
 the same height and velocity.
 
 If a portal is blocked on one side, for example if it is built against a wall, then a player will always exit out of the unblocked
-side.
+side no matter which side they entered the source portal.
+
+If a vehicle enters the portal then it and all its passengers will be teleported to the destination portal, maintaining
+relative direction and velocity.  Yes you can have minecart on a rail go between portals.
+
+
+## Size Differences
+
+Generally the player will exit out in the same relative position of the destination portal that they entered in the
+source portal.
+
+If the destination portal is shorter then they will be clipped to its height if entering too high in the source
+portal.
+
+Likewise if they are too far right or left in the source portal compared to the destination portal they will be
+clipped to the corresponding side.
+
+
+## Destinations
+
+Portals can dial between worlds on the same server.  This allows a portal in the Nether to dial a portal in the overworld
+or indeed any other custom work.
+
+!!! info
+    Multiserver bungeecord support will come in due course.
 
