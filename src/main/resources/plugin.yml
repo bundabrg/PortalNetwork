@@ -1,5 +1,5 @@
 name: PortalNetwork
-version: ${project.version}-dev
+version: ${project.version}
 main: au.com.grieve.portalnetwork.PortalNetwork
 api-version: "1.13"
 authors: [Bundabrg]
