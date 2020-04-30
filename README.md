@@ -2,7 +2,7 @@
 
 [![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://lbesson.mit-license.org/)
 [![GitHub release](https://img.shields.io/github/release/Bundabrg/PortalNetwork)](https://GitHub.com/Bundabrg/PortalNetwork/releases/)
-[![GitHub commits](https://img.shields.io/github/commits-since/Bundabrg/PortalNetwork/v1.2.0.svg)](https://GitHub.com/Bundabrg/PortalNetwork/commit/)
+[![GitHub commits](https://img.shields.io/github/commits-since/Bundabrg/PortalNetwork/latest)](https://GitHub.com/Bundabrg/PortalNetwork/commit/)
 [![Github all releases](https://img.shields.io/github/downloads/Bundabrg/PortalNetwork/total.svg)](https://GitHub.com/Bundabrg/PortalNetwork/releases/)
 ![HitCount](http://hits.dwyl.com/bundabrg/portalnetwork.svg)
 

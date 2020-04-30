@@ -172,7 +172,7 @@ jobs:
             --shm-size=2g \
             -v $(pwd)/config.yml:/app/config/config.yml \
             -v $(pwd)/build:/app/build \
-            registry.worldguard.com.au/bgrieve/spigot_tools:feature-resource-revision app resource add-version \
+            registry.worldguard.com.au/bgrieve/spigot_tools:latest app resource add-version \
               portal-network.78053 \
               ${assets[0]} \
               ${tag_name} \
