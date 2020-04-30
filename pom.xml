@@ -63,7 +63,7 @@
                     <relocations>
                         <relocation>
                             <pattern>au.com.grieve.bcf</pattern>
-                            <shadedPattern>au.com.grieve.portalnetwork.bcf</shadedPattern>
+                            <shadedPattern>${project.groupId}.${project.artifactId}.bcf</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>
@@ -133,7 +133,7 @@
         <dependency>
             <groupId>au.com.grieve.bcf</groupId>
             <artifactId>bukkit</artifactId>
-            <version>1.1-SNAPSHOT</version>
+            <version>1.2.0</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
