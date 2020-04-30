@@ -63,7 +63,7 @@
                     <relocations>
                         <relocation>
                             <pattern>au.com.grieve.bcf</pattern>
-                            <shadedPattern>au.com.grieve.portalnetwork.bcf</shadedPattern>
+                            <shadedPattern>${project.groupId}.${project.artifactId}.bcf</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>
