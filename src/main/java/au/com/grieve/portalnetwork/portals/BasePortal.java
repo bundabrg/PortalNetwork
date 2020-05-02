@@ -37,6 +37,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.BlockVector;
 import org.bukkit.util.Vector;
@@ -116,15 +117,31 @@ public class BasePortal {
     public BasePortal(PortalManager manager, Location location) {
         this.manager = manager;
         this.location = location;
-
-        // Set Portal Block
-        location.getBlock().setType(Material.GOLD_BLOCK);
-
         update();
     }
 
     public Location getLocation() {
         return location.clone();
+    }
+
+    protected void setValid(boolean state) {
+        dial(null);
+        valid = state;
+        updateBlock();
+    }
+
+    // Update Potal block based upon state
+    protected void updateBlock() {
+        if (valid) {
+            if (dialledPortal != null) {
+                location.getBlock().setType(GLASS_MAPPINGS.get(dialledPortal.getAddress()));
+            } else {
+                location.getBlock().setType(Material.BEACON);
+            }
+        } else {
+            location.getBlock().setType(Material.GOLD_BLOCK);
+        }
+
     }
 
     /**
@@ -151,16 +168,10 @@ public class BasePortal {
         }
 
         if (count != 3 || non_idx == -1) {
-            if (valid) {
-                dial(null);
-                valid = false;
-            }
+            setValid(false);
             manager.reindexPortal(this);
-
             return;
         }
-
-        valid = true;
 
         // Determine address block. It should be opposite non_idx
         Location address_block = blocks.get((non_idx + 2) % 4);
@@ -171,6 +182,19 @@ public class BasePortal {
         Location left_block = blocks.get(((non_idx - 1) % 4 + 4) % 4);
         Location right_block = blocks.get(((non_idx + 1) % 4 + 4) % 4);
         network = (WOOL_MAPPINGS.indexOf(left_block.getBlock().getType()) << 4) + WOOL_MAPPINGS.indexOf(right_block.getBlock().getType());
+
+        // If address and network already exist pop out the address block
+        BasePortal p = manager.find(network, address);
+        if (p != null && p != this) {
+            Material material = address_block.getBlock().getType();
+            address_block.getBlock().setType(Material.AIR);
+            if (address_block.getWorld() != null) {
+                address_block.getWorld().dropItemNaturally(address_block, new ItemStack(material));
+            }
+            setValid(false);
+            manager.reindexPortal(this);
+            return;
+        }
 
         // Get Width of portal by counting obsidian blocks to a max of 10 each direction
         Vector left_unit_vector = left_block.toVector().subtract(location.toVector()).normalize();
@@ -193,6 +217,7 @@ public class BasePortal {
             right = test_right.toBlockVector();
         }
 
+        setValid(true);
         manager.reindexPortal(this);
     }
 

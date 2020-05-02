@@ -42,8 +42,7 @@ public class Hidden extends BasePortal {
             return;
         }
 
-        // Set Portal Block Colour
-        location.getWorld().getBlockAt(location).setType(GLASS_MAPPINGS.get(dialledPortal.getAddress()));
+        updateBlock();
 
         // Draw frame
         for (Iterator<BlockVector> it = getPortalFrameIterator(); it.hasNext(); ) {
@@ -80,8 +79,7 @@ public class Hidden extends BasePortal {
             block.setType(Material.AIR);
         }
 
-        // Set back to portal block
-        location.getWorld().getBlockAt(location).setType(Material.GOLD_BLOCK);
+        updateBlock();
 
         // Play portal sound
         location.getWorld().playSound(location, Sound.BLOCK_BEACON_DEACTIVATE, 1f, 1);
