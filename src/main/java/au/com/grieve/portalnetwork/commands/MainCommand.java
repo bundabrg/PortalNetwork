@@ -35,6 +35,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Map;
+
 
 @Command("portalnetwork|pn")
 @Permission("portalnetwork.*")
@@ -118,7 +120,13 @@ public class MainCommand extends BukkitCommand {
 
         try {
             item = PortalNetwork.getInstance().getPortalManager().createPortalBlock(portalType);
-            player.getInventory().addItem(item);
+            Map<Integer, ItemStack> bad = player.getInventory().addItem(item);
+            // bad contains the items we could not add to the player. We will just drop them next to them
+            if (bad.size() > 0) {
+                for (ItemStack badItem : bad.values()) {
+                    player.getWorld().dropItemNaturally(player.getLocation(), badItem);
+                }
+            }
 
             sender.spigot().sendMessage(
                     new ComponentBuilder("Giving " + player.getName() + " a portal block.").create()
