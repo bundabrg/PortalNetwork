@@ -1,6 +1,6 @@
 /*
  * PortalNetwork - Portals for Players
- * Copyright (C) 2020 PortalNetwork Developers
+ * Copyright (C) 2021 PortalNetwork Developers
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -107,6 +107,7 @@ public class PortalManager {
                 try {
                     portal = createPortal(portalData.getString("portal_type"), portalData.getLocation("location"));
                 } catch (InvalidPortalException e) {
+                    e.printStackTrace();
                     continue;
                 }
 

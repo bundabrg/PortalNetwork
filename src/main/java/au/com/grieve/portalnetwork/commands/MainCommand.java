@@ -1,6 +1,6 @@
 /*
  * PortalNetwork - Portals for Players
- * Copyright (C) 2020 PortalNetwork Developers
+ * Copyright (C) 2021 PortalNetwork Developers
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,12 +18,12 @@
 
 package au.com.grieve.portalnetwork.commands;
 
-import au.com.grieve.bcf.BukkitCommand;
 import au.com.grieve.bcf.annotations.Arg;
 import au.com.grieve.bcf.annotations.Command;
 import au.com.grieve.bcf.annotations.Default;
 import au.com.grieve.bcf.annotations.Description;
 import au.com.grieve.bcf.annotations.Permission;
+import au.com.grieve.bcf.platform.bukkit.BukkitCommand;
 import au.com.grieve.portalnetwork.PortalNetwork;
 import au.com.grieve.portalnetwork.exceptions.InvalidPortalException;
 import au.com.grieve.portalnetwork.portals.BasePortal;
@@ -81,7 +81,7 @@ public class MainCommand extends BukkitCommand {
                             portal.getLocation().getZ() + ";" +
                             portal.getLocation().getWorld().getName() + "] ").color(ChatColor.GREEN)
                     .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND,
-                            "/tp " + sender.getName() + " " +
+                            "/execute in " + portal.getLocation().getWorld().getName() + " run tp " + sender.getName() + " " +
                                     portal.getLocation().getX() + " " +
                                     (portal.getLocation().getY() + 1) + " " +
                                     portal.getLocation().getZ()

@@ -1,6 +1,6 @@
 /*
  * PortalNetwork - Portals for Players
- * Copyright (C) 2020 PortalNetwork Developers
+ * Copyright (C) 2021 PortalNetwork Developers
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 
 package au.com.grieve.portalnetwork;
 
-import au.com.grieve.bcf.BukkitCommandManager;
+import au.com.grieve.bcf.platform.bukkit.BukkitCommandManager;
 import au.com.grieve.portalnetwork.commands.MainCommand;
 import au.com.grieve.portalnetwork.listeners.PortalEvents;
 import au.com.grieve.portalnetwork.parsers.PortalTypeParser;
@@ -27,6 +27,7 @@ import au.com.grieve.portalnetwork.portals.Hidden;
 import au.com.grieve.portalnetwork.portals.Nether;
 import lombok.Getter;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public final class PortalNetwork extends JavaPlugin {
 
@@ -61,11 +62,15 @@ public final class PortalNetwork extends JavaPlugin {
         portalManager.registerPortalClass("end", End.class);
         portalManager.registerPortalClass("hidden", Hidden.class);
 
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                portalManager.load();
 
-        portalManager.load();
-
-        // Register Listeners
-        getServer().getPluginManager().registerEvents(new PortalEvents(), this);
+                // Register Listeners
+                getServer().getPluginManager().registerEvents(new PortalEvents(), PortalNetwork.this);
+            }
+        }.runTaskLater(PortalNetwork.getInstance(), 5);
 
         // Test1
 //        Portal portal1 = Portal.Create(new Location(getServer().getWorld("world"), 356, 3, -313));
