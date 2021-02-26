@@ -18,11 +18,7 @@
 
 package au.com.grieve.portalnetwork.commands;
 
-import au.com.grieve.bcf.annotations.Arg;
-import au.com.grieve.bcf.annotations.Command;
-import au.com.grieve.bcf.annotations.Default;
-import au.com.grieve.bcf.annotations.Description;
-import au.com.grieve.bcf.annotations.Permission;
+import au.com.grieve.bcf.annotations.*;
 import au.com.grieve.bcf.platform.bukkit.BukkitCommand;
 import au.com.grieve.portalnetwork.PortalNetwork;
 import au.com.grieve.portalnetwork.exceptions.InvalidPortalException;
@@ -75,20 +71,36 @@ public class MainCommand extends BukkitCommand {
         );
 
         for (BasePortal portal : PortalNetwork.getInstance().getPortalManager().getPortals()) {
-            @SuppressWarnings("ConstantConditions") ComponentBuilder msg = new ComponentBuilder(
+            if (portal.getLocation().getWorld() == null) {
+                continue;
+            }
+
+            String worldName = portal.getLocation().getWorld().getName();
+            switch (worldName) {
+                case "world":
+                    worldName = "overworld";
+                    break;
+                case "world_nether":
+                    worldName = "nether";
+                    break;
+                case "world_the_end":
+                    worldName = "the_end";
+                    break;
+            }
+
+            ComponentBuilder msg = new ComponentBuilder(
                     "[" + portal.getLocation().getX() + ";" +
                             portal.getLocation().getY() + ";" +
                             portal.getLocation().getZ() + ";" +
-                            portal.getLocation().getWorld().getName() + "] ").color(ChatColor.GREEN)
+                            worldName + "] ").color(ChatColor.GREEN)
                     .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND,
-                            "/execute in " + portal.getLocation().getWorld().getName() + " run tp " + sender.getName() + " " +
+                            "/execute in " + worldName + " run tp " + sender.getName() + " " +
                                     portal.getLocation().getX() + " " +
                                     (portal.getLocation().getY() + 1) + " " +
                                     portal.getLocation().getZ()
                     ))
                     .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Teleport to Portal").create()))
                     .append("").event((HoverEvent) null).event((ClickEvent) null);
-
 
             if (!portal.isValid()) {
                 msg.append("[invalid]").color(ChatColor.RED);
