@@ -1,6 +1,6 @@
 /*
  * PortalNetwork - Portals for Players
- * Copyright (C) 2020 PortalNetwork Developers
+ * Copyright (C) 2021 PortalNetwork Developers
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,19 +26,11 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockBurnEvent;
-import org.bukkit.event.block.BlockExplodeEvent;
-import org.bukkit.event.block.BlockIgniteEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.block.*;
 import org.bukkit.event.entity.EntityPortalEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerPortalEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
@@ -54,12 +46,8 @@ public class PortalEvents implements Listener {
     final Map<Entity, BlockVector> ignore = new HashMap<>();
 
     // Stop burning portal
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onBlockBurnEvent(BlockBurnEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
-
         PortalManager manager = PortalNetwork.getInstance().getPortalManager();
         BasePortal portal = manager.find(event.getBlock().getLocation());
         if (portal != null) {
@@ -68,12 +56,8 @@ public class PortalEvents implements Listener {
     }
 
     // Stop Exploding
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onBlockExplodeEvent(BlockExplodeEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
-
         PortalManager manager = PortalNetwork.getInstance().getPortalManager();
         BasePortal portal = manager.find(event.getBlock().getLocation());
         if (portal != null) {
@@ -82,12 +66,8 @@ public class PortalEvents implements Listener {
     }
 
     // Stop ignition
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onBlockIgniteEvent(BlockIgniteEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
-
         PortalManager manager = PortalNetwork.getInstance().getPortalManager();
         BasePortal portal = manager.find(event.getBlock().getLocation());
         if (portal != null) {
@@ -96,12 +76,8 @@ public class PortalEvents implements Listener {
     }
 
     @SuppressWarnings("unused")
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onBlockBreakEvent(BlockBreakEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
-
         PortalManager manager = PortalNetwork.getInstance().getPortalManager();
 
         // Check if player is breaking a portal block
@@ -129,8 +105,6 @@ public class PortalEvents implements Listener {
         }
 
         portal.handleBlockBreak(event);
-
-
     }
 
     @SuppressWarnings("unused")
@@ -144,10 +118,6 @@ public class PortalEvents implements Listener {
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getClickedBlock() == null) {
             return;
         }
-
-//        if (event.useInteractedBlock().equals(Event.Result.DENY)) {
-//            return;
-//        }
 
         PortalManager manager = PortalNetwork.getInstance().getPortalManager();
         BasePortal portal = manager.find(event.getClickedBlock().getLocation());
@@ -166,11 +136,11 @@ public class PortalEvents implements Listener {
     }
 
     @SuppressWarnings("unused")
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onPlayerMoveEvent(PlayerMoveEvent event) {
         // If ignored player has moved enough we stop ignoring
         if (ignore.containsKey(event.getPlayer())) {
-            if (ignore.get(event.getPlayer()).distanceSquared(event.getPlayer().getLocation().toVector()) > 9) {
+            if (ignore.get(event.getPlayer()).distanceSquared(event.getPlayer().getLocation().toVector()) > 4) {
                 ignore.remove(event.getPlayer());
             }
             return;
@@ -212,7 +182,7 @@ public class PortalEvents implements Listener {
     }
 
     // Handle Vehicle moves
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onVehicleMoveEvent(VehicleMoveEvent event) {
         // If ignored player has moved enough we stop ignoring
         if (ignore.containsKey(event.getVehicle())) {
@@ -261,12 +231,8 @@ public class PortalEvents implements Listener {
     }
 
     // Probably should move this inside nether/end portal class
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOW)
     public void onEntityPortalEvent(EntityPortalEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
-
         PortalManager manager = PortalNetwork.getInstance().getPortalManager();
         BasePortal portal = manager.find(event.getFrom(), 2);
 
@@ -280,7 +246,7 @@ public class PortalEvents implements Listener {
 
     // Probably should move this inside nether portal class
     @SuppressWarnings("unused")
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOW)
     public void onPlayerPortalEvent(PlayerPortalEvent event) {
         if (event.isCancelled()) {
             return;
@@ -311,12 +277,8 @@ public class PortalEvents implements Listener {
 
 
     @SuppressWarnings("unused")
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onBlockPlaceEvent(BlockPlaceEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
-
         // Ignore if player is sneaking
         if (event.getPlayer().isSneaking()) {
             return;
