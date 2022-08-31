@@ -73,7 +73,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v1
         with:
-          python-version: '3.6'
+          python-version: '3.9.13'
           architecture: 'x64'
 
       - name: Cache dependencies
@@ -134,7 +134,7 @@ jobs:
           for asset in ./build/binary/*.jar; do
             assets+=("-a" "$asset")
           done
-          assets+=("-a" "build/docs/pdf/documentation.pdf#PortalNetwork-Documentation.pdf")
+          #assets+=("-a" "build/docs/pdf/documentation.pdf#PortalNetwork-Documentation.pdf")
 
           tag_name="${GITHUB_REF##*/}"
           hub release create \
