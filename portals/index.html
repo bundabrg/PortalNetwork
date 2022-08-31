@@ -1,334 +1,571 @@
 
-<!DOCTYPE html>
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+        <meta name="author" content="Bundabrg">
+      
+      
+        <link rel="canonical" href="https://github.com/Bundabrg/PortalNetwork/portals/">
+      
+      <link rel="icon" href="../img/favicon.ico">
+      <meta name="generator" content="mkdocs-1.3.1, mkdocs-material-8.4.2">
+    
+    
+      
+        <title>Portals - PortalNetwork</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.69437709.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.cbb835fc.min.css">
+        
+          
+          
+          <meta name="theme-color" content="#4051b5">
+        
+      
+      
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../css/timeago.css">
+    
+      <link rel="stylesheet" href="../css/mkpdf.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
 
-<html class="no-js" lang="en">
-<head>
-<meta charset="utf-8"/>
-<meta content="width=device-width,initial-scale=1" name="viewport"/>
-<link href="https://github.com/Bundabrg/PortalNetwork/portals/" rel="canonical"/>
-<meta content="Bundabrg" name="author"/>
-<link href="../img/favicon.ico" rel="shortcut icon"/>
-<meta content="mkdocs-1.1, mkdocs-material-5.1.3" name="generator"/>
-<title>Portals - PortalNetwork</title>
-<link href="../assets/stylesheets/main.62d34fff.min.css" rel="stylesheet"/>
-<link href="../assets/stylesheets/palette.c8acc6db.min.css" rel="stylesheet"/>
-<meta content="#3f51b5" name="theme-color"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&amp;display=fallback" rel="stylesheet"/>
-<style>body,input{font-family:"Roboto",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono",SFMono-Regular,Consolas,Menlo,monospace}</style>
-<link href="../css/mkpdf.css" rel="stylesheet"/>
-</head>
-<body data-md-color-accent="indigo" data-md-color-primary="indigo" dir="ltr">
-<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
-<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
-<label class="md-overlay" for="__drawer"></label>
-<div data-md-component="skip">
-<a class="md-skip" href="#building-a-portal">
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#building-a-portal" class="md-skip">
           Skip to content
         </a>
-</div>
-<div data-md-component="announce">
-</div>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
 <header class="md-header" data-md-component="header">
-<nav aria-label="Header" class="md-header-nav md-grid">
-<a aria-label="PortalNetwork" class="md-header-nav__button md-logo" href="https://github.com/Bundabrg/PortalNetwork" title="PortalNetwork">
-<img alt="logo" src="../img/header_logo.png"/>
-</a>
-<label class="md-header-nav__button md-icon" for="__drawer">
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16Z"></path></svg>
-</label>
-<div class="md-header-nav__title" data-md-component="header-title">
-<div class="md-header-nav__ellipsis">
-<span class="md-header-nav__topic md-ellipsis">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="PortalNetwork" class="md-header__button md-logo" aria-label="PortalNetwork" data-md-component="logo">
+      
+  <img src="../img/header_logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
             PortalNetwork
           </span>
-<span class="md-header-nav__topic md-ellipsis">
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
             
               Portals
             
           </span>
-</div>
-</div>
-<label class="md-header-nav__button md-icon" for="__search">
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z"></path></svg>
-</label>
-<div class="md-search" data-md-component="search" role="dialog">
-<label class="md-search__overlay" for="__search"></label>
-<div class="md-search__inner" role="search">
-<form class="md-search__form" name="search">
-<input aria-label="Search" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" data-md-state="active" name="query" placeholder="Search" spellcheck="false" type="text"/>
-<label class="md-search__icon md-icon" for="__search">
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z"></path></svg>
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z"></path></svg>
-</label>
-<button aria-label="Clear" class="md-search__icon md-icon" data-md-component="search-reset" tabindex="-1" type="reset">
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"></path></svg>
-</button>
-</form>
-<div class="md-search__output">
-<div class="md-search__scrollwrap" data-md-scrollfix="">
-<div class="md-search-result" data-md-component="search-result">
-<div class="md-search-result__meta">
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
             Initializing search
           </div>
-<ol class="md-search-result__list"></ol>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
-</div>
-</div>
-</div>
-</div>
-<div class="md-header-nav__source">
-<a class="md-source" href="https://github.com/Bundabrg/PortalNetwork" title="Go to repository">
-<div class="md-source__icon md-icon">
-<svg viewbox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"></path></svg>
-</div>
-<div class="md-source__repository">
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Bundabrg/PortalNetwork" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.1.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
     Bundabrg/PortalNetwork
   </div>
 </a>
-</div>
-</nav>
+      </div>
+    
+  </nav>
+  
 </header>
-<div class="md-container" data-md-component="container">
-<main class="md-main" data-md-component="main">
-<div class="md-main__inner md-grid">
-<div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
-<div class="md-sidebar__scrollwrap">
-<div class="md-sidebar__inner">
-<nav aria-label="Navigation" class="md-nav md-nav--primary" data-md-level="0">
-<label class="md-nav__title" for="__drawer">
-<a aria-label="PortalNetwork" class="md-nav__button md-logo" href="https://github.com/Bundabrg/PortalNetwork" title="PortalNetwork">
-<img alt="logo" src="../img/header_logo.png"/>
-</a>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="PortalNetwork" class="md-nav__button md-logo" aria-label="PortalNetwork" data-md-component="logo">
+      
+  <img src="../img/header_logo.png" alt="logo">
+
+    </a>
     PortalNetwork
   </label>
-<div class="md-nav__source">
-<a class="md-source" href="https://github.com/Bundabrg/PortalNetwork" title="Go to repository">
-<div class="md-source__icon md-icon">
-<svg viewbox="0 0 448 512" xmlns="http://www.w3.org/2000/svg"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"></path></svg>
-</div>
-<div class="md-source__repository">
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Bundabrg/PortalNetwork" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.1.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
     Bundabrg/PortalNetwork
   </div>
 </a>
-</div>
-<ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href=".." title="Introduction">
-      Introduction
-    </a>
-</li>
-<li class="md-nav__item md-nav__item--active">
-<input class="md-nav__toggle md-toggle" data-md-toggle="toc" id="__toc" type="checkbox"/>
-<label class="md-nav__link md-nav__link--active" for="__toc">
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        Introduction
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Portals
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         Portals
-        <span class="md-nav__icon md-icon">
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3,9H17V7H3V9M3,13H17V11H3V13M3,17H17V15H3V17M19,17H21V15H19V17M19,7V9H21V7H19M19,13H21V11H19V13Z"></path></svg>
-</span>
-</label>
-<a class="md-nav__link md-nav__link--active" href="./" title="Portals">
-      Portals
-    </a>
-<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
-<label class="md-nav__title" for="__toc">
-<span class="md-nav__icon md-icon">
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z"></path></svg>
-</span>
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
       Table of contents
     </label>
-<ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#building-a-portal">
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#building-a-portal" class="md-nav__link">
     Building a Portal
   </a>
-<nav aria-label="Building a Portal" class="md-nav">
-<ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#network">
+  
+    <nav class="md-nav" aria-label="Building a Portal">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#network" class="md-nav__link">
     Network
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#address">
+        
+          <li class="md-nav__item">
+  <a href="#address" class="md-nav__link">
     Address
   </a>
+  
 </li>
-</ul>
-</nav>
+        
+      </ul>
+    </nav>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#portal-types">
+      
+        <li class="md-nav__item">
+  <a href="#portal-types" class="md-nav__link">
     Portal Types
   </a>
-<nav aria-label="Portal Types" class="md-nav">
-<ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#nether">
+  
+    <nav class="md-nav" aria-label="Portal Types">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nether" class="md-nav__link">
     Nether
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#end">
+        
+          <li class="md-nav__item">
+  <a href="#end" class="md-nav__link">
     End
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#hidden">
+        
+          <li class="md-nav__item">
+  <a href="#hidden" class="md-nav__link">
     Hidden
   </a>
+  
 </li>
-</ul>
-</nav>
+        
+      </ul>
+    </nav>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#portal-size">
+      
+        <li class="md-nav__item">
+  <a href="#portal-size" class="md-nav__link">
     Portal Size
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#building-in-portal">
+      
+        <li class="md-nav__item">
+  <a href="#building-in-portal" class="md-nav__link">
     Building in Portal
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#direction-and-velocity">
+      
+        <li class="md-nav__item">
+  <a href="#direction-and-velocity" class="md-nav__link">
     Direction and Velocity
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#size-differences">
+      
+        <li class="md-nav__item">
+  <a href="#size-differences" class="md-nav__link">
     Size Differences
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#destinations">
+      
+        <li class="md-nav__item">
+  <a href="#destinations" class="md-nav__link">
     Destinations
   </a>
+  
 </li>
-</ul>
+      
+    </ul>
+  
 </nav>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../configuration/" title="Configuration">
-      Configuration
-    </a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../permissions_and_commands/" title="Permissions and Commands">
-      Permissions and Commands
-    </a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../contributing/" title="Contributing">
-      Contributing
-    </a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../api/" title="API">
-      API
-    </a>
-</li>
-</ul>
+      
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../configuration/" class="md-nav__link">
+        Configuration
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../permissions_and_commands/" class="md-nav__link">
+        Permissions and Commands
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../contributing/" class="md-nav__link">
+        Contributing
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/" class="md-nav__link">
+        API
+      </a>
+    </li>
+  
+
+    
+  </ul>
 </nav>
-</div>
-</div>
-</div>
-<div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
-<div class="md-sidebar__scrollwrap">
-<div class="md-sidebar__inner">
-<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
-<label class="md-nav__title" for="__toc">
-<span class="md-nav__icon md-icon">
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z"></path></svg>
-</span>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
       Table of contents
     </label>
-<ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#building-a-portal">
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#building-a-portal" class="md-nav__link">
     Building a Portal
   </a>
-<nav aria-label="Building a Portal" class="md-nav">
-<ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#network">
+  
+    <nav class="md-nav" aria-label="Building a Portal">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#network" class="md-nav__link">
     Network
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#address">
+        
+          <li class="md-nav__item">
+  <a href="#address" class="md-nav__link">
     Address
   </a>
+  
 </li>
-</ul>
-</nav>
+        
+      </ul>
+    </nav>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#portal-types">
+      
+        <li class="md-nav__item">
+  <a href="#portal-types" class="md-nav__link">
     Portal Types
   </a>
-<nav aria-label="Portal Types" class="md-nav">
-<ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#nether">
+  
+    <nav class="md-nav" aria-label="Portal Types">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nether" class="md-nav__link">
     Nether
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#end">
+        
+          <li class="md-nav__item">
+  <a href="#end" class="md-nav__link">
     End
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#hidden">
+        
+          <li class="md-nav__item">
+  <a href="#hidden" class="md-nav__link">
     Hidden
   </a>
+  
 </li>
-</ul>
-</nav>
+        
+      </ul>
+    </nav>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#portal-size">
+      
+        <li class="md-nav__item">
+  <a href="#portal-size" class="md-nav__link">
     Portal Size
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#building-in-portal">
+      
+        <li class="md-nav__item">
+  <a href="#building-in-portal" class="md-nav__link">
     Building in Portal
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#direction-and-velocity">
+      
+        <li class="md-nav__item">
+  <a href="#direction-and-velocity" class="md-nav__link">
     Direction and Velocity
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#size-differences">
+      
+        <li class="md-nav__item">
+  <a href="#size-differences" class="md-nav__link">
     Size Differences
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#destinations">
+      
+        <li class="md-nav__item">
+  <a href="#destinations" class="md-nav__link">
     Destinations
   </a>
+  
 </li>
-</ul>
+      
+    </ul>
+  
 </nav>
-</div>
-</div>
-</div>
-<div class="md-content">
-<article class="md-content__inner md-typeset"><a class="md-content__icon pdf-download-btn" download href="../pdf/documentation.pdf" title="Download"><i class="fa fas fa-download"></i><small> PDF</small></a>
-<h1>Portals</h1>
-<h2 id="building-a-portal">Building a Portal<a class="headerlink" href="#building-a-portal" title="Permanent link">¶</a></h2>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+
+
+  <h1>Portals</h1>
+
+<h2 id="building-a-portal">Building a Portal<a class="headerlink" href="#building-a-portal" title="Permanent link">&para;</a></h2>
 <p>At a minimum a portal is built using just 4 blocks put together in the shape of a T shape Tetromino. A <code>portalblock</code> and 
 3 coloured wool blocks. Right clicking any of these blocks will attempt to dial the next colour portal in the network.</p>
-<p><img alt="Portal Design" src="../img/portal-design.png"/></p>
-<h3 id="network">Network<a class="headerlink" href="#network" title="Permanent link">¶</a></h3>
+<p><img alt="Portal Design" src="../img/portal-design.png" /></p>
+<h3 id="network">Network<a class="headerlink" href="#network" title="Permanent link">&para;</a></h3>
 <p>The blocks to either side of the portal designate the <em>network</em> to which it belongs.  If you think of a phone number 
 the <em>network</em> would be like an area code.  Any portal can dial any other portal that belongs to the same network.  As 
 there are 16 colours this means that there is a total of 256 networks available.</p>
-<h3 id="address">Address<a class="headerlink" href="#address" title="Permanent link">¶</a></h3>
+<h3 id="address">Address<a class="headerlink" href="#address" title="Permanent link">&para;</a></h3>
 <p>The third coloured wool defines the portal <em>address</em>.  The address must be unique amongst all portals that belong
 to the same <em>network</em>.  As there are 16 colours this means that you can have a total of 16 portals able to dial
 each other per network.</p>
@@ -336,7 +573,7 @@ each other per network.</p>
 <p class="admonition-title">Bug</p>
 <p>At the moment it is undefined what happens if 2 portals have the same address. This will be rectified shortly.</p>
 </div>
-<h2 id="portal-types">Portal Types<a class="headerlink" href="#portal-types" title="Permanent link">¶</a></h2>
+<h2 id="portal-types">Portal Types<a class="headerlink" href="#portal-types" title="Permanent link">&para;</a></h2>
 <p>The <code>portalblock</code> in the middle will define what type of portal will be generated.  This is purely cosmetic and any portal, 
 regardless of its type, can connect to any other on the same network.</p>
 <p>The three built-in portal types are:</p>
@@ -345,17 +582,17 @@ regardless of its type, can connect to any other on the same network.</p>
 <li>End</li>
 <li>Hidden</li>
 </ol>
-<h3 id="nether">Nether<a class="headerlink" href="#nether" title="Permanent link">¶</a></h3>
-<p><img alt="Nether Portal" src="../img/portal-type-nether.png"/></p>
-<h3 id="end">End<a class="headerlink" href="#end" title="Permanent link">¶</a></h3>
-<p><img alt="End Portal" src="../img/portal-type-end.png"/></p>
-<h3 id="hidden">Hidden<a class="headerlink" href="#hidden" title="Permanent link">¶</a></h3>
-<p><img alt="Hidden Portal" src="../img/portal-type-hidden.png"/></p>
-<h2 id="portal-size">Portal Size<a class="headerlink" href="#portal-size" title="Permanent link">¶</a></h2>
+<h3 id="nether">Nether<a class="headerlink" href="#nether" title="Permanent link">&para;</a></h3>
+<p><img alt="Nether Portal" src="../img/portal-type-nether.png" /></p>
+<h3 id="end">End<a class="headerlink" href="#end" title="Permanent link">&para;</a></h3>
+<p><img alt="End Portal" src="../img/portal-type-end.png" /></p>
+<h3 id="hidden">Hidden<a class="headerlink" href="#hidden" title="Permanent link">&para;</a></h3>
+<p><img alt="Hidden Portal" src="../img/portal-type-hidden.png" /></p>
+<h2 id="portal-size">Portal Size<a class="headerlink" href="#portal-size" title="Permanent link">&para;</a></h2>
 <p>The size of the portal is determined by how wide it is.  You can make a portal wider by adding obsidian blocks to one
  or both sides of the network blocks.  The height is half the width + 2 blocks.  This includes the portal base and frame.</p>
-<p><img alt="Wider Portal" src="../img/portal-wider.png"/></p>
-<h2 id="building-in-portal">Building in Portal<a class="headerlink" href="#building-in-portal" title="Permanent link">¶</a></h2>
+<p><img alt="Wider Portal" src="../img/portal-wider.png" /></p>
+<h2 id="building-in-portal">Building in Portal<a class="headerlink" href="#building-in-portal" title="Permanent link">&para;</a></h2>
 <p>When a portal activates it will create a frame for itself of the colour of the remote portal address and will fill its
 body with the type of portal being generated.</p>
 <p>If any blocks are encountered in this area the portal will ignore them and generate itself around them.  This means that
@@ -365,9 +602,9 @@ the portal and place rails for a minecart.</p>
 <p>The only block that has special meaning is an obsidian block. Any obsidian block found in the portal area will prevent
 the portal generating any higher than just under that block and above that block will not trigger a teleport.  This
 allows you to control the actual height of the portal.</p>
-<p><img alt="Portal Shape" src="../img/portal-shape.png"/></p>
+<p><img alt="Portal Shape" src="../img/portal-shape.png" /></p>
 <p>Pressing sneak when placing a block on the base will not trigger a dial.</p>
-<h2 id="direction-and-velocity">Direction and Velocity<a class="headerlink" href="#direction-and-velocity" title="Permanent link">¶</a></h2>
+<h2 id="direction-and-velocity">Direction and Velocity<a class="headerlink" href="#direction-and-velocity" title="Permanent link">&para;</a></h2>
 <p>When a player steps through a portal they will exit the destination portal with the same relative direction and velocity
 they entered.  This means if they enter through the front left of a portal they will exit at the back left of the
 destination portal (relative to its direction).  Velocity it maintained so flying through on an elytra will exit at
@@ -376,95 +613,115 @@ the same height and velocity.</p>
 side no matter which side they entered the source portal.</p>
 <p>If a vehicle enters the portal then it and all its passengers will be teleported to the destination portal, maintaining
 relative direction and velocity.  Yes you can have minecart on a rail go between portals.</p>
-<h2 id="size-differences">Size Differences<a class="headerlink" href="#size-differences" title="Permanent link">¶</a></h2>
+<h2 id="size-differences">Size Differences<a class="headerlink" href="#size-differences" title="Permanent link">&para;</a></h2>
 <p>Generally the player will exit out in the same relative position of the destination portal that they entered in the
 source portal.</p>
 <p>If the destination portal is shorter then they will be clipped to its height if entering too high in the source
 portal.</p>
 <p>Likewise if they are too far right or left in the source portal compared to the destination portal they will be
 clipped to the corresponding side.</p>
-<h2 id="destinations">Destinations<a class="headerlink" href="#destinations" title="Permanent link">¶</a></h2>
+<h2 id="destinations">Destinations<a class="headerlink" href="#destinations" title="Permanent link">&para;</a></h2>
 <p>Portals can dial between worlds on the same server.  This allows a portal in the Nether to dial a portal in the overworld
 or indeed any other custom work.</p>
 <div class="admonition info">
 <p class="admonition-title">Info</p>
 <p>Multiserver bungeecord support will come in due course.</p>
 </div>
-<hr/>
-<div class="md-source-date">
-<small>
+
+  <hr>
+<div class="md-source-file">
+  <small>
     
-      Last update: <span class="timeago" datetime="1614322596000" locale="en"></span>
-</small>
+      Last update:
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2022-08-31T06:23:19+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2022-08-31</span>
+      
+    
+  </small>
 </div>
-</article>
-</div>
-</div>
-</main>
-<footer class="md-footer">
-<div class="md-footer-nav">
-<nav aria-label="Footer" class="md-footer-nav__inner md-grid">
-<a class="md-footer-nav__link md-footer-nav__link--prev" href=".." rel="prev" title="Introduction">
-<div class="md-footer-nav__button md-icon">
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z"></path></svg>
-</div>
-<div class="md-footer-nav__title">
-<div class="md-ellipsis">
-<span class="md-footer-nav__direction">
-                  Previous
-                </span>
-                Introduction
-              </div>
-</div>
-</a>
-<a class="md-footer-nav__link md-footer-nav__link--next" href="../configuration/" rel="next" title="Configuration">
-<div class="md-footer-nav__title">
-<div class="md-ellipsis">
-<span class="md-footer-nav__direction">
-                  Next
-                </span>
-                Configuration
-              </div>
-</div>
-<div class="md-footer-nav__button md-icon">
-<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4,11V13H16L10.5,18.5L11.92,19.92L19.84,12L11.92,4.08L10.5,5.5L16,11H4Z"></path></svg>
-</div>
-</a>
-</nav>
-</div>
-<div class="md-footer-meta md-typeset">
-<div class="md-footer-meta__inner md-grid">
-<div class="md-footer-copyright">
-<div class="md-footer-copyright__highlight">
-            Copyright (C) 2020 PortalNetwork Developers
+
+
+
+
+              
+            </article>
+            
           </div>
+        </div>
         
-        Made with
-        <a href="https://squidfunk.github.io/mkdocs-material/" rel="noopener" target="_blank">
-          Material for MkDocs
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+    <nav class="md-footer__inner md-grid" aria-label="Footer" >
+      
+        
+        <a href=".." class="md-footer__link md-footer__link--prev" aria-label="Previous: Introduction" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              Introduction
+            </div>
+          </div>
         </a>
+      
+      
+        
+        <a href="../configuration/" class="md-footer__link md-footer__link--next" aria-label="Next: Configuration" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              Configuration
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright (C) 2020 PortalNetwork Developers
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
 </div>
-</div>
-</div>
+      
+    </div>
+  </div>
 </footer>
-</div>
-<script src="../assets/javascripts/vendor.f81b9e8b.min.js"></script>
-<script src="../assets/javascripts/bundle.23546af0.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents"}</script>
-<script>
-        app = initialize({
-          base: "..",
-          features: ["instant"],
-          search: Object.assign({
-            worker: "../assets/javascripts/worker/search.58d22e8e.min.js"
-          }, typeof search !== "undefined" && search)
-        })
-      </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/timeago.js/4.0.0-beta.2/timeago.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/timeago.js/4.0.0-beta.2/timeago.locales.min.js"></script>
-<script>
-            var nodes = document.querySelectorAll('.timeago');
-            var locale = nodes[0].getAttribute('locale');
-            timeago.render(nodes, locale);
-          </script>
-</body>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["instant"], "search": "../assets/javascripts/workers/search.ecf98df9.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.9c69f0bc.min.js"></script>
+      
+        <script src="../js/timeago.min.js"></script>
+      
+        <script src="../js/timeago_mkdocs_material.js"></script>
+      
+    
+  </body>
 </html>
