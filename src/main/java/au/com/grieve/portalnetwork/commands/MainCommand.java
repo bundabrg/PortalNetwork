@@ -1,6 +1,6 @@
 /*
  * PortalNetwork - Portals for Players
- * Copyright (C) 2021 PortalNetwork Developers
+ * Copyright (C) 2022 PortalNetwork Developers
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,7 +33,10 @@ import org.bukkit.inventory.ItemStack;
 
 
 @Command("portalnetwork|pn")
-@Permission("portalnetwork.*")
+@Permission("portalnetwork.admin")
+@Permission("portalnetwork.command.reload")
+@Permission("portalnetwork.command.list")
+@Permission("portalnetwork.command.give")
 public class MainCommand extends BukkitCommand {
 
     @Default
