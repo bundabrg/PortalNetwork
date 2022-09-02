@@ -31,6 +31,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.io.IOException;
+
 
 @Command("portalnetwork|pn")
 @Permission("portalnetwork.admin")
@@ -58,11 +60,17 @@ public class MainCommand extends BukkitCommand {
     @Permission("portalnetwork.command.reload")
     public void onReload(CommandSender sender) {
         // Read main config
-        PortalNetwork.getInstance().reload();
+        try {
+            PortalNetwork.getInstance().reload();
 
-        sender.spigot().sendMessage(
-                new ComponentBuilder("Reloaded PortalNetwork").color(ChatColor.YELLOW).create()
-        );
+            sender.spigot().sendMessage(
+                    new ComponentBuilder("Reloaded PortalNetwork").color(ChatColor.YELLOW).create())
+            ;
+        } catch (IOException e) {
+            sender.spigot().sendMessage(
+                    new ComponentBuilder("Failed to reload PortalNetwork").color(ChatColor.RED).create()
+            );
+        }
     }
 
     @Arg("list")

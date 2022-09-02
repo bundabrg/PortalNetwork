@@ -1,6 +1,6 @@
 /*
  * PortalNetwork - Portals for Players
- * Copyright (C) 2021 PortalNetwork Developers
+ * Copyright (C) 2022 PortalNetwork Developers
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,7 +19,11 @@
 package au.com.grieve.portalnetwork.portals;
 
 import au.com.grieve.portalnetwork.PortalManager;
-import org.bukkit.*;
+import au.com.grieve.portalnetwork.config.PortalConfig;
+import org.bukkit.Axis;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.EndGateway;
 import org.bukkit.block.data.Orientable;
@@ -29,8 +33,8 @@ import java.util.Iterator;
 
 public class End extends BasePortal {
 
-    public End(PortalManager manager, Location location) {
-        super(manager, location);
+    public End(PortalManager manager, Location location, PortalConfig config) {
+        super(manager, location, config);
     }
 
     /**
@@ -85,7 +89,7 @@ public class End extends BasePortal {
         }
 
         // Play portal sound
-        location.getWorld().playSound(location, Sound.BLOCK_BEACON_ACTIVATE, 1f, 1);
+        location.getWorld().playSound(location, config.getSound().getStart(), 1f, 1);
     }
 
     /**
@@ -121,7 +125,7 @@ public class End extends BasePortal {
         updateBlock();
 
         // Play portal sound
-        location.getWorld().playSound(location, Sound.BLOCK_BEACON_DEACTIVATE, 1f, 1);
+        location.getWorld().playSound(location, config.getSound().getStop(), 1f, 1);
     }
 
 }

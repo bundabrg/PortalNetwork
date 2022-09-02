@@ -114,3 +114,4 @@ buildNumber.properties
 
 # Ignore mkdocs
 build/
+venv/

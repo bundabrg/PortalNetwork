@@ -1,7 +1,7 @@
 ## Building a Portal
 
-At a minimum a portal is built using just 4 blocks put together in the shape of a T shape Tetromino. A `portalblock` and 
-3 coloured wool blocks. Right clicking any of these blocks will attempt to dial the next colour portal in the network.
+At a minimum a portal is built using just 4 blocks put together in the shape of a T shape Tetromino. A `portalblock` and
+3 coloured wool blocks. Right-clicking any of these blocks will attempt to dial the next colour portal in the network.
 
 ![Portal Design](img/portal-design.png)
 
@@ -14,12 +14,12 @@ there are 16 colours this means that there is a total of 256 networks available.
 
 ### Address
 
-The third coloured wool defines the portal *address*.  The address must be unique amongst all portals that belong
-to the same *network*.  As there are 16 colours this means that you can have a total of 16 portals able to dial
+The third coloured wool defines the portal *address*. The address must be unique amongst all portals that belong
+to the same *network*. As there are 16 colours this means that you can have a total of 16 portals able to dial
 each other per network.
 
-!!! bug
-    At the moment it is undefined what happens if 2 portals have the same address. This will be rectified shortly.
+!!! note
+If you attempt to create a portal with the same network and address as another it will un-make itself.
 
 ## Portal Types
 
@@ -84,21 +84,47 @@ relative direction and velocity.  Yes you can have minecart on a rail go between
 
 ## Size Differences
 
-Generally the player will exit out in the same relative position of the destination portal that they entered in the
+Generally the player will exit out in the same relative position of the destination portal that they entered the
 source portal.
 
-If the destination portal is shorter then they will be clipped to its height if entering too high in the source
+If the destination portal is shorter, then they will be clipped to its height if entering too high in the source
 portal.
 
-Likewise if they are too far right or left in the source portal compared to the destination portal they will be
+Likewise, if they are too far right or left in the source portal compared to the destination portal they will be
 clipped to the corresponding side.
-
 
 ## Destinations
 
-Portals can dial between worlds on the same server.  This allows a portal in the Nether to dial a portal in the overworld
-or indeed any other custom work.
+Portals can dial between worlds on the same server. This allows a portal in the Nether to dial a portal in the overworld
+or indeed any other custom world.
 
 !!! info
-    Multiserver bungeecord support will come in due course.
+Multiserver bungeecord support will come in due course.
 
+## Crafting Recipe
+
+By default, all three portals have a recipe to allow them to be crafted. This can be customized in `config.yml`.
+
+### Nether Portal
+
+![Nether Recipe](img/recipe-type-nether.png)
+
+* Netherite Ingot in Middle
+* Ender Pearl top right
+* Obsidian every else
+
+### End Portal
+
+![End Recipe](img/recipe-type-end.png)
+
+* Netherite Ingot in Middle
+* Ender Pearl top right
+* End Stone every else
+
+### Hidden Portal
+
+![Hidden Recipe](img/recipe-type-hidden.png)
+
+* Netherite Block in Middle
+* Ender Pearl top right
+* Obsidian every else

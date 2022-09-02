@@ -1,6 +1,6 @@
 /*
  * PortalNetwork - Portals for Players
- * Copyright (C) 2021 PortalNetwork Developers
+ * Copyright (C) 2022 PortalNetwork Developers
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@ package au.com.grieve.portalnetwork.portals;
 
 import au.com.grieve.portalnetwork.PortalManager;
 import au.com.grieve.portalnetwork.PortalNetwork;
+import au.com.grieve.portalnetwork.config.PortalConfig;
 import com.google.common.collect.Streams;
 import lombok.Getter;
 import org.bukkit.Location;
@@ -48,6 +49,10 @@ public class BasePortal {
     // Portal Manager
     @Getter
     final PortalManager manager;
+
+    // Portal Config
+    @Getter
+    final PortalConfig config;
 
     // Location of Portal Block
     final Location location;
@@ -106,12 +111,16 @@ public class BasePortal {
     @Getter
     BasePortal dialledPortal;
 
-    public BasePortal(PortalManager manager, Location location) {
+    public BasePortal(PortalManager manager, Location location, PortalConfig config) {
         this.manager = manager;
         this.location = location;
+        this.config = config;
         update();
     }
 
+    /**
+     * Load configuration from manager for this portal type
+     */
     public Location getLocation() {
         return location.clone();
     }
@@ -128,10 +137,10 @@ public class BasePortal {
             if (dialledPortal != null) {
                 location.getBlock().setType(GLASS_MAPPINGS.get(dialledPortal.getAddress()));
             } else {
-                location.getBlock().setType(Material.BEACON);
+                location.getBlock().setType(config.getBlock().getActive());
             }
         } else {
-            location.getBlock().setType(Material.GOLD_BLOCK);
+            location.getBlock().setType(config.getBlock().getInactive());
         }
 
     }
@@ -755,6 +764,7 @@ public class BasePortal {
         }.runTaskLater(PortalNetwork.getInstance(), 3);
     }
 
+    @SuppressWarnings("unused")
     public void handleBlockBurn(BlockBurnEvent event) {
         dial(null);
         new BukkitRunnable() {
@@ -766,6 +776,7 @@ public class BasePortal {
         }.runTaskLater(PortalNetwork.getInstance(), 3);
     }
 
+    @SuppressWarnings("unused")
     public void handleBlockExplode(BlockExplodeEvent event) {
         dial(null);
         new BukkitRunnable() {
@@ -777,6 +788,7 @@ public class BasePortal {
         }.runTaskLater(PortalNetwork.getInstance(), 3);
     }
 
+    @SuppressWarnings("unused")
     public void handleBlockIgnite(BlockIgniteEvent event) {
         dial(null);
         new BukkitRunnable() {

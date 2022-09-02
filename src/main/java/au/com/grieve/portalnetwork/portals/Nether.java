@@ -1,6 +1,6 @@
 /*
  * PortalNetwork - Portals for Players
- * Copyright (C) 2020 PortalNetwork Developers
+ * Copyright (C) 2022 PortalNetwork Developers
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,10 +19,10 @@
 package au.com.grieve.portalnetwork.portals;
 
 import au.com.grieve.portalnetwork.PortalManager;
+import au.com.grieve.portalnetwork.config.PortalConfig;
 import org.bukkit.Axis;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.Orientable;
 import org.bukkit.util.BlockVector;
@@ -31,8 +31,8 @@ import java.util.Iterator;
 
 public class Nether extends BasePortal {
 
-    public Nether(PortalManager manager, Location location) {
-        super(manager, location);
+    public Nether(PortalManager manager, Location location, PortalConfig config) {
+        super(manager, location, config);
     }
 
     /**
@@ -76,7 +76,7 @@ public class Nether extends BasePortal {
 
 
         // Play portal sound
-        location.getWorld().playSound(location, Sound.BLOCK_BEACON_ACTIVATE, 1f, 1);
+        location.getWorld().playSound(location, config.getSound().getStart(), 1f, 1);
     }
 
     /**
@@ -112,7 +112,7 @@ public class Nether extends BasePortal {
         updateBlock();
 
         // Play portal sound
-        location.getWorld().playSound(location, Sound.BLOCK_BEACON_DEACTIVATE, 1f, 1);
+        location.getWorld().playSound(location, config.getSound().getStop(), 1f, 1);
     }
 
 }
