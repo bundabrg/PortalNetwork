@@ -353,6 +353,40 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#crafting-recipe" class="md-nav__link">
+    Crafting Recipe
+  </a>
+  
+    <nav class="md-nav" aria-label="Crafting Recipe">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nether-portal" class="md-nav__link">
+    Nether Portal
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#end-portal" class="md-nav__link">
+    End Portal
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hidden-portal" class="md-nav__link">
+    Hidden Portal
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -541,6 +575,40 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#crafting-recipe" class="md-nav__link">
+    Crafting Recipe
+  </a>
+  
+    <nav class="md-nav" aria-label="Crafting Recipe">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nether-portal" class="md-nav__link">
+    Nether Portal
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#end-portal" class="md-nav__link">
+    End Portal
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hidden-portal" class="md-nav__link">
+    Hidden Portal
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -558,21 +626,21 @@
   <h1>Portals</h1>
 
 <h2 id="building-a-portal">Building a Portal<a class="headerlink" href="#building-a-portal" title="Permanent link">&para;</a></h2>
-<p>At a minimum a portal is built using just 4 blocks put together in the shape of a T shape Tetromino. A <code>portalblock</code> and 
-3 coloured wool blocks. Right clicking any of these blocks will attempt to dial the next colour portal in the network.</p>
+<p>At a minimum a portal is built using just 4 blocks put together in the shape of a T shape Tetromino. A <code>portalblock</code> and
+3 coloured wool blocks. Right-clicking any of these blocks will attempt to dial the next colour portal in the network.</p>
 <p><img alt="Portal Design" src="../img/portal-design.png" /></p>
 <h3 id="network">Network<a class="headerlink" href="#network" title="Permanent link">&para;</a></h3>
 <p>The blocks to either side of the portal designate the <em>network</em> to which it belongs.  If you think of a phone number 
 the <em>network</em> would be like an area code.  Any portal can dial any other portal that belongs to the same network.  As 
 there are 16 colours this means that there is a total of 256 networks available.</p>
 <h3 id="address">Address<a class="headerlink" href="#address" title="Permanent link">&para;</a></h3>
-<p>The third coloured wool defines the portal <em>address</em>.  The address must be unique amongst all portals that belong
-to the same <em>network</em>.  As there are 16 colours this means that you can have a total of 16 portals able to dial
+<p>The third coloured wool defines the portal <em>address</em>. The address must be unique amongst all portals that belong
+to the same <em>network</em>. As there are 16 colours this means that you can have a total of 16 portals able to dial
 each other per network.</p>
-<div class="admonition bug">
-<p class="admonition-title">Bug</p>
-<p>At the moment it is undefined what happens if 2 portals have the same address. This will be rectified shortly.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
 </div>
+<p>If you attempt to create a portal with the same network and address as another it will un-make itself.</p>
 <h2 id="portal-types">Portal Types<a class="headerlink" href="#portal-types" title="Permanent link">&para;</a></h2>
 <p>The <code>portalblock</code> in the middle will define what type of portal will be generated.  This is purely cosmetic and any portal, 
 regardless of its type, can connect to any other on the same network.</p>
@@ -614,26 +682,49 @@ side no matter which side they entered the source portal.</p>
 <p>If a vehicle enters the portal then it and all its passengers will be teleported to the destination portal, maintaining
 relative direction and velocity.  Yes you can have minecart on a rail go between portals.</p>
 <h2 id="size-differences">Size Differences<a class="headerlink" href="#size-differences" title="Permanent link">&para;</a></h2>
-<p>Generally the player will exit out in the same relative position of the destination portal that they entered in the
+<p>Generally the player will exit out in the same relative position of the destination portal that they entered the
 source portal.</p>
-<p>If the destination portal is shorter then they will be clipped to its height if entering too high in the source
+<p>If the destination portal is shorter, then they will be clipped to its height if entering too high in the source
 portal.</p>
-<p>Likewise if they are too far right or left in the source portal compared to the destination portal they will be
+<p>Likewise, if they are too far right or left in the source portal compared to the destination portal they will be
 clipped to the corresponding side.</p>
 <h2 id="destinations">Destinations<a class="headerlink" href="#destinations" title="Permanent link">&para;</a></h2>
-<p>Portals can dial between worlds on the same server.  This allows a portal in the Nether to dial a portal in the overworld
-or indeed any other custom work.</p>
+<p>Portals can dial between worlds on the same server. This allows a portal in the Nether to dial a portal in the overworld
+or indeed any other custom world.</p>
 <div class="admonition info">
 <p class="admonition-title">Info</p>
-<p>Multiserver bungeecord support will come in due course.</p>
 </div>
+<p>Multiserver bungeecord support will come in due course.</p>
+<h2 id="crafting-recipe">Crafting Recipe<a class="headerlink" href="#crafting-recipe" title="Permanent link">&para;</a></h2>
+<p>By default, all three portals have a recipe to allow them to be crafted. This can be customized in <code>config.yml</code>.</p>
+<h3 id="nether-portal">Nether Portal<a class="headerlink" href="#nether-portal" title="Permanent link">&para;</a></h3>
+<p><img alt="Nether Recipe" src="../img/recipe-type-nether.png" /></p>
+<ul>
+<li>Netherite Ingot in Middle</li>
+<li>Ender Pearl top right</li>
+<li>Obsidian every else</li>
+</ul>
+<h3 id="end-portal">End Portal<a class="headerlink" href="#end-portal" title="Permanent link">&para;</a></h3>
+<p><img alt="End Recipe" src="../img/recipe-type-end.png" /></p>
+<ul>
+<li>Netherite Ingot in Middle</li>
+<li>Ender Pearl top right</li>
+<li>End Stone every else</li>
+</ul>
+<h3 id="hidden-portal">Hidden Portal<a class="headerlink" href="#hidden-portal" title="Permanent link">&para;</a></h3>
+<p><img alt="Hidden Recipe" src="../img/recipe-type-hidden.png" /></p>
+<ul>
+<li>Netherite Block in Middle</li>
+<li>Ender Pearl top right</li>
+<li>Obsidian every else</li>
+</ul>
 
   <hr>
 <div class="md-source-file">
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2022-08-31T08:37:52+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2022-08-31</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2022-09-02T10:37:17+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2022-09-02</span>
       
     
   </small>
