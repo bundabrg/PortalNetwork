@@ -143,6 +143,9 @@ public final class PortalNetwork extends JavaPlugin {
     private void initConfig() throws IOException {
         // Main Config
         if (!configFile.exists()) {
+            //noinspection ResultOfMethodCallIgnored
+            getDataFolder().mkdir();
+
             try (InputStream in = getClassLoader().getResourceAsStream("config.yml")) {
                 //noinspection ConstantConditions
                 Files.copy(in, configFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
