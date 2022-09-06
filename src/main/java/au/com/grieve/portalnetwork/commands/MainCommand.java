@@ -18,7 +18,10 @@
 
 package au.com.grieve.portalnetwork.commands;
 
-import au.com.grieve.bcf.annotations.*;
+import au.com.grieve.bcf.annotations.Arg;
+import au.com.grieve.bcf.annotations.Command;
+import au.com.grieve.bcf.annotations.Default;
+import au.com.grieve.bcf.annotations.Permission;
 import au.com.grieve.bcf.platform.bukkit.BukkitCommand;
 import au.com.grieve.portalnetwork.PortalNetwork;
 import au.com.grieve.portalnetwork.exceptions.InvalidPortalException;
@@ -27,6 +30,7 @@ import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.hover.content.Text;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -55,7 +59,7 @@ public class MainCommand extends BukkitCommand {
         // Show list of child commands
     }
 
-    @Arg("reload")
+    @Arg("reload(description=Reload Plugin)")
     @Permission("portalnetwork.admin")
     @Permission("portalnetwork.command.reload")
     public void onReload(CommandSender sender) {
@@ -73,7 +77,7 @@ public class MainCommand extends BukkitCommand {
         }
     }
 
-    @Arg("list")
+    @Arg("list(description=List placed portals)")
     @Permission("portalnetwork.admin")
     @Permission("portalnetwork.command.list")
     public void onList(CommandSender sender) {
@@ -110,7 +114,7 @@ public class MainCommand extends BukkitCommand {
                                     (portal.getLocation().getY() + 1) + " " +
                                     portal.getLocation().getZ()
                     ))
-                    .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Teleport to Portal").create()))
+                    .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(new ComponentBuilder("Teleport to Portal").create())))
                     .append("").event((HoverEvent) null).event((ClickEvent) null);
 
             if (!portal.isValid()) {
@@ -132,8 +136,7 @@ public class MainCommand extends BukkitCommand {
         );
     }
 
-    @Arg("give|g @portaltype(switch=type|t, default=NETHER) @player(required=true, default=%self, mode=online)")
-    @Description("Give player a portal block")
+    @Arg("give|g(description=Give player a portal block) @portaltype(switch=type|t, default=NETHER) @player(required=true, default=%self, mode=online)")
     @Permission("portalnetwork.admin")
     @Permission("portalnetwork.command.give")
     public void onGive(CommandSender sender, String portalType, Player player) {
