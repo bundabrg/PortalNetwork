@@ -395,68 +395,68 @@
 
 <h2 id="configuration-file">Configuration File<a class="headerlink" href="#configuration-file" title="Permanent link">&para;</a></h2>
 <p>File: <code>config.yml</code></p>
-<div class="highlight"><pre><span></span><code><span class="c1">## Don&#39;t touch ##</span><span class="w"></span>
-<span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="c1">## Don&#39;t touch ##</span>
+<span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
 
-<span class="c1">## Portal Type Configuration</span><span class="w"></span>
-<span class="nt">portal</span><span class="p">:</span><span class="w"></span>
-<span class="w">  </span><span class="nt">nether</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">item</span><span class="p">:</span><span class="w"></span>
-<span class="w">      </span><span class="nt">block</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;GOLD_BLOCK&quot;</span><span class="w"></span>
-<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Portal</span><span class="nv"> </span><span class="s">Block</span><span class="nv"> </span><span class="s">(nether)&quot;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">block</span><span class="p">:</span><span class="w"></span>
-<span class="w">      </span><span class="nt">active</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;BEACON&quot;</span><span class="w"></span>
-<span class="w">      </span><span class="nt">inactive</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;GOLD_BLOCK&quot;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">sound</span><span class="p">:</span><span class="w"></span>
-<span class="w">      </span><span class="nt">start</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;BLOCK_BEACON_ACTIVATE&quot;</span><span class="w"></span>
-<span class="w">      </span><span class="nt">stop</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;BLOCK_BEACON_DEACTIVATE&quot;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">recipe</span><span class="p">:</span><span class="w"></span>
-<span class="w">      </span><span class="nt">items</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;OOP&quot;</span><span class="w"></span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;ONO&quot;</span><span class="w"></span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;OOO&quot;</span><span class="w"></span>
-<span class="w">      </span><span class="nt">mapping</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">N</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;NETHERITE_INGOT&quot;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">O</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;OBSIDIAN&quot;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">P</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ENDER_PEARL&quot;</span><span class="w"></span>
-<span class="w">  </span><span class="nt">end</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">item</span><span class="p">:</span><span class="w"></span>
-<span class="w">      </span><span class="nt">block</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;GOLD_BLOCK&quot;</span><span class="w"></span>
-<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Portal</span><span class="nv"> </span><span class="s">Block</span><span class="nv"> </span><span class="s">(end)&quot;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">block</span><span class="p">:</span><span class="w"></span>
-<span class="w">      </span><span class="nt">active</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;BEACON&quot;</span><span class="w"></span>
-<span class="w">      </span><span class="nt">inactive</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;GOLD_BLOCK&quot;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">sound</span><span class="p">:</span><span class="w"></span>
-<span class="w">      </span><span class="nt">start</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;BLOCK_BEACON_ACTIVATE&quot;</span><span class="w"></span>
-<span class="w">      </span><span class="nt">stop</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;BLOCK_BEACON_DEACTIVATE&quot;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">recipe</span><span class="p">:</span><span class="w"></span>
-<span class="w">      </span><span class="nt">items</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;EEP&quot;</span><span class="w"></span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;ENE&quot;</span><span class="w"></span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;EEE&quot;</span><span class="w"></span>
-<span class="w">      </span><span class="nt">mapping</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">N</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;NETHERITE_INGOT&quot;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">E</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;END_STONE&quot;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">P</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ENDER_PEARL&quot;</span><span class="w"></span>
-<span class="w">  </span><span class="nt">hidden</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">item</span><span class="p">:</span><span class="w"></span>
-<span class="w">      </span><span class="nt">block</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;GOLD_BLOCK&quot;</span><span class="w"></span>
-<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Portal</span><span class="nv"> </span><span class="s">Block</span><span class="nv"> </span><span class="s">(hidden)&quot;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">block</span><span class="p">:</span><span class="w"></span>
-<span class="w">      </span><span class="nt">active</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;BEACON&quot;</span><span class="w"></span>
-<span class="w">      </span><span class="nt">inactive</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;GOLD_BLOCK&quot;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">sound</span><span class="p">:</span><span class="w"></span>
-<span class="w">      </span><span class="nt">start</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;BLOCK_BEACON_ACTIVATE&quot;</span><span class="w"></span>
-<span class="w">      </span><span class="nt">stop</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;BLOCK_BEACON_DEACTIVATE&quot;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">recipe</span><span class="p">:</span><span class="w"></span>
-<span class="w">      </span><span class="nt">items</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;OOP&quot;</span><span class="w"></span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;ONO&quot;</span><span class="w"></span>
-<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;OOO&quot;</span><span class="w"></span>
-<span class="w">      </span><span class="nt">mapping</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">N</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;NETHERITE_BLOCK&quot;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">O</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;OBSIDIAN&quot;</span><span class="w"></span>
-<span class="w">        </span><span class="nt">P</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ENDER_PEARL&quot;</span><span class="w"></span>
+<span class="c1">## Portal Type Configuration</span>
+<span class="nt">portal</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">nether</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">item</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">block</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;GOLD_BLOCK&quot;</span>
+<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Portal</span><span class="nv"> </span><span class="s">Block</span><span class="nv"> </span><span class="s">(nether)&quot;</span>
+<span class="w">    </span><span class="nt">block</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">active</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;BEACON&quot;</span>
+<span class="w">      </span><span class="nt">inactive</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;GOLD_BLOCK&quot;</span>
+<span class="w">    </span><span class="nt">sound</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">start</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;BLOCK_BEACON_ACTIVATE&quot;</span>
+<span class="w">      </span><span class="nt">stop</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;BLOCK_BEACON_DEACTIVATE&quot;</span>
+<span class="w">    </span><span class="nt">recipe</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">items</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;OOP&quot;</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;ONO&quot;</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;OOO&quot;</span>
+<span class="w">      </span><span class="nt">mapping</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">N</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;NETHERITE_INGOT&quot;</span>
+<span class="w">        </span><span class="nt">O</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;OBSIDIAN&quot;</span>
+<span class="w">        </span><span class="nt">P</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ENDER_PEARL&quot;</span>
+<span class="w">  </span><span class="nt">end</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">item</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">block</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;GOLD_BLOCK&quot;</span>
+<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Portal</span><span class="nv"> </span><span class="s">Block</span><span class="nv"> </span><span class="s">(end)&quot;</span>
+<span class="w">    </span><span class="nt">block</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">active</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;BEACON&quot;</span>
+<span class="w">      </span><span class="nt">inactive</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;GOLD_BLOCK&quot;</span>
+<span class="w">    </span><span class="nt">sound</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">start</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;BLOCK_BEACON_ACTIVATE&quot;</span>
+<span class="w">      </span><span class="nt">stop</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;BLOCK_BEACON_DEACTIVATE&quot;</span>
+<span class="w">    </span><span class="nt">recipe</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">items</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;EEP&quot;</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;ENE&quot;</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;EEE&quot;</span>
+<span class="w">      </span><span class="nt">mapping</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">N</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;NETHERITE_INGOT&quot;</span>
+<span class="w">        </span><span class="nt">E</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;END_STONE&quot;</span>
+<span class="w">        </span><span class="nt">P</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ENDER_PEARL&quot;</span>
+<span class="w">  </span><span class="nt">hidden</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">item</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">block</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;GOLD_BLOCK&quot;</span>
+<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Portal</span><span class="nv"> </span><span class="s">Block</span><span class="nv"> </span><span class="s">(hidden)&quot;</span>
+<span class="w">    </span><span class="nt">block</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">active</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;BEACON&quot;</span>
+<span class="w">      </span><span class="nt">inactive</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;GOLD_BLOCK&quot;</span>
+<span class="w">    </span><span class="nt">sound</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">start</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;BLOCK_BEACON_ACTIVATE&quot;</span>
+<span class="w">      </span><span class="nt">stop</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;BLOCK_BEACON_DEACTIVATE&quot;</span>
+<span class="w">    </span><span class="nt">recipe</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">items</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;OOP&quot;</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;ONO&quot;</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;OOO&quot;</span>
+<span class="w">      </span><span class="nt">mapping</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">N</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;NETHERITE_BLOCK&quot;</span>
+<span class="w">        </span><span class="nt">O</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;OBSIDIAN&quot;</span>
+<span class="w">        </span><span class="nt">P</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ENDER_PEARL&quot;</span>
 </code></pre></div>
 <h2 id="portal-data">Portal Data<a class="headerlink" href="#portal-data" title="Permanent link">&para;</a></h2>
 <p>File: <code>portaldata.yml</code></p>
@@ -468,7 +468,7 @@ what you are doing.</p>
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2022-09-06T23:08:18+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2022-09-06</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2023-07-26T02:49:35+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2023-07-26</span>
       
     
   </small>

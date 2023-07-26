@@ -411,22 +411,22 @@
 <p>Add the following repository to your <code>pom.xml</code></p>
 <div class="highlight"><pre><span></span><code><span class="cm">&lt;!-- Bundabrg&#39;s Repo --&gt;</span>
 <span class="nt">&lt;repository&gt;</span>
-    <span class="nt">&lt;id&gt;</span>bundabrg-repo<span class="nt">&lt;/id&gt;</span>
-    <span class="nt">&lt;url&gt;</span>https://repo.worldguard.com.au/repository/maven-public<span class="nt">&lt;/url&gt;</span>
-    <span class="nt">&lt;releases&gt;</span>
-        <span class="nt">&lt;enabled&gt;</span>true<span class="nt">&lt;/enabled&gt;</span>
-    <span class="nt">&lt;/releases&gt;</span>
-    <span class="nt">&lt;snapshots&gt;</span>
-        <span class="nt">&lt;enabled&gt;</span>true<span class="nt">&lt;/enabled&gt;</span>
-    <span class="nt">&lt;/snapshots&gt;</span>
-<span class="nt">&lt;/repository&gt;</span>   
+<span class="w">    </span><span class="nt">&lt;id&gt;</span>bundabrg-repo<span class="nt">&lt;/id&gt;</span>
+<span class="w">    </span><span class="nt">&lt;url&gt;</span>https://repo.worldguard.com.au/repository/maven-public<span class="nt">&lt;/url&gt;</span>
+<span class="w">    </span><span class="nt">&lt;releases&gt;</span>
+<span class="w">        </span><span class="nt">&lt;enabled&gt;</span>true<span class="nt">&lt;/enabled&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/releases&gt;</span>
+<span class="w">    </span><span class="nt">&lt;snapshots&gt;</span>
+<span class="w">        </span><span class="nt">&lt;enabled&gt;</span>true<span class="nt">&lt;/enabled&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/snapshots&gt;</span>
+<span class="nt">&lt;/repository&gt;</span><span class="w">   </span>
 </code></pre></div>
 <p>Add the following dependency to your <code>pom.xml</code>
 <div class="highlight"><pre><span></span><code><span class="nt">&lt;dependency&gt;</span>
-    <span class="nt">&lt;groupId&gt;</span>au.com.grieve<span class="nt">&lt;/groupId&gt;</span>
-    <span class="nt">&lt;artifactId&gt;</span>PortalNetwork<span class="nt">&lt;/artifactId&gt;</span>
-    <span class="nt">&lt;version&gt;</span>1.2.0<span class="nt">&lt;/version&gt;</span>
-    <span class="nt">&lt;scope&gt;</span>provided<span class="nt">&lt;/scope&gt;</span>
+<span class="w">    </span><span class="nt">&lt;groupId&gt;</span>au.com.grieve<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>PortalNetwork<span class="nt">&lt;/artifactId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;version&gt;</span>1.2.0<span class="nt">&lt;/version&gt;</span>
+<span class="w">    </span><span class="nt">&lt;scope&gt;</span>provided<span class="nt">&lt;/scope&gt;</span>
 <span class="nt">&lt;/dependency&gt;</span>
 </code></pre></div></p>
 <h2 id="new-portal-type">New Portal Type<a class="headerlink" href="#new-portal-type" title="Permanent link">&para;</a></h2>
@@ -445,8 +445,8 @@ or one of the existing portal types.</p>
 to register the new portal type.</p>
 <p>For example if you have a new PortalType class called "DiamondPortal" that creates a diamond shaped portal you would
 do the following:</p>
-<div class="highlight"><pre><span></span><code><span class="n">PortalNetwork</span><span class="p">.</span><span class="na">getInstance</span><span class="p">().</span><span class="na">getPortalManager</span><span class="p">()</span><span class="w"></span>
-<span class="w">    </span><span class="p">.</span><span class="na">registerPortalClass</span><span class="p">(</span><span class="s">&quot;diamond&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">DiamondPortal</span><span class="p">.</span><span class="na">class</span><span class="p">);</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="n">PortalNetwork</span><span class="p">.</span><span class="na">getInstance</span><span class="p">().</span><span class="na">getPortalManager</span><span class="p">()</span>
+<span class="w">    </span><span class="p">.</span><span class="na">registerPortalClass</span><span class="p">(</span><span class="s">&quot;diamond&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">DiamondPortal</span><span class="p">.</span><span class="na">class</span><span class="p">);</span>
 </code></pre></div>
 <p>Then use the following command to get the portalblock ingame:
 <div class="highlight"><pre><span></span><code>/pn give -type diamond
@@ -457,7 +457,7 @@ do the following:</p>
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2022-09-06T23:08:18+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2022-09-06</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2023-07-26T02:49:35+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2023-07-26</span>
       
     
   </small>
