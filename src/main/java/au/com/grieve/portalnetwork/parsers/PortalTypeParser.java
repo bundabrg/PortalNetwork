@@ -1,6 +1,6 @@
 /*
  * PortalNetwork - Portals for Players
- * Copyright (C) 2020 PortalNetwork Developers
+ * Copyright (C) 2023 PortalNetwork Developers
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,38 +18,67 @@
 
 package au.com.grieve.portalnetwork.parsers;
 
-import au.com.grieve.bcf.ArgNode;
-import au.com.grieve.bcf.CommandContext;
-import au.com.grieve.bcf.CommandManager;
-import au.com.grieve.bcf.exceptions.ParserInvalidResultException;
-import au.com.grieve.bcf.parsers.SingleParser;
+import au.com.grieve.bcf.CompletionCandidateGroup;
+import au.com.grieve.bcf.ParsedLine;
+import au.com.grieve.bcf.ParserContext;
+import au.com.grieve.bcf.exception.EndOfLineException;
+import au.com.grieve.bcf.exception.ParserSyntaxException;
+import au.com.grieve.bcf.impl.completion.DefaultCompletionCandidate;
+import au.com.grieve.bcf.impl.completion.StaticCompletionCandidateGroup;
+import au.com.grieve.bcf.impl.error.InvalidOptionError;
+import au.com.grieve.bcf.impl.parser.BaseParser;
 import au.com.grieve.portalnetwork.PortalNetwork;
+import lombok.ToString;
+import org.bukkit.command.CommandSender;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 /**
- * Type of Portal
+ * Return the type of portal as a String This technically could just be a literal parser, but we
+ * want to support 3rd parties adding their own portal types
  */
-public class PortalTypeParser extends SingleParser {
-
-    public PortalTypeParser(CommandManager manager, ArgNode argNode, CommandContext context) {
-        super(manager, argNode, context);
+@ToString(callSuper = true)
+public class PortalTypeParser extends BaseParser<CommandSender, String> {
+    public PortalTypeParser(Map<String, String> parameters) {
+        super(parameters);
     }
 
     @Override
-    protected String result() throws ParserInvalidResultException {
-        if (PortalNetwork.getInstance().getPortalManager().getPortalClasses().containsKey(getInput().toLowerCase())) {
-            return getInput().toLowerCase();
+    protected String doParse(ParserContext<CommandSender> context, ParsedLine line)
+            throws EndOfLineException, ParserSyntaxException {
+        String input = line.next();
+
+        if (PortalNetwork.getInstance()
+                .getPortalManager()
+                .getPortalClasses()
+                .containsKey(input.toLowerCase())) {
+            return input.toLowerCase();
         }
-        throw new ParserInvalidResultException(this, "Invalid Portal Type: " + getInput());
+
+        throw new ParserSyntaxException(
+                line,
+                new InvalidOptionError(
+                        new ArrayList<>(
+                                PortalNetwork.getInstance()
+                                        .getPortalManager()
+                                        .getPortalClasses()
+                                        .keySet())));
     }
 
     @Override
-    protected List<String> complete() {
-        return PortalNetwork.getInstance().getPortalManager().getPortalClasses().keySet().stream()
-                .filter(p -> p.startsWith(getInput().toLowerCase()))
-                .limit(20)
-                .collect(Collectors.toList());
+    protected void doComplete(
+            ParserContext<CommandSender> context, ParsedLine line, List<CompletionCandidateGroup> candidates)
+            throws EndOfLineException {
+        String input = line.next();
+
+        PortalNetwork.getInstance()
+                .getPortalManager()
+                .getPortalConfig().forEach((name, config) -> {
+                    CompletionCandidateGroup group = new StaticCompletionCandidateGroup(input, (config.getDescription() != null && !config.getDescription().isEmpty()) ? config.getDescription() : getDescription());
+                    group.getCompletionCandidates().add(new DefaultCompletionCandidate(name));
+                    candidates.add(group);
+                });
     }
 }

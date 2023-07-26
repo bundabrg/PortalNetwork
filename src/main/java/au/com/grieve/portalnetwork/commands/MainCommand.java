@@ -1,6 +1,6 @@
 /*
  * PortalNetwork - Portals for Players
- * Copyright (C) 2022 PortalNetwork Developers
+ * Copyright (C) 2023 PortalNetwork Developers
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,11 +18,11 @@
 
 package au.com.grieve.portalnetwork.commands;
 
-import au.com.grieve.bcf.annotations.Arg;
-import au.com.grieve.bcf.annotations.Command;
-import au.com.grieve.bcf.annotations.Default;
-import au.com.grieve.bcf.annotations.Permission;
-import au.com.grieve.bcf.platform.bukkit.BukkitCommand;
+import au.com.grieve.bcf.annotation.Arg;
+import au.com.grieve.bcf.annotation.Command;
+import au.com.grieve.bcf.annotation.Default;
+import au.com.grieve.bcf.platform.minecraft.bukkit.annotation.Permission;
+import au.com.grieve.bcf.platform.minecraft.bukkit.impl.command.BukkitAnnotationCommand;
 import au.com.grieve.portalnetwork.PortalNetwork;
 import au.com.grieve.portalnetwork.exceptions.InvalidPortalException;
 import au.com.grieve.portalnetwork.portals.BasePortal;
@@ -43,7 +43,7 @@ import java.io.IOException;
 @Permission("portalnetwork.command.reload")
 @Permission("portalnetwork.command.list")
 @Permission("portalnetwork.command.give")
-public class MainCommand extends BukkitCommand {
+public class MainCommand extends BukkitAnnotationCommand {
 
     @Default
     public void onDefault(CommandSender sender) {
@@ -58,6 +58,12 @@ public class MainCommand extends BukkitCommand {
 
         // Show list of child commands
     }
+
+//    @Error
+//    @Override
+//    public void onError(CommandSender sender, List<ExecutionError> errors) {
+//        System.err.println(errors);
+//    }
 
     @Arg("reload(description=Reload Plugin)")
     @Permission("portalnetwork.admin")
@@ -136,6 +142,7 @@ public class MainCommand extends BukkitCommand {
         );
     }
 
+    // @player(required=true, default=%self, mode=online)"
     @Arg("give|g(description=Give player a portal block) @portaltype(switch=type|t, default=NETHER) @player(required=true, default=%self, mode=online)")
     @Permission("portalnetwork.admin")
     @Permission("portalnetwork.command.give")

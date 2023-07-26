@@ -1,6 +1,6 @@
 /*
  * PortalNetwork - Portals for Players
- * Copyright (C) 2022 PortalNetwork Developers
+ * Copyright (C) 2023 PortalNetwork Developers
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,9 +18,14 @@
 
 package au.com.grieve.portalnetwork;
 
-import au.com.grieve.bcf.platform.bukkit.BukkitCommandManager;
+import au.com.grieve.bcf.platform.minecraft.bukkit.impl.BukkitCommandManager;
 import au.com.grieve.portalnetwork.commands.MainCommand;
-import au.com.grieve.portalnetwork.config.*;
+import au.com.grieve.portalnetwork.config.BlockConfig;
+import au.com.grieve.portalnetwork.config.Config;
+import au.com.grieve.portalnetwork.config.ItemConfig;
+import au.com.grieve.portalnetwork.config.PortalConfig;
+import au.com.grieve.portalnetwork.config.RecipeConfig;
+import au.com.grieve.portalnetwork.config.SoundConfig;
 import au.com.grieve.portalnetwork.listeners.PortalEvents;
 import au.com.grieve.portalnetwork.parsers.PortalTypeParser;
 import au.com.grieve.portalnetwork.portals.End;
@@ -75,6 +80,7 @@ public final class PortalNetwork extends JavaPlugin {
         portalManager = new PortalManager(this);
         portalManager.registerPortalClass("nether", Nether.class, configuration.getPortal().getOrDefault("nether",
                 new PortalConfig(
+                        "Portal with Nether Effect",
                         new ItemConfig(Material.GOLD_BLOCK, "Portal Block (nether)"),
                         new BlockConfig(Material.BEACON, Material.GOLD_BLOCK),
                         new SoundConfig(Sound.BLOCK_BEACON_ACTIVATE, Sound.BLOCK_BEACON_DEACTIVATE),
@@ -91,6 +97,7 @@ public final class PortalNetwork extends JavaPlugin {
                         ))));
         portalManager.registerPortalClass("end", End.class, configuration.getPortal().getOrDefault("end",
                 new PortalConfig(
+                        "Portal with EndPortal Effect",
                         new ItemConfig(Material.GOLD_BLOCK, "Portal Block (end)"),
                         new BlockConfig(Material.BEACON, Material.GOLD_BLOCK),
                         new SoundConfig(Sound.BLOCK_BEACON_ACTIVATE, Sound.BLOCK_BEACON_DEACTIVATE),
@@ -107,6 +114,7 @@ public final class PortalNetwork extends JavaPlugin {
                         ))));
         portalManager.registerPortalClass("hidden", Hidden.class, configuration.getPortal().getOrDefault("hidden",
                 new PortalConfig(
+                        "Hidden Portal",
                         new ItemConfig(Material.GOLD_BLOCK, "Portal Block (hidden)"),
                         new BlockConfig(Material.BEACON, Material.GOLD_BLOCK),
                         new SoundConfig(Sound.BLOCK_BEACON_ACTIVATE, Sound.BLOCK_BEACON_DEACTIVATE),

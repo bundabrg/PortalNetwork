@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   ~ PortalNetwork - Portals for Players
-  ~ Copyright (C) 2022 PortalNetwork Developers
+  ~ Copyright (C) 2023 PortalNetwork Developers
   ~
   ~ This program is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU General Public License as published by
@@ -134,7 +134,7 @@
         <dependency>
             <groupId>au.com.grieve.bcf</groupId>
             <artifactId>bukkit</artifactId>
-            <version>1.4.1</version>
+            <version>2.0.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
