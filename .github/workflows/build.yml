@@ -166,13 +166,14 @@ jobs:
             spigot:
               username: ${SPIGOT_USERNAME}
               password: ${SPIGOT_PASSWORD}
+              totp: ${SPIGOT_TOTP}
           EOF
 
           docker run -i \
             --shm-size=2g \
             -v $(pwd)/config.yml:/app/config/config.yml \
             -v $(pwd)/build:/app/build \
-            registry.worldguard.com.au/bgrieve/spigot_tools:latest app resource add-version \
+            registry.worldguard.com.au/bgrieve/spigot_tools:feature-2fa app resource add-version \
               portal-network.78053 \
               ${assets[0]} \
               ${tag_name} \
@@ -188,4 +189,5 @@ jobs:
           DEPLOY_TOKEN: ${{ secrets.GITLAB_DEPLOY_TOKEN }}
           SPIGOT_USERNAME: ${{ secrets.SPIGOT_USERNAME }}
           SPIGOT_PASSWORD: ${{ secrets.SPIGOT_PASSWORD }}
+          SPIGOT_TOTP: ${{ secrets.SPIGOT_TOTP }}
 
