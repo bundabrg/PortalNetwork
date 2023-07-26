@@ -8,19 +8,20 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Set up JDK 11
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v2
         with:
           java-version: 11
+          distribution: 'zulu'
           server-id: bundabrg-repo
           settings-path: ${{ github.workspace }} # location for the settings.xml file
           server-username: MAVEN_USERNAME # env variable for username in deploy
           server-password: MAVEN_TOKEN # env variable for token in deploy
 
       - name: Cache dependencies
-        uses: actions/cache@v1
+        uses: actions/cache@v3
         with:
           path: ~/.m2/repository
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
@@ -68,16 +69,16 @@ jobs:
   documentation:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Setup Python
-        uses: actions/setup-python@v1
+        uses: actions/setup-python@v4
         with:
           python-version: '3.10.12'
           architecture: 'x64'
 
       - name: Cache dependencies
-        uses: actions/cache@v1
+        uses: actions/cache@v3
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
@@ -110,7 +111,7 @@ jobs:
     needs: [build, documentation]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - run: git fetch --prune --unshallow
 
       - name: Download Binary Artifact
@@ -151,52 +152,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Publish to SpigotMC
-        run: |
-          set -x
-          assets=()
-          for asset in ./build/binary/*.jar; do
-            assets+=("$asset")
-          done
-          tag_name="${GITHUB_REF##*/}"
-
-          docker login -u gitlab+deploy-token-2 -p ${DEPLOY_TOKEN} https://registry.worldguard.com.au
-          cat > config.yml << EOF
-          common:
-            spigot:
-              username: ${SPIGOT_USERNAME}
-              password: ${SPIGOT_PASSWORD}
-              totp: ${SPIGOT_TOTP}
-          EOF
-
-          docker run -i \
-            --shm-size=2g \
-            -v $(pwd)/config.yml:/app/config/config.yml \
-            -v $(pwd)/build:/app/build \
-            registry.worldguard.com.au/bgrieve/spigot_tools:feature-2fa app resource add-version \
-              portal-network.78053 \
-              ${assets[0]} \
-              ${tag_name} \
-              "Release ${tag_name}" << EOF
-          [plain]
-          Release $tag_name
-
-          Since Last Release:
-          $(git log $(git describe --tags --abbrev=0 HEAD^ 2> /dev/null || git rev-list --max-parents=0 HEAD)..HEAD --graph --pretty=format:'%h %d %s [%an] %n%b' --abbrev-commit)
-          [/plain]
-          EOF
-        env:
-          DEPLOY_TOKEN: ${{ secrets.GITLAB_DEPLOY_TOKEN }}
-          SPIGOT_USERNAME: ${{ secrets.SPIGOT_USERNAME }}
-          SPIGOT_PASSWORD: ${{ secrets.SPIGOT_PASSWORD }}
-          SPIGOT_TOTP: ${{ secrets.SPIGOT_TOTP }}
-
   release-spigot:
     if: startsWith(github.ref,'refs/tags/v')
-    needs: [ release, documentation ]
+    needs: [ build, documentation ]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - run: git fetch --prune --unshallow
 
       - name: Download Binary Artifact
@@ -212,6 +173,7 @@ jobs:
           path: build/docs
 
       - name: Publish to SpigotMC
+        continue-on-error: true
         run: |
           set -x
           assets=()
@@ -233,7 +195,7 @@ jobs:
             --shm-size=2g \
             -v $(pwd)/config.yml:/app/config/config.yml \
             -v $(pwd)/build:/app/build \
-            registry.worldguard.com.au/bgrieve/spigot_tools:feature-2fa app resource add-version \
+            registry.worldguard.com.au/bgrieve/spigot_tools:latest app resource add-version \
               portal-network.78053 \
               ${assets[0]} \
               ${tag_name} \
