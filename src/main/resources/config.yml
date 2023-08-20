@@ -4,6 +4,7 @@ version: 2
 ## Portal Type Configuration
 portal:
   nether:
+    description: "Portal with Nether Effect"
     item:
       block: "GOLD_BLOCK"
       name: "Portal Block (nether)"
@@ -23,6 +24,7 @@ portal:
         O: "OBSIDIAN"
         P: "ENDER_PEARL"
   end:
+    description: "Portal with EndPortal Effect"
     item:
       block: "GOLD_BLOCK"
       name: "Portal Block (end)"
@@ -42,6 +44,7 @@ portal:
         E: "END_STONE"
         P: "ENDER_PEARL"
   hidden:
+    description: "Hidden Portal"
     item:
       block: "GOLD_BLOCK"
       name: "Portal Block (hidden)"

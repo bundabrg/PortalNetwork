@@ -1,6 +1,6 @@
 /*
  * PortalNetwork - Portals for Players
- * Copyright (C) 2022 PortalNetwork Developers
+ * Copyright (C) 2023 PortalNetwork Developers
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -52,6 +52,7 @@ public class PortalManager {
     @Getter
     private final BiMap<String, Class<? extends BasePortal>> portalClasses = HashBiMap.create();
 
+    @Getter
     private final Map<String, PortalConfig> portalConfig = new HashMap<>();
 
     private final JavaPlugin plugin;

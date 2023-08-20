@@ -1,6 +1,6 @@
 /*
  * PortalNetwork - Portals for Players
- * Copyright (C) 2022 PortalNetwork Developers
+ * Copyright (C) 2023 PortalNetwork Developers
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,6 +32,7 @@ import lombok.ToString;
 @ToString
 public class PortalConfig {
 
+    private String description;
     private ItemConfig item;
     private BlockConfig block;
     private SoundConfig sound;

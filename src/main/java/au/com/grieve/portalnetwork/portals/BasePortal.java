@@ -1,6 +1,6 @@
 /*
  * PortalNetwork - Portals for Players
- * Copyright (C) 2022 PortalNetwork Developers
+ * Copyright (C) 2023 PortalNetwork Developers
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -45,6 +45,7 @@ import java.util.*;
 public class BasePortal {
 
     static public final NamespacedKey PortalTypeKey = new NamespacedKey(PortalNetwork.getInstance(), "portal_type");
+    static public final String DESCRIPTION = "BasePortal";
 
     // Portal Manager
     @Getter
