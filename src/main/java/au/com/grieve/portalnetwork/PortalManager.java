@@ -66,6 +66,10 @@ public class PortalManager {
     private final Hashtable<BlockVector, BasePortal> indexBases = new Hashtable<>();
     private final Hashtable<BlockVector, BasePortal> indexPortalBlocks = new Hashtable<>();
 
+    // Recipes
+    @Getter
+    private final List<NamespacedKey> recipes = new ArrayList<>();
+
     // Configuration
     public PortalManager(JavaPlugin plugin) {
         this.plugin = plugin;
@@ -86,12 +90,14 @@ public class PortalManager {
             RecipeConfig r = config.getRecipe();
             try {
                 ItemStack item = createPortalBlock(name);
-                ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(plugin, name), item);
+                NamespacedKey key = new NamespacedKey(plugin, name);
+                ShapedRecipe recipe = new ShapedRecipe(key, item);
                 recipe.shape(r.getItems().toArray(new String[0]));
                 for (Map.Entry<Character, Material> ingredient : r.getMapping().entrySet()) {
                     recipe.setIngredient(ingredient.getKey(), ingredient.getValue());
                 }
                 plugin.getServer().addRecipe(recipe);
+                recipes.add(key);
             } catch (InvalidPortalException ignored) {
             }
         }

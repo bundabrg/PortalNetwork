@@ -131,6 +131,17 @@ public class PortalEvents implements Listener {
 
     @SuppressWarnings("unused")
     @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        // Grant knowledge of the crafting recipe to all players.
+        // Ideally this should only happen once the player has picked up
+        // all of the items in a given recipe, but there's too much overhead
+        // to track all that.
+        PortalManager manager = PortalNetwork.getInstance().getPortalManager();
+        event.getPlayer().discoverRecipes(manager.getRecipes());
+    }
+
+    @SuppressWarnings("unused")
+    @EventHandler
     public void onPlayerQuitEvent(PlayerQuitEvent event) {
         ignore.remove(event.getPlayer());
     }
